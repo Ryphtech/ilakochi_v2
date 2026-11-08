@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Navbar } from './components/Navbar/Navbar';
 import { Hero } from './components/Hero/Hero';
-import { BrandIntro } from './components/BrandIntro/BrandIntro';
-import { TaglineReveal } from './components/Common/TaglineReveal';
-import { ScrollMarquee } from './components/Common/ScrollMarquee';
-import { SignatureDishes } from './components/SignatureDishes/SignatureDishes';
-import { HowItWorks } from './components/HowItWorks/HowItWorks';
-import { OurStory } from './components/OurStory/OurStory';
-import { KeralaCulture } from './components/KeralaCulture/KeralaCulture';
-import { ReviewsSection } from './components/Reviews/ReviewsSection';
-import { MenuSection } from './components/Menu/MenuSection';
-import { DishDetailModal } from './components/Menu/DishDetailModal';
-import { DiningExperience } from './components/DiningExperience/DiningExperience';
-import { GallerySection } from './components/Gallery/GallerySection';
-import { FAQSection } from './components/FAQ/FAQSection';
-import { LocationSection } from './components/Location/LocationSection';
-import { ReservationSection } from './components/Reservation/ReservationSection';
-import { Footer } from './components/Footer/Footer';
+import { WebsitePreloader } from './components/Common/WebsitePreloader';
+import { SectionSkeleton } from './components/Common/SectionSkeleton';
 import { X, Calendar, MessageSquare } from 'lucide-react';
 import { restaurantData } from './data/restaurantData';
 import { MenuItem } from './data/menuData';
 
+// Lazy-loaded below-the-fold sections for optimized performance & faster TTI
+const BrandIntro = lazy(() => import('./components/BrandIntro/BrandIntro').then(m => ({ default: m.BrandIntro })));
+const TaglineReveal = lazy(() => import('./components/Common/TaglineReveal').then(m => ({ default: m.TaglineReveal })));
+const ScrollMarquee = lazy(() => import('./components/Common/ScrollMarquee').then(m => ({ default: m.ScrollMarquee })));
+const SignatureDishes = lazy(() => import('./components/SignatureDishes/SignatureDishes').then(m => ({ default: m.SignatureDishes })));
+const HowItWorks = lazy(() => import('./components/HowItWorks/HowItWorks').then(m => ({ default: m.HowItWorks })));
+const OurStory = lazy(() => import('./components/OurStory/OurStory').then(m => ({ default: m.OurStory })));
+const KeralaCulture = lazy(() => import('./components/KeralaCulture/KeralaCulture').then(m => ({ default: m.KeralaCulture })));
+const ReviewsSection = lazy(() => import('./components/Reviews/ReviewsSection').then(m => ({ default: m.ReviewsSection })));
+const MenuSection = lazy(() => import('./components/Menu/MenuSection').then(m => ({ default: m.MenuSection })));
+const DiningExperience = lazy(() => import('./components/DiningExperience/DiningExperience').then(m => ({ default: m.DiningExperience })));
+const GallerySection = lazy(() => import('./components/Gallery/GallerySection').then(m => ({ default: m.GallerySection })));
+const FAQSection = lazy(() => import('./components/FAQ/FAQSection').then(m => ({ default: m.FAQSection })));
+const LocationSection = lazy(() => import('./components/Location/LocationSection').then(m => ({ default: m.LocationSection })));
+const ReservationSection = lazy(() => import('./components/Reservation/ReservationSection').then(m => ({ default: m.ReservationSection })));
+const Footer = lazy(() => import('./components/Footer/Footer').then(m => ({ default: m.Footer })));
+const DishDetailModal = lazy(() => import('./components/Menu/DishDetailModal').then(m => ({ default: m.DishDetailModal })));
+
 export function App() {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
   const [selectedDish, setSelectedDish] = useState<MenuItem | null>(null);
 
@@ -34,10 +39,15 @@ export function App() {
 
   return (
     <div className="relative min-h-screen bg-[#0B291E] text-[#F8F6EE] selection:bg-[#176B45] selection:text-[#F8F6EE]">
-      {/* Top Navigation */}
+      {/* 00. Luxury Website Preloader & Entrance Animation */}
+      {showPreloader && (
+        <WebsitePreloader onComplete={() => setShowPreloader(false)} />
+      )}
+
+      {/* Top Navigation (Eagerly Loaded) */}
       <Navbar onOpenReservation={() => setReservationModalOpen(true)} />
 
-      {/* 01. Immersive Video Reel Hero */}
+      {/* 01. Immersive Video Reel Hero (Eagerly Loaded for Instant FCP) */}
       <Hero
         onExploreMenu={() => scrollToSection('menu')}
         onDiscoverStory={() => scrollToSection('story')}
@@ -45,68 +55,107 @@ export function App() {
       />
 
       {/* 02. Brand Editorial Introduction */}
-      <BrandIntro />
+      <Suspense fallback={<SectionSkeleton height="min-h-[500px]" />}>
+        <BrandIntro />
+      </Suspense>
 
       {/* Mandatory B11 Tagline Reveal Section */}
-      <TaglineReveal />
+      <Suspense fallback={<SectionSkeleton height="min-h-[300px]" hasCardGrid={false} />}>
+        <TaglineReveal />
+      </Suspense>
 
       {/* Kinetic Scroll Marquee 1 (Paragon Style) */}
-      <ScrollMarquee
-        textTop="AUTHENTIC KERALA SEAFOOD • BANANA LEAF DINING • FRESH HARBOUR CATCH • ILA KOCHI •"
-        textBottom="ഇല കൊച്ചി • ROOTED IN NATURE • INSPIRED BY THE COAST • THE ART OF COASTAL COOKING •"
-      />
+      <Suspense fallback={<div className="h-20 bg-[#0B291E]" />}>
+        <ScrollMarquee
+          textTop="AUTHENTIC KERALA SEAFOOD • BANANA LEAF DINING • FRESH HARBOUR CATCH • ILA KOCHI •"
+          textBottom="ഇല കൊച്ചി • ROOTED IN NATURE • INSPIRED BY THE COAST • THE ART OF COASTAL COOKING •"
+        />
+      </Suspense>
 
       {/* 03. Signature Seafood Showcase */}
-      <SignatureDishes onSelectDish={(dish) => setSelectedDish(dish)} />
+      <Suspense fallback={<SectionSkeleton height="min-h-[600px]" />}>
+        <SignatureDishes onSelectDish={(dish) => setSelectedDish(dish)} />
+      </Suspense>
 
       {/* 04. 3-Step Journey: How It Works */}
-      <HowItWorks />
+      <Suspense fallback={<SectionSkeleton height="min-h-[450px]" />}>
+        <HowItWorks />
+      </Suspense>
 
       {/* 05. Our Story – The Meaning of "ILA" */}
-      <OurStory />
+      <Suspense fallback={<SectionSkeleton height="min-h-[500px]" />}>
+        <OurStory />
+      </Suspense>
 
       {/* 06. Kerala Food Culture & Banana Leaf Traditions */}
-      <KeralaCulture />
+      <Suspense fallback={<SectionSkeleton height="min-h-[480px]" />}>
+        <KeralaCulture />
+      </Suspense>
 
       {/* 07. Verified Social Proof & Customer Reviews */}
-      <ReviewsSection />
+      <Suspense fallback={<SectionSkeleton height="min-h-[420px]" />}>
+        <ReviewsSection />
+      </Suspense>
 
       {/* Kinetic Scroll Marquee 2 (Dishes & Aromas) */}
-      <ScrollMarquee
-        textTop="PEARL SPOT POLLICHATHU • KALANJI TAWA FRY • CHEMMEEN GHEE ROAST • KOONTHAL •"
-        textBottom="WOOD PRESSED COCONUT OIL • MALABAR TAMARIND • LIVING PLANTAIN LEAF •"
-      />
+      <Suspense fallback={<div className="h-20 bg-[#123D2A]" />}>
+        <ScrollMarquee
+          textTop="PEARL SPOT POLLICHATHU • KALANJI TAWA FRY • CHEMMEEN GHEE ROAST • KOONTHAL •"
+          textBottom="WOOD PRESSED COCONUT OIL • MALABAR TAMARIND • LIVING PLANTAIN LEAF •"
+        />
+      </Suspense>
 
       {/* 08. Interactive Menu Exploration */}
-      <MenuSection
-        onOpenReservation={() => setReservationModalOpen(true)}
-        onSelectDish={(dish) => setSelectedDish(dish)}
-      />
+      <Suspense fallback={<SectionSkeleton height="min-h-[650px]" />}>
+        <MenuSection
+          onOpenReservation={() => setReservationModalOpen(true)}
+          onSelectDish={(dish) => setSelectedDish(dish)}
+        />
+      </Suspense>
 
       {/* 09. The Dining Experience & Ambience */}
-      <DiningExperience />
+      <Suspense fallback={<SectionSkeleton height="min-h-[500px]" />}>
+        <DiningExperience />
+      </Suspense>
 
       {/* 10. Photo Gallery & Lightbox */}
-      <GallerySection />
+      <Suspense fallback={<SectionSkeleton height="min-h-[550px]" />}>
+        <GallerySection />
+      </Suspense>
 
       {/* 11. Objection Handling: FAQ Section */}
-      <FAQSection />
+      <Suspense fallback={<SectionSkeleton height="min-h-[450px]" hasCardGrid={false} />}>
+        <FAQSection />
+      </Suspense>
 
       {/* 12. Location & Contact Details */}
-      <LocationSection />
+      <Suspense fallback={<SectionSkeleton height="min-h-[550px]" />}>
+        <LocationSection />
+      </Suspense>
 
       {/* 13. Table Reservation Section */}
-      <ReservationSection />
+      <Suspense fallback={<SectionSkeleton height="min-h-[450px]" hasCardGrid={false} />}>
+        <ReservationSection />
+      </Suspense>
 
       {/* 14 & 15. Final Brand Statement & Luxury Footer */}
-      <Footer onOpenReservation={() => setReservationModalOpen(true)} />
+      <Suspense fallback={<SectionSkeleton height="min-h-[400px]" />}>
+        <Footer onOpenReservation={() => setReservationModalOpen(true)} />
+      </Suspense>
 
-      {/* Interactive Dish Detail Modal */}
-      <DishDetailModal
-        dish={selectedDish}
-        onClose={() => setSelectedDish(null)}
-        onOpenReservation={() => setReservationModalOpen(true)}
-      />
+      {/* Interactive Dish Detail Modal (Lazy loaded on demand) */}
+      {selectedDish && (
+        <Suspense fallback={null}>
+          <DishDetailModal
+            dish={selectedDish}
+            onClose={() => setSelectedDish(null)}
+            onOpenReservation={() => {
+              setSelectedDish(null);
+              setReservationModalOpen(true);
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Floating Quick Action Pill for Mobile & Desktop */}
       <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
@@ -148,7 +197,9 @@ export function App() {
               <X className="w-5 h-5" />
             </button>
 
-            <ReservationSection isModal onClose={() => setReservationModalOpen(false)} />
+            <Suspense fallback={<SectionSkeleton height="min-h-[300px]" hasCardGrid={false} />}>
+              <ReservationSection isModal onClose={() => setReservationModalOpen(false)} />
+            </Suspense>
           </div>
         </div>
       )}

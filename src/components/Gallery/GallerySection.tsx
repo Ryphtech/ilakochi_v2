@@ -81,6 +81,7 @@ export const GallerySection: React.FC = () => {
                 alt={img.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 loading="lazy"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/95 via-[#0B291E]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5 sm:p-6">
                 <div className="flex justify-end">

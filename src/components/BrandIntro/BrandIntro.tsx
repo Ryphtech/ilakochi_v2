@@ -88,6 +88,7 @@ export const BrandIntro: React.FC = () => {
                     alt="Authentic Kerala Seafood Sadhya Meal on Green Banana Leaf"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/90 via-black/20 to-transparent" />
                   <div className="absolute bottom-5 left-5 right-5 text-xs text-[#F8F6EE]">

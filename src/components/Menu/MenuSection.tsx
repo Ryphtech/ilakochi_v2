@@ -145,6 +145,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                       alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/80 via-transparent to-transparent" />
 
