@@ -4,9 +4,18 @@ import {
   getFirestore,
   collection,
   addDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  orderBy,
   serverTimestamp,
   Firestore,
 } from 'firebase/firestore';
+import { MenuItem, menuItems as defaultMenuItems } from '../data/menuData';
 
 // Firebase configuration from environment or fallback to user credentials
 export const firebaseConfig = {
@@ -25,7 +34,7 @@ export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfi
 // Initialize Firestore Database
 export const db: Firestore = getFirestore(app);
 
-// Safe Analytics initialization (only in browser environments where supported)
+// Safe Analytics initialization
 let analyticsInstance: Analytics | null = null;
 if (typeof window !== 'undefined') {
   isSupported().then((supported) => {
@@ -51,6 +60,7 @@ export const trackEvent = (eventName: string, params?: Record<string, unknown>) 
 };
 
 export interface ReservationData {
+  id?: string;
   name: string;
   phone: string;
   guests: string;
@@ -58,11 +68,24 @@ export interface ReservationData {
   time: string;
   notes?: string;
   source?: string;
+  status?: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  createdAt?: unknown;
 }
 
-/**
- * Save table reservation inquiry directly to Firestore 'reservations' collection
- */
+export interface MediaUploadItem {
+  id?: string;
+  name: string;
+  key: string;
+  url: string;
+  size: number;
+  type: string;
+  uploadedAt?: unknown;
+}
+
+// ==========================================
+// 1. RESERVATIONS BACKEND
+// ==========================================
+
 export const saveReservationToFirestore = async (data: ReservationData) => {
   try {
     const reservationsCol = collection(db, 'reservations');
@@ -85,4 +108,120 @@ export const saveReservationToFirestore = async (data: ReservationData) => {
     console.warn('Firebase Firestore reservation save error (falling back to direct WhatsApp):', err);
     return { success: false, error: err };
   }
+};
+
+export const subscribeReservations = (callback: (reservations: ReservationData[]) => void) => {
+  const q = query(collection(db, 'reservations'), orderBy('createdAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const items = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data(),
+    })) as ReservationData[];
+    callback(items);
+  }, (err) => {
+    console.error('Error listening to reservations:', err);
+  });
+};
+
+export const updateReservationStatus = async (
+  id: string,
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled'
+) => {
+  const docRef = doc(db, 'reservations', id);
+  await updateDoc(docRef, { status });
+};
+
+export const deleteReservation = async (id: string) => {
+  const docRef = doc(db, 'reservations', id);
+  await deleteDoc(docRef);
+};
+
+// ==========================================
+// 2. FOOD ITEMS (MENU) BACKEND
+// ==========================================
+
+export const subscribeMenuItems = (callback: (items: MenuItem[]) => void) => {
+  const colRef = collection(db, 'menu_items');
+  return onSnapshot(colRef, (snapshot) => {
+    if (snapshot.empty) {
+      // If Firestore collection is empty, yield default menu
+      callback(defaultMenuItems);
+      return;
+    }
+    const items = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data(),
+    })) as MenuItem[];
+    callback(items);
+  }, (err) => {
+    console.warn('Error listening to menu_items from Firestore, using defaults:', err);
+    callback(defaultMenuItems);
+  });
+};
+
+export const addMenuItem = async (item: Omit<MenuItem, 'id'> & { id?: string }) => {
+  const customId = item.id || item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const docRef = doc(db, 'menu_items', customId);
+  await setDoc(docRef, {
+    ...item,
+    id: customId,
+    updatedAt: serverTimestamp(),
+  });
+  return customId;
+};
+
+export const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
+  const docRef = doc(db, 'menu_items', id);
+  await updateDoc(docRef, {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  });
+};
+
+export const deleteMenuItem = async (id: string) => {
+  const docRef = doc(db, 'menu_items', id);
+  await deleteDoc(docRef);
+};
+
+/**
+ * Seed or reset Firestore with default curated Ila Kochi dishes
+ */
+export const seedDefaultMenu = async () => {
+  for (const item of defaultMenuItems) {
+    const docRef = doc(db, 'menu_items', item.id);
+    await setDoc(docRef, {
+      ...item,
+      updatedAt: serverTimestamp(),
+    });
+  }
+};
+
+// ==========================================
+// 3. MEDIA UPLOADS META (R2 SYNC)
+// ==========================================
+
+export const saveMediaUploadMeta = async (item: MediaUploadItem) => {
+  const colRef = collection(db, 'media_uploads');
+  await addDoc(colRef, {
+    ...item,
+    uploadedAt: serverTimestamp(),
+  });
+};
+
+export const subscribeMediaUploads = (callback: (items: MediaUploadItem[]) => void) => {
+  const q = query(collection(db, 'media_uploads'), orderBy('uploadedAt', 'desc'));
+  return onSnapshot(q, (snapshot) => {
+    const items = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...docSnap.data(),
+    })) as MediaUploadItem[];
+    callback(items);
+  }, (err) => {
+    console.warn('Error subscribing to media_uploads:', err);
+  });
+};
+
+export const deleteMediaUploadMeta = async (id: string) => {
+  const docRef = doc(db, 'media_uploads', id);
+  await deleteDoc(docRef);
 };

@@ -30,31 +30,75 @@ export const getR2Url = (key: string): string => {
   return `${r2Config.publicUrl}/${cleanKey}`;
 };
 
+export interface UploadResult {
+  success: boolean;
+  url: string;
+  key?: string;
+  name?: string;
+  size?: number;
+  type?: string;
+  error?: unknown;
+}
+
 /**
- * Upload a media file directly to Cloudflare R2 Object Storage
+ * Upload a media file (Image or Video) to Cloudflare R2 Object Storage
+ * Uses the proxy endpoint when available, and falls back to direct S3 client
  */
 export const uploadFileToR2 = async (
-  file: File | Blob | Uint8Array,
-  key: string,
-  contentType: string
-): Promise<{ success: boolean; url: string; error?: unknown }> => {
+  file: File
+): Promise<UploadResult> => {
   try {
-    const cleanKey = key.startsWith('/') ? key.slice(1) : key;
-    const body = file instanceof Uint8Array ? file : new Uint8Array(await file.arrayBuffer());
+    // 1. Try upload endpoint
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'x-filename': encodeURIComponent(file.name),
+        'content-type': file.type || 'application/octet-stream',
+      },
+      body: file,
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        return data as UploadResult;
+      }
+    }
+  } catch (apiErr) {
+    console.warn('API upload failed, trying direct S3 client fallback:', apiErr);
+  }
+
+  // 2. Direct S3 client fallback
+  try {
+    const cleanName = file.name.toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+    const uniqueKey = `${Date.now()}-${cleanName}`;
+    const arrayBuffer = await file.arrayBuffer();
+    const body = new Uint8Array(arrayBuffer);
 
     const command = new PutObjectCommand({
       Bucket: r2Config.bucketName,
-      Key: cleanKey,
+      Key: uniqueKey,
       Body: body,
-      ContentType: contentType,
+      ContentType: file.type || 'application/octet-stream',
     });
 
     await r2Client.send(command);
 
-    const publicUrl = `${r2Config.publicUrl}/${cleanKey}`;
-    return { success: true, url: publicUrl };
-  } catch (err) {
-    console.error('Failed to upload asset to Cloudflare R2:', err);
-    return { success: false, url: '', error: err };
+    const publicUrl = `${r2Config.publicUrl}/${uniqueKey}`;
+    return {
+      success: true,
+      url: publicUrl,
+      key: uniqueKey,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    };
+  } catch (s3Err) {
+    console.error('Direct S3 upload to Cloudflare R2 failed:', s3Err);
+    return {
+      success: false,
+      url: '',
+      error: s3Err,
+    };
   }
 };

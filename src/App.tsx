@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Navbar } from './components/Navbar/Navbar';
 import { Hero } from './components/Hero/Hero';
 import { WebsitePreloader } from './components/Common/WebsitePreloader';
@@ -6,6 +6,9 @@ import { SectionSkeleton } from './components/Common/SectionSkeleton';
 import { X, Calendar, MessageSquare } from 'lucide-react';
 import { restaurantData } from './data/restaurantData';
 import { MenuItem } from './data/menuData';
+
+// Lazy-loaded Admin Portal
+const AdminPortal = lazy(() => import('./components/Admin/AdminPortal').then(m => ({ default: m.AdminPortal })));
 
 // Lazy-loaded below-the-fold sections for optimized performance & faster TTI
 const BrandIntro = lazy(() => import('./components/BrandIntro/BrandIntro').then(m => ({ default: m.BrandIntro })));
@@ -30,12 +33,56 @@ export function App() {
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
   const [selectedDish, setSelectedDish] = useState<MenuItem | null>(null);
 
+  // Admin portal route detection: '#admin', '#/admin', or '/admin'
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = (window.location.hash || '').toLowerCase();
+      const path = (window.location.pathname || '').toLowerCase();
+      return hash === '#admin' || hash === '#/admin' || path === '/admin';
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const checkRoute = () => {
+      const hash = (window.location.hash || '').toLowerCase();
+      const path = (window.location.pathname || '').toLowerCase();
+      setIsAdminRoute(hash === '#admin' || hash === '#/admin' || path === '/admin');
+    };
+
+    window.addEventListener('hashchange', checkRoute);
+    window.addEventListener('popstate', checkRoute);
+    return () => {
+      window.removeEventListener('hashchange', checkRoute);
+      window.removeEventListener('popstate', checkRoute);
+    };
+  }, []);
+
+  const handleExitAdmin = () => {
+    window.location.hash = '';
+    if (window.location.pathname === '/admin') {
+      window.history.pushState(null, '', '/');
+    }
+    setIsAdminRoute(false);
+  };
+
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  // If Admin Route is active, render the dedicated Staff Portal
+  if (isAdminRoute) {
+    return (
+      <div className="relative min-h-screen bg-[#0B291E] text-[#F8F6EE] selection:bg-[#176B45] selection:text-[#F8F6EE]">
+        <Suspense fallback={<SectionSkeleton height="min-h-screen" />}>
+          <AdminPortal onExit={handleExitAdmin} />
+        </Suspense>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-[#0B291E] text-[#F8F6EE] selection:bg-[#176B45] selection:text-[#F8F6EE]">

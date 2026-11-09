@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '../Navbar/Logo';
 import { restaurantData } from '../../data/restaurantData';
-import { MapPin, Phone, Mail, Clock, ArrowUp, MessageSquare } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ArrowUp, MessageSquare, Lock } from 'lucide-react';
 
 interface FooterProps {
   onOpenReservation: () => void;
@@ -114,6 +114,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                   Find Us
                 </a>
               </li>
+              <li className="pt-2 border-t border-[#176B45]/20">
+                <a
+                  href="#admin"
+                  className="text-[#A8BFA0]/70 hover:text-[#C5A46D] transition-colors inline-flex items-center gap-1.5 text-[11px]"
+                >
+                  <Lock className="w-3 h-3 text-[#C5A46D]" />
+                  <span>Staff Portal</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -209,8 +218,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
             &copy; {new Date().getFullYear()} ILA KOCHI RESTAURANT (ഇല കൊച്ചി). Pathadipalam Metro Pillar 350. All rights reserved.
           </div>
 
-          <div className="flex items-center gap-4">
-            <span>Rooted in Nature &middot; Inspired by the Coast</span>
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+            <span className="hidden sm:inline">Rooted in Nature &middot; Inspired by the Coast</span>
+            <a
+              href="#admin"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#C5A46D] hover:text-[#F8F6EE] text-[10px] font-sans-ui border border-[#176B45]/40 transition-colors"
+              title="Staff Portal (Menu, Media & Reservations)"
+            >
+              <Lock className="w-2.5 h-2.5" />
+              <span>Staff Portal</span>
+            </a>
             <button
               onClick={scrollToTop}
               className="p-2 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#C5A46D] transition-colors border border-[#176B45]/40 cursor-pointer"

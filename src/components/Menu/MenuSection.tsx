@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { menuCategories, menuItems, MenuItem } from '../../data/menuData';
+import React, { useState, useEffect, useMemo } from 'react';
+import { menuCategories, menuItems as fallbackMenuItems, MenuItem } from '../../data/menuData';
+import { subscribeMenuItems } from '../../lib/firebase';
 import { Search, Flame, Sparkles, Filter, ArrowRight } from 'lucide-react';
 
 interface MenuSectionProps {
@@ -8,12 +9,25 @@ interface MenuSectionProps {
 }
 
 export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onSelectDish }) => {
+  const [items, setItems] = useState<MenuItem[]>(fallbackMenuItems);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [dietaryFilter, setDietaryFilter] = useState<'all' | 'seafood' | 'non-veg' | 'veg'>('all');
 
+  // Real-time sync with Firebase Firestore
+  useEffect(() => {
+    const unsubscribe = subscribeMenuItems((firestoreItems) => {
+      if (firestoreItems && firestoreItems.length > 0) {
+        setItems(firestoreItems);
+      } else {
+        setItems(fallbackMenuItems);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   const filteredItems = useMemo(() => {
-    return menuItems.filter((item) => {
+    return items.filter((item) => {
       const matchesCategory =
         selectedCategory === 'all' || item.category === selectedCategory;
 
@@ -27,7 +41,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
 
       return matchesCategory && matchesDietary && matchesSearch;
     });
-  }, [selectedCategory, dietaryFilter, searchQuery]);
+  }, [items, selectedCategory, dietaryFilter, searchQuery]);
 
   return (
     <section id="menu" className="relative py-20 sm:py-24 lg:py-28 bg-[#0B291E] text-[#F8F6EE] overflow-hidden">

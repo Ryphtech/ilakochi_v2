@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { menuItems, MenuItem } from '../../data/menuData';
+import React, { useState, useEffect } from 'react';
+import { menuItems as defaultDishes, MenuItem } from '../../data/menuData';
+import { subscribeMenuItems } from '../../lib/firebase';
 import { Flame, Sparkles, Leaf, ArrowRight, Waves } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
 
@@ -8,12 +9,23 @@ interface SignatureDishesProps {
 }
 
 export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }) => {
+  const [dishes, setDishes] = useState<MenuItem[]>(defaultDishes);
+
+  useEffect(() => {
+    const unsubscribe = subscribeMenuItems((items) => {
+      if (items && items.length > 0) {
+        setDishes(items);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Select key signature dishes
-  const karimeen = menuItems.find((d) => d.id === 'karimeen-pollichathu') || menuItems[2];
-  const kalanji = menuItems.find((d) => d.id === 'kalanji-tawa-fry') || menuItems[0];
-  const hamur = menuItems.find((d) => d.id === 'hamur-tawa-fry') || menuItems[1];
-  const chemmeen = menuItems.find((d) => d.id === 'chemmeen-ghee-roast') || menuItems[3];
-  const koonthal = menuItems.find((d) => d.id === 'koonthal-ghee-roast') || menuItems[5];
+  const karimeen = dishes.find((d) => d.id === 'karimeen-pollichathu') || dishes[2] || defaultDishes[2];
+  const kalanji = dishes.find((d) => d.id === 'kalanji-tawa-fry') || dishes[0] || defaultDishes[0];
+  const hamur = dishes.find((d) => d.id === 'hamur-tawa-fry') || dishes[1] || defaultDishes[1];
+  const chemmeen = dishes.find((d) => d.id === 'chemmeen-ghee-roast') || dishes[3] || defaultDishes[3];
+  const koonthal = dishes.find((d) => d.id === 'koonthal-ghee-roast') || dishes[5] || defaultDishes[5];
 
   // Hero toggle between Karimeen and Kalanji
   const [activeHeroId, setActiveHeroId] = useState<string>('karimeen-pollichathu');
