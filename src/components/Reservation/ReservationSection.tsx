@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Users, Clock, Sparkles, MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
+import { saveReservationToFirestore } from '../../lib/firebase';
 
 interface ReservationSectionProps {
   isModal?: boolean;
@@ -24,12 +25,23 @@ export const ReservationSection: React.FC<ReservationSectionProps> = ({ isModal 
     setError('');
   };
 
-  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+  const handleWhatsAppSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.phone.trim()) {
       setError('Please provide your name and contact phone number.');
       return;
     }
+
+    // Save reservation inquiry to Firebase Firestore backend
+    saveReservationToFirestore({
+      name: formData.name,
+      phone: formData.phone,
+      guests: formData.guests,
+      date: formData.date || 'Today / Upcoming',
+      time: formData.time,
+      notes: formData.notes,
+      source: isModal ? 'modal' : 'in-page',
+    });
 
     const message = `Hello ILA KOCHI Kitchen,
 I would like to request a table reservation inquiry:

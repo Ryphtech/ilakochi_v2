@@ -1,7 +1,8 @@
 import React from 'react';
 import { DishVideoReel } from './DishVideoReel';
 import { restaurantData } from '../../data/restaurantData';
-import { ArrowDown, Compass, Utensils, Calendar } from 'lucide-react';
+import { getR2Url } from '../../lib/r2';
+import { ArrowDown, Compass, Utensils, Star, MapPin, Calendar, Clock } from 'lucide-react';
 
 interface HeroProps {
   onExploreMenu: () => void;
@@ -42,14 +43,14 @@ export const Hero: React.FC<HeroProps> = ({
             </span>
           </div>
 
-          {/* Main Brand Logo Statement (Enlarged) */}
+          {/* Main Brand Logo Statement */}
           <div className="space-y-3">
             <h1 className="sr-only">ILA KOCHI — Traditional Kerala Seafood &amp; Banana Leaf Dining</h1>
             <div className="flex items-center justify-center lg:justify-start">
               <img
                 src="/assets/ila-kochi-logo-white.png"
                 alt="ILA KOCHI Emblem"
-                className="h-36 sm:h-48 md:h-56 lg:h-64 w-auto object-contain drop-shadow-[0_12px_36px_rgba(197,164,109,0.45)] filter brightness-105 transition-transform duration-500 hover:scale-105 select-none"
+                className="h-28 sm:h-36 md:h-40 w-auto object-contain drop-shadow-[0_8px_28px_rgba(197,164,109,0.35)] filter brightness-105 transition-transform duration-500 hover:scale-105 select-none"
               />
             </div>
             <p className="text-sm sm:text-base lg:text-lg font-sans-ui uppercase tracking-[0.28em] text-[#C5A46D] font-medium pt-1">
@@ -68,8 +69,25 @@ export const Hero: React.FC<HeroProps> = ({
             {restaurantData.heroPitch}
           </p>
 
+          {/* Social Proof & Location Badges */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 text-xs text-[#A8BFA0]">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
+              <Star className="w-3.5 h-3.5 text-[#C5A46D] fill-[#C5A46D]" />
+              <span className="text-[#F8F6EE] font-medium">{restaurantData.stats.rating}</span>
+              <span>({restaurantData.stats.reviewsCount} Google Reviews)</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
+              <MapPin className="w-3.5 h-3.5 text-[#C5A46D]" />
+              <span>Pathadipalam Metro Pillar 350</span>
+            </div>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
+              <Clock className="w-3.5 h-3.5 text-[#C5A46D]" />
+              <span>Daily 11:30 AM &ndash; 11:00 PM</span>
+            </div>
+          </div>
+
           {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-3">
             {onOpenReservation && (
               <button
                 onClick={onOpenReservation}
@@ -101,7 +119,7 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Right Column: Authentic Dish Video Reel Showcase */}
         <div className="w-full lg:w-5/12 flex flex-col items-center justify-center pt-4 lg:pt-0">
           <DishVideoReel
-            videoSrc="/assets/ila-kochi-reel.mp4"
+            videoSrc={getR2Url('ila-kochi-reel.mp4')}
             onExploreMenu={onExploreMenu}
           />
         </div>

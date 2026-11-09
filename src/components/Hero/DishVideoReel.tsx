@@ -78,10 +78,9 @@ export const DishVideoReel: React.FC<DishVideoReelProps> = ({
         role="region"
         aria-label="Ila Kochi Authentic Dish Video Reel"
       >
-        {/* Video Element */}
+        {/* Video Element with Cloudflare R2 CDN & Local Fallback */}
         <video
           ref={videoRef}
-          src={videoSrc}
           autoPlay
           loop
           muted={isMuted}
@@ -91,7 +90,10 @@ export const DishVideoReel: React.FC<DishVideoReelProps> = ({
           className={`w-full h-full object-cover transition-opacity duration-700 ${
             isLoaded ? 'opacity-100' : 'opacity-30'
           }`}
-        />
+        >
+          <source src={videoSrc} type="video/mp4" />
+          <source src="/assets/ila-kochi-reel.mp4" type="video/mp4" />
+        </video>
 
         {/* Cinematic Vignette Overlay (Leaves video bright in center, smooth dark edges for text) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E] via-transparent to-black/40 pointer-events-none" />

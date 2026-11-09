@@ -44,3 +44,4 @@ export const SectionSkeleton: React.FC<SectionSkeletonProps> = ({
     </div>
   );
 };
+
