@@ -35,11 +35,11 @@ export const GallerySection: React.FC = () => {
   };
 
   return (
-    <section id="gallery" className="relative py-20 sm:py-24 lg:py-28 bg-[#0B291E] text-[#F8F6EE] overflow-hidden">
+    <section id="gallery" className="relative py-20 sm:py-24 lg:py-28 bg-black text-[#F8F6EE] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Visual Tapestry</span>
           </div>
@@ -59,8 +59,8 @@ export const GallerySection: React.FC = () => {
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-2 rounded-full text-xs uppercase tracking-wider font-sans-ui whitespace-nowrap transition-all cursor-pointer ${
                 activeCategory === cat
-                  ? 'bg-[#C5A46D] text-[#0B291E] font-semibold shadow-md'
-                  : 'bg-[#123D2A]/60 text-[#DCE8D5] hover:bg-[#176B45]/50 border border-[#176B45]/30'
+                  ? 'bg-[#C5A46D] text-black font-semibold shadow-md'
+                  : 'bg-[#0a0a0a] text-[#DCE8D5] hover:bg-white/10 border border-white/10'
               }`}
             >
               {cat === 'all' ? 'All Photographs' : cat}
@@ -74,7 +74,7 @@ export const GallerySection: React.FC = () => {
             <div
               key={img.id}
               onClick={() => openLightbox(idx)}
-              className="group relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#123D2A] border border-[#176B45]/40 hover:border-[#C5A46D] transition-all duration-500 shadow-xl cursor-pointer"
+              className="group relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#0a0a0a] border border-white/10 hover:border-[#C5A46D] transition-all duration-500 shadow-xl cursor-pointer"
             >
               <img
                 src={img.image}
@@ -83,9 +83,9 @@ export const GallerySection: React.FC = () => {
                 loading="lazy"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/95 via-[#0B291E]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5 sm:p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5 sm:p-6">
                 <div className="flex justify-end">
-                  <div className="p-2 rounded-full bg-[#0B291E]/80 text-[#C5A46D] border border-[#C5A46D]/40">
+                  <div className="p-2 rounded-full bg-black/80 text-[#C5A46D] border border-[#C5A46D]/40">
                     <Maximize2 className="w-4 h-4" />
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export const GallerySection: React.FC = () => {
         >
           <button
             onClick={closeLightbox}
-            className="absolute top-5 right-5 z-20 p-2.5 rounded-full bg-[#123D2A]/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-[#176B45] transition-colors cursor-pointer"
+            className="absolute top-5 right-5 z-20 p-2.5 rounded-full bg-black/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-white/20 transition-colors cursor-pointer"
             aria-label="Close Lightbox"
           >
             <X className="w-6 h-6" />
@@ -123,7 +123,7 @@ export const GallerySection: React.FC = () => {
 
           <button
             onClick={prevImage}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-[#123D2A]/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-[#176B45] transition-colors cursor-pointer"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-white/20 transition-colors cursor-pointer"
             aria-label="Previous photograph"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -131,14 +131,14 @@ export const GallerySection: React.FC = () => {
 
           <button
             onClick={nextImage}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-[#123D2A]/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-[#176B45] transition-colors cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/80 text-[#F8F6EE] hover:text-[#C5A46D] border border-white/20 transition-colors cursor-pointer"
             aria-label="Next photograph"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
 
           <div
-            className="relative max-w-4xl max-h-[85vh] rounded-2xl overflow-hidden border border-[#176B45]/60 shadow-2xl"
+            className="relative max-w-4xl max-h-[85vh] rounded-2xl overflow-hidden border border-white/20 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <img
@@ -146,7 +146,7 @@ export const GallerySection: React.FC = () => {
               alt={filteredImages[lightboxIndex].title}
               className="w-full h-full max-h-[75vh] object-contain bg-black"
             />
-            <div className="p-4 sm:p-5 bg-[#0B291E] border-t border-[#176B45]/40 flex items-center justify-between">
+            <div className="p-4 sm:p-5 bg-[#0a0a0a] border-t border-white/10 flex items-center justify-between">
               <div>
                 <h4 className="text-base sm:text-lg font-serif-display font-medium text-[#F8F6EE]">
                   {filteredImages[lightboxIndex].title}

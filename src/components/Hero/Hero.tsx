@@ -1,8 +1,5 @@
-import React from 'react';
-import { DishVideoReel } from './DishVideoReel';
-import { restaurantData } from '../../data/restaurantData';
-import { getR2Url } from '../../lib/r2';
-import { ArrowDown, Compass, Utensils, Star, MapPin, Calendar, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { HeroLiveStats } from './HeroLiveStats';
 
 interface HeroProps {
   onExploreMenu: () => void;
@@ -10,135 +7,129 @@ interface HeroProps {
   onOpenReservation?: () => void;
 }
 
+// Dynamically discover all poster images placed in src/assets/hero_poster/
+const posterModules = import.meta.glob<{ default: string }>(
+  '../../assets/hero_poster/*.{png,jpg,jpeg,webp,avif,PNG,JPG,JPEG,WEBP,AVIF}',
+  { eager: true }
+);
+
+const posters = Object.entries(posterModules)
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([, mod]) => mod.default);
+
 export const Hero: React.FC<HeroProps> = ({
   onExploreMenu,
   onDiscoverStory,
   onOpenReservation,
 }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-advance carousel every 5 seconds with smooth crossfade (one fades out, other fades in)
+  useEffect(() => {
+    if (posters.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % posters.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [posters.length, currentIndex]);
+
   return (
     <section
       id="home"
-      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0B291E]"
+      className="relative w-full bg-black select-none overflow-hidden"
       aria-label="Welcome to ILA KOCHI"
     >
-      {/* Atmospheric Background Layers (No 3D Canvas) */}
-      <div className="absolute inset-0 bg-radial-vignette pointer-events-none z-0 opacity-70" />
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-[#176B45]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-[32rem] h-[32rem] bg-[#123D2A]/60 rounded-full blur-3xl pointer-events-none" />
+      {/* Accessible Hidden SEO Headings */}
+      <h1 className="sr-only">
+        ഇതാണ് കൊച്ചിയുടെ രുചി! - Ila Kochi Authentic Kerala Seafood Restaurant
+      </h1>
+      <h2 className="sr-only">
+        കേരളത്തിന്റെ തനിമ, ഓരോ ഇലയിലും.
+      </h2>
 
-      {/* Subtle organic watermark in background */}
-      <div className="absolute right-6 md:right-24 top-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.03] text-[20vw] font-serif-display leading-none text-[#F8F6EE]">
-        ഇല
-      </div>
-
-      {/* Main Content Container: 2-Column Responsive Layout */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-36 md:pb-24 flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
-        {/* Left Column: Brand Story & CTAs */}
-        <div className="w-full lg:w-7/12 text-center lg:text-left space-y-6">
-          {/* Heritage Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#123D2A]/90 border border-[#176B45]/60 backdrop-blur-sm shadow-md">
-            <span className="w-2 h-2 rounded-full bg-[#C5A46D] animate-pulse" />
-            <span className="text-[11px] sm:text-xs font-sans-ui tracking-[0.25em] uppercase text-[#DCE8D5]">
-              Authentic Kerala Seafood &middot; ഇല കൊച്ചി
-            </span>
-          </div>
-
-          {/* Main Brand Logo Statement */}
-          <div className="space-y-3">
-            <h1 className="sr-only">ILA KOCHI — Traditional Kerala Seafood &amp; Banana Leaf Dining</h1>
-            <div className="flex items-center justify-center lg:justify-start">
+      {/* Hero Showcase Stage: Native 16:9 Aspect Ratio to match posters without cropping */}
+      <div className="relative w-full aspect-[16/9] overflow-hidden bg-black flex items-center justify-center">
+        {/* Pure Crossfading Poster Images */}
+        {posters.map((posterUrl, index) => {
+          const isActive = index === currentIndex;
+          return (
+            <div
+              key={`full-poster-${index}`}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+                isActive ? 'opacity-100 z-0' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+              aria-hidden={!isActive}
+            >
               <img
-                src="/assets/ila-kochi-logo-white.png"
-                alt="ILA KOCHI Emblem"
-                className="h-28 sm:h-36 md:h-40 w-auto object-contain drop-shadow-[0_8px_28px_rgba(197,164,109,0.35)] filter brightness-105 transition-transform duration-500 hover:scale-105 select-none"
+                src={posterUrl}
+                alt={`Ila Kochi Showcase Poster ${index + 1}`}
+                className="w-full h-full object-cover object-center"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
               />
             </div>
-            <p className="text-sm sm:text-base lg:text-lg font-sans-ui uppercase tracking-[0.28em] text-[#C5A46D] font-medium pt-1">
-              {restaurantData.tagline}
-            </p>
-          </div>
+          );
+        })}
 
-          {/* Heading Statement */}
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif-display tracking-tight text-[#F8F6EE] leading-tight text-balance">
-            Fresh Catch from the Harbour. <br />
-            <span className="italic font-editorial text-[#C5A46D]">Served on Living Banana Leaf.</span>
-          </h2>
+        {/* Inverted Downside-Up Brick Red Bookmark (Touching Bottom-Left of the Hero Image) */}
+        <div
+          className="absolute bottom-0 left-4 sm:left-6 md:left-10 z-30 select-none pointer-events-auto"
+          aria-label={`Slide ${currentIndex + 1} of ${posters.length || 5}`}
+        >
+          <div className="relative flex flex-col items-center justify-end w-10 sm:w-12 md:w-14 h-14 sm:h-16 md:h-20 drop-shadow-[0_-4px_16px_rgba(0,0,0,0.5)] hover:h-[4.25rem] md:hover:h-[5.5rem] transition-all duration-300">
+            {/* Inverted Bookmark SVG Shape (Swallowtail notch cut at top, perfectly flat at bottom) */}
+            <svg
+              viewBox="0 0 52 72"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="absolute inset-0 w-full h-full"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M0 0 L26 14 L52 0 L52 72 L0 72 Z"
+                fill="#B23B2A"
+              />
+              <path
+                d="M1 1 L26 15 L51 1 L51 72"
+                stroke="rgba(255, 255, 255, 0.25)"
+                strokeWidth="1"
+              />
+            </svg>
 
-          {/* Pitch & Philosophy */}
-          <p className="text-sm sm:text-base text-[#DCE8D5]/90 font-light leading-relaxed max-w-xl mx-auto lg:mx-0">
-            {restaurantData.heroPitch}
-          </p>
-
-          {/* Social Proof & Location Badges */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1 text-xs text-[#A8BFA0]">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
-              <Star className="w-3.5 h-3.5 text-[#C5A46D] fill-[#C5A46D]" />
-              <span className="text-[#F8F6EE] font-medium">{restaurantData.stats.rating}</span>
-              <span>({restaurantData.stats.reviewsCount} Google Reviews)</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
-              <MapPin className="w-3.5 h-3.5 text-[#C5A46D]" />
-              <span>Pathadipalam Metro Pillar 350</span>
-            </div>
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#123D2A]/80 border border-[#176B45]/40 shadow-sm">
-              <Clock className="w-3.5 h-3.5 text-[#C5A46D]" />
-              <span>Daily 11:30 AM &ndash; 11:00 PM</span>
-            </div>
-          </div>
-
-          {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-3">
-            {onOpenReservation && (
-              <button
-                onClick={onOpenReservation}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#0B291E] bg-[#C5A46D] hover:bg-[#d8b982] transition-all duration-300 shadow-xl shadow-[#0B291E]/70 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            {/* Slide Indicator Text inside bookmark (e.g. 1/5 to 5/5) */}
+            <div className="relative z-10 pb-2 sm:pb-3 md:pb-4 flex flex-col items-center justify-center">
+              <span
+                key={currentIndex}
+                className="font-mono font-bold text-white text-[10px] sm:text-xs md:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
               >
-                <Calendar className="w-4 h-4" />
-                <span>Reserve Your Table</span>
-              </button>
-            )}
-
-            <button
-              onClick={onExploreMenu}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-[#F8F6EE] border border-[#176B45] hover:border-[#C5A46D] bg-[#123D2A]/70 hover:bg-[#123D2A] transition-all duration-300 backdrop-blur-sm cursor-pointer"
-            >
-              <Utensils className="w-4 h-4 text-[#C5A46D]" />
-              <span>Explore Our Menu</span>
-            </button>
-
-            <button
-              onClick={onDiscoverStory}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs font-medium uppercase tracking-[0.16em] text-[#A8BFA0] hover:text-[#C5A46D] transition-colors cursor-pointer"
-            >
-              <Compass className="w-4 h-4 text-[#C5A46D]" />
-              <span>Our Story</span>
-            </button>
+                {currentIndex + 1}/{posters.length || 5}
+              </span>
+            </div>
           </div>
-        </div>
-
-        {/* Right Column: Authentic Dish Video Reel Showcase */}
-        <div className="w-full lg:w-5/12 flex flex-col items-center justify-center pt-4 lg:pt-0">
-          <DishVideoReel
-            videoSrc={getR2Url('ila-kochi-reel.mp4')}
-            onExploreMenu={onExploreMenu}
-          />
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 pointer-events-auto">
-        <button
-          onClick={onDiscoverStory}
-          className="group flex flex-col items-center gap-1 text-center focus:outline-none cursor-pointer"
-          aria-label="Scroll to learn more about Ila Kochi"
-        >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-[#A8BFA0] group-hover:text-[#C5A46D] transition-colors">
-            Scroll to Explore
-          </span>
-          <div className="w-7 h-7 rounded-full border border-[#176B45]/60 flex items-center justify-center group-hover:border-[#C5A46D] group-hover:bg-[#123D2A]/60 transition-all">
-            <ArrowDown className="w-3.5 h-3.5 text-[#C5A46D] animate-bounce" />
-          </div>
-        </button>
+      {/* Title & Live Stats after Hero Image */}
+      <div className="relative w-full pt-12 sm:pt-16 lg:pt-20 pb-14 sm:pb-20 bg-[#041a10] border-b border-[#17442a]/60 overflow-hidden">
+        {/* Atmospheric dark botanical green depth & glows */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#03130c] via-[#062417] to-[#03130c] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[52rem] h-[28rem] bg-[#0e3d26]/35 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 right-10 w-96 h-96 bg-[#164a30]/20 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Centered Main Title: കൊച്ചിയുടെ തനി നാടൻ രുചി */}
+        <div className="relative z-10 text-center px-4 max-w-7xl mx-auto mb-10 sm:mb-14 lg:mb-16">
+          <h2 className="font-malayalam text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-bold text-white tracking-tight leading-[1.2] sm:leading-[1.15]">
+            കൊച്ചിയുടെ തനി നാടൻ രുചി
+          </h2>
+          <div className="w-24 sm:w-32 md:w-36 h-1 sm:h-1.5 bg-[#C5A46D] mx-auto mt-4 sm:mt-6 rounded-full" />
+        </div>
+
+        {/* Live Running Metrics & Sept 2022 Experience Live Clock */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <HeroLiveStats />
+        </div>
       </div>
     </section>
   );

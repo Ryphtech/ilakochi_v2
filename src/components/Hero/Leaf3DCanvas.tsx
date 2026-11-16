@@ -543,7 +543,7 @@ export const Leaf3DCanvas: React.FC<Leaf3DCanvasProps> = ({ onLoaded }) => {
       aria-label="3D Interactive Tropical Leaf Visualization"
     >
       {/* Interactive 3D Hint Pill */}
-      <div className="absolute bottom-16 right-8 z-20 hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#123D2A]/80 border border-[#176B45]/50 backdrop-blur-md text-[10px] uppercase tracking-widest text-[#DCE8D5]/80 select-none pointer-events-none">
+      <div className="absolute bottom-16 right-8 z-20 hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/80 border border-white/15 backdrop-blur-md text-[10px] uppercase tracking-widest text-[#DCE8D5]/80 select-none pointer-events-none">
         <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46D] animate-ping" />
         <span>Drag to Inspect Leaf &bull; Scroll to Transition</span>
       </div>

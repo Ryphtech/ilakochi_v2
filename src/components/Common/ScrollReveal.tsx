@@ -18,8 +18,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   direction = 'up',
   delay = 0,
-  duration = 1.0,
-  distance = 70,
+  duration = 0.5,
+  distance = 30,
   className = '',
   scrub = false,
 }) => {
@@ -31,37 +31,44 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
     // Check reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion) {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      return;
+    }
+
+    // Limit distance & duration so animations are always fast, modern, and never sluggish
+    const effectiveDistance = Math.min(distance, 35);
+    const effectiveDuration = Math.min(duration, 0.6);
 
     let xVal = 0;
     let yVal = 0;
 
-    if (direction === 'left') xVal = -distance;
-    else if (direction === 'right') xVal = distance;
-    else if (direction === 'up') yVal = distance;
-    else if (direction === 'down') yVal = -distance;
+    if (direction === 'left') xVal = -effectiveDistance;
+    else if (direction === 'right') xVal = effectiveDistance;
+    else if (direction === 'up') yVal = effectiveDistance;
+    else if (direction === 'down') yVal = -effectiveDistance;
 
     const ctx = gsap.context(() => {
       if (scrub) {
-        // Continuous scrub linked to scroll position
         gsap.fromTo(
           el,
-          { x: xVal, y: yVal, opacity: 0.2 },
+          { x: xVal, y: yVal, opacity: 0.3 },
           {
             x: 0,
             y: 0,
             opacity: 1,
-            ease: 'power1.out',
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: el,
-              start: 'top 90%',
-              end: 'top 45%',
-              scrub: 1.0,
+              start: 'top 95%',
+              end: 'top 65%',
+              scrub: 0.5,
             },
           }
         );
       } else {
-        // Smooth trigger reveal
+        // Fast, smooth, ONE-TIME entrance animation (never fades out or reverses on scroll!)
         gsap.fromTo(
           el,
           { x: xVal, y: yVal, opacity: 0 },
@@ -69,13 +76,14 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
             x: 0,
             y: 0,
             opacity: 1,
-            duration: duration,
-            delay: delay,
-            ease: 'power3.out',
+            duration: effectiveDuration,
+            delay: Math.min(delay, 0.2),
+            ease: 'power2.out',
             scrollTrigger: {
               trigger: el,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
+              start: 'top 92%',
+              once: true, // Only trigger ONCE - stays fully visible permanently!
+              toggleActions: 'play none none none',
             },
           }
         );
@@ -91,4 +99,3 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     </div>
   );
 };
-

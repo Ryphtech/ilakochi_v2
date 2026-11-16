@@ -74,7 +74,7 @@ export const MediaUploadZone: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Upload Zone Card */}
-      <div className="p-8 rounded-3xl bg-[#0B291E] border-2 border-dashed border-[#176B45] hover:border-[#C5A46D] transition-colors text-center relative">
+      <div className="p-8 rounded-3xl bg-[#0a0a0a] border-2 border-dashed border-white/10 hover:border-[#C5A46D] transition-colors text-center relative">
         <input
           type="file"
           id="media-upload-input"
@@ -89,7 +89,7 @@ export const MediaUploadZone: React.FC = () => {
           htmlFor="media-upload-input"
           className="flex flex-col items-center justify-center space-y-4 cursor-pointer"
         >
-          <div className="w-16 h-16 rounded-2xl bg-[#123D2A] border border-[#176B45] flex items-center justify-center text-[#C5A46D] shadow-xl">
+          <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center text-[#C5A46D] shadow-xl">
             <Upload className="w-8 h-8" />
           </div>
 
@@ -103,7 +103,7 @@ export const MediaUploadZone: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 pt-2">
-            <span className="px-3 py-1 rounded-full text-[11px] font-mono bg-[#123D2A] border border-[#176B45]/50 text-[#C5A46D]">
+            <span className="px-3 py-1 rounded-full text-[11px] font-mono bg-black border border-white/10/50 text-[#C5A46D]">
               MP4 &bull; WEBM &bull; JPG &bull; PNG &bull; WEBP
             </span>
           </div>
@@ -111,8 +111,8 @@ export const MediaUploadZone: React.FC = () => {
 
         {isUploading && (
           <div className="mt-6 max-w-sm mx-auto space-y-2">
-            <div className="w-full h-1.5 bg-[#123D2A] rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#176B45] to-[#C5A46D] animate-pulse" />
+            <div className="w-full h-1.5 bg-black rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-white/20 to-[#C5A46D] animate-pulse" />
             </div>
             <span className="text-[11px] text-[#C5A46D] block font-mono">{uploadProgress}</span>
           </div>
@@ -127,7 +127,7 @@ export const MediaUploadZone: React.FC = () => {
       </div>
 
       {/* Cloudflare Core Assets Quick Strip */}
-      <div className="p-5 rounded-2xl bg-[#123D2A]/60 border border-[#176B45]/40 space-y-3">
+      <div className="p-5 rounded-2xl bg-black/60 border border-white/10/40 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-xs uppercase tracking-wider font-semibold text-[#C5A46D] flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export const MediaUploadZone: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           {/* Reel Video */}
-          <div className="p-3 rounded-xl bg-[#0B291E] border border-[#176B45]/40 flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-[#0a0a0a] border border-white/10/40 flex items-center justify-between">
             <div className="flex items-center gap-2.5 truncate">
               <Video className="w-4 h-4 text-[#C5A46D] flex-shrink-0" />
               <div className="truncate">
@@ -148,7 +148,7 @@ export const MediaUploadZone: React.FC = () => {
             </div>
             <button
               onClick={() => copyToClipboard(getR2Url('ila-kochi-reel.mp4'), 'core-reel')}
-              className="p-1.5 rounded-lg bg-[#123D2A] text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
+              className="p-1.5 rounded-lg bg-black text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
               title="Copy CDN Link"
             >
               {copiedId === 'core-reel' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -156,7 +156,7 @@ export const MediaUploadZone: React.FC = () => {
           </div>
 
           {/* Logo */}
-          <div className="p-3 rounded-xl bg-[#0B291E] border border-[#176B45]/40 flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-[#0a0a0a] border border-white/10/40 flex items-center justify-between">
             <div className="flex items-center gap-2.5 truncate">
               <Image className="w-4 h-4 text-[#C5A46D] flex-shrink-0" />
               <div className="truncate">
@@ -166,7 +166,7 @@ export const MediaUploadZone: React.FC = () => {
             </div>
             <button
               onClick={() => copyToClipboard(getR2Url('ila-kochi-logo-white.png'), 'core-logo')}
-              className="p-1.5 rounded-lg bg-[#123D2A] text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
+              className="p-1.5 rounded-lg bg-black text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
               title="Copy CDN Link"
             >
               {copiedId === 'core-logo' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -174,7 +174,7 @@ export const MediaUploadZone: React.FC = () => {
           </div>
 
           {/* Listing */}
-          <div className="p-3 rounded-xl bg-[#0B291E] border border-[#176B45]/40 flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-[#0a0a0a] border border-white/10/40 flex items-center justify-between">
             <div className="flex items-center gap-2.5 truncate">
               <Image className="w-4 h-4 text-[#C5A46D] flex-shrink-0" />
               <div className="truncate">
@@ -184,7 +184,7 @@ export const MediaUploadZone: React.FC = () => {
             </div>
             <button
               onClick={() => copyToClipboard(getR2Url('ila-google-listing.jpg'), 'core-listing')}
-              className="p-1.5 rounded-lg bg-[#123D2A] text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
+              className="p-1.5 rounded-lg bg-black text-[#C5A46D] hover:text-[#F8F6EE] transition-colors cursor-pointer flex-shrink-0"
               title="Copy CDN Link"
             >
               {copiedId === 'core-listing' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -203,7 +203,7 @@ export const MediaUploadZone: React.FC = () => {
         </div>
 
         {uploads.length === 0 ? (
-          <div className="text-center py-12 rounded-2xl bg-[#0B291E]/60 border border-[#176B45]/30">
+          <div className="text-center py-12 rounded-2xl bg-[#0a0a0a]/60 border border-white/10/30">
             <p className="text-sm text-[#A8BFA0]">No custom uploads yet. Upload photos or videos above.</p>
           </div>
         ) : (
@@ -215,7 +215,7 @@ export const MediaUploadZone: React.FC = () => {
               return (
                 <div
                   key={item.id || item.key}
-                  className="group rounded-2xl overflow-hidden bg-[#0B291E] border border-[#176B45]/50 hover:border-[#C5A46D] transition-all shadow-xl flex flex-col justify-between"
+                  className="group rounded-2xl overflow-hidden bg-[#0a0a0a] border border-white/10/50 hover:border-[#C5A46D] transition-all shadow-xl flex flex-col justify-between"
                 >
                   {/* Media Preview */}
                   <div className="relative aspect-video bg-black/60 overflow-hidden flex items-center justify-center">
@@ -264,10 +264,10 @@ export const MediaUploadZone: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="pt-2 border-t border-[#176B45]/30 flex items-center justify-between gap-2">
+                    <div className="pt-2 border-t border-white/10/30 flex items-center justify-between gap-2">
                       <button
                         onClick={() => copyToClipboard(item.url, item.id || item.key)}
-                        className="flex-1 py-1.5 px-3 rounded-lg bg-[#123D2A] hover:bg-[#176B45] text-xs text-[#DCE8D5] hover:text-[#F8F6EE] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                        className="flex-1 py-1.5 px-3 rounded-lg bg-black hover:bg-white/10 text-xs text-[#DCE8D5] hover:text-[#F8F6EE] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         {copiedId === (item.id || item.key) ? (
                           <>

@@ -44,15 +44,15 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
   }, [items, selectedCategory, dietaryFilter, searchQuery]);
 
   return (
-    <section id="menu" className="relative py-20 sm:py-24 lg:py-28 bg-[#0B291E] text-[#F8F6EE] overflow-hidden">
+    <section id="menu" className="relative py-20 sm:py-24 lg:py-28 bg-black text-[#F8F6EE] overflow-hidden">
       {/* Decorative ambient background */}
-      <div className="absolute top-1/3 right-0 w-96 h-96 bg-[#176B45]/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-white/[0.02] rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-[#C5A46D]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-12 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Curated Culinary Offerings</span>
           </div>
@@ -72,7 +72,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                 placeholder="Search fish, prawns, beef roast, meals..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-11 pr-14 py-3 rounded-full bg-[#123D2A]/80 border border-[#176B45]/60 text-sm text-[#F8F6EE] placeholder-[#A8BFA0]/60 focus:outline-none focus:border-[#C5A46D] focus:ring-1 focus:ring-[#C5A46D] transition-all shadow-inner"
+                className="w-full pl-11 pr-14 py-3 rounded-full bg-[#0a0a0a] border border-white/15 text-sm text-[#F8F6EE] placeholder-[#A8BFA0]/60 focus:outline-none focus:border-[#C5A46D] focus:ring-1 focus:ring-[#C5A46D] transition-all shadow-inner"
               />
               {searchQuery && (
                 <button
@@ -94,8 +94,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
               onClick={() => setSelectedCategory(cat.id)}
               className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-sans-ui font-medium whitespace-nowrap transition-all duration-300 cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-[#C5A46D] text-[#0B291E] shadow-lg shadow-[#0B291E]/50 font-semibold'
-                  : 'bg-[#123D2A]/70 text-[#DCE8D5] hover:bg-[#176B45]/60 border border-[#176B45]/30'
+                  ? 'bg-[#C5A46D] text-black shadow-lg shadow-black/50 font-semibold'
+                  : 'bg-[#0a0a0a] text-[#DCE8D5] hover:bg-white/10 border border-white/10'
               }`}
             >
               {cat.label}
@@ -104,7 +104,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
         </div>
 
         {/* Dietary Filter Pills */}
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-4 border-b border-[#176B45]/30">
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-4 border-b border-white/10">
           <div className="flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-[#C5A46D]" />
             <span className="text-xs uppercase tracking-wider text-[#A8BFA0] font-sans-ui">Filter by:</span>
@@ -114,7 +114,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                 onClick={() => setDietaryFilter(diet)}
                 className={`text-[11px] uppercase tracking-wider px-3 py-1 rounded-md transition-colors cursor-pointer ${
                   dietaryFilter === diet
-                    ? 'bg-[#176B45] text-[#F8F6EE] font-medium'
+                    ? 'bg-[#C5A46D] text-black font-medium'
                     : 'text-[#A8BFA0] hover:text-[#F8F6EE]'
                 }`}
               >
@@ -149,7 +149,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
               <div
                 key={item.id}
                 onClick={() => onSelectDish && onSelectDish(item)}
-                className="group rounded-3xl bg-[#123D2A]/60 border border-[#176B45]/40 hover:border-[#C5A46D]/60 p-5 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between cursor-pointer"
+                className="group rounded-3xl bg-[#0a0a0a] border border-white/10 hover:border-[#C5A46D]/60 p-5 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between cursor-pointer"
               >
                 <div>
                   {/* Image with Aspect Ratio */}
@@ -161,15 +161,15 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                       loading="lazy"
                       decoding="async"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/80 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                     {item.badge && (
-                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#0B291E]/85 text-[#C5A46D] border border-[#C5A46D]/30 backdrop-blur-sm">
+                      <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-black/90 text-[#C5A46D] border border-[#C5A46D]/30 backdrop-blur-sm">
                         {item.badge}
                       </span>
                     )}
 
-                    <span className="absolute bottom-2.5 right-2.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#176B45]/90 text-[#F8F6EE] border border-[#A8BFA0]/30 shadow-md">
+                    <span className="absolute bottom-2.5 right-2.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-[#C5A46D] text-black border border-[#C5A46D] shadow-md">
                       {item.price}
                     </span>
                   </div>
@@ -192,7 +192,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                 </div>
 
                 {/* Bottom Row */}
-                <div className="mt-4 pt-3.5 border-t border-[#176B45]/30 flex items-center justify-between text-[11px] text-[#A8BFA0]">
+                <div className="mt-4 pt-3.5 border-t border-white/10 flex items-center justify-between text-[11px] text-[#A8BFA0]">
                   <div className="flex items-center gap-1">
                     {item.spiceLevel && (
                       <>
@@ -204,7 +204,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
                     )}
                   </div>
 
-                  <span className="uppercase text-[9px] tracking-wider px-2.5 py-0.5 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-[#DCE8D5]">
+                  <span className="uppercase text-[9px] tracking-wider px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[#DCE8D5]">
                     {item.dietary}
                   </span>
                 </div>
@@ -214,7 +214,7 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
         )}
 
         {/* Menu Actions Banner */}
-        <div className="mt-14 sm:mt-16 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#123D2A] via-[#176B45]/40 to-[#123D2A] border border-[#176B45]/60 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+        <div className="mt-14 sm:mt-16 p-6 sm:p-8 rounded-3xl bg-[#0a0a0a] border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
           <div className="space-y-1 text-center sm:text-left">
             <h4 className="text-xl sm:text-2xl font-serif-display text-[#F8F6EE]">
               Craving fresh seafood on leaf today?
@@ -227,13 +227,13 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
           <div className="flex items-center gap-3 flex-wrap justify-center">
             <button
               onClick={onOpenReservation}
-              className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#C5A46D] text-[#0B291E] hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer"
+              className="px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#C5A46D] text-black hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer"
             >
               Reserve A Table
             </button>
             <a
               href="#location"
-              className="px-5 py-3 rounded-full text-xs font-medium uppercase tracking-wider text-[#F8F6EE] border border-[#176B45] hover:border-[#C5A46D] bg-[#0B291E]/60 transition-colors"
+              className="px-5 py-3 rounded-full text-xs font-medium uppercase tracking-wider text-[#F8F6EE] border border-white/15 hover:border-[#C5A46D] bg-white/5 transition-colors"
             >
               Get Directions
             </a>

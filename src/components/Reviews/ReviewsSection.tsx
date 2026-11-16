@@ -28,12 +28,12 @@ export const ReviewsSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#123D2A] border-t border-[#176B45]/30 relative overflow-hidden">
+    <section className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-black border-t border-white/10 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <ScrollReveal direction="up" distance={40}>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <Star className="w-3.5 h-3.5 fill-[#C5A46D]" />
               <span>Verified Patron Experiences</span>
             </div>
@@ -63,7 +63,7 @@ export const ReviewsSection: React.FC = () => {
               delay={idx * 0.1}
               className="h-full"
             >
-              <div className="h-full p-6 sm:p-7 rounded-3xl bg-[#0B291E]/90 border border-[#176B45]/50 hover:border-[#C5A46D]/60 transition-all duration-300 shadow-xl flex flex-col justify-between">
+              <div className="h-full p-6 sm:p-7 rounded-3xl bg-[#0a0a0a] border border-white/10 hover:border-[#C5A46D]/60 transition-all duration-300 shadow-xl flex flex-col justify-between">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex text-[#C5A46D]">
@@ -71,7 +71,7 @@ export const ReviewsSection: React.FC = () => {
                         <Star key={i} className="w-3.5 h-3.5 fill-current" />
                       ))}
                     </div>
-                    <Quote className="w-5 h-5 text-[#176B45]/60" />
+                    <Quote className="w-5 h-5 text-white/20" />
                   </div>
 
                   <p className="text-xs sm:text-sm text-[#DCE8D5]/90 font-light leading-relaxed">
@@ -79,7 +79,7 @@ export const ReviewsSection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#176B45]/30 flex items-center justify-between gap-2">
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-2">
                   <div>
                     <h4 className="text-sm font-serif-display font-medium text-[#F8F6EE]">
                       {rev.author}
@@ -89,7 +89,7 @@ export const ReviewsSection: React.FC = () => {
                     </span>
                   </div>
 
-                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-[#C5A46D] flex-shrink-0">
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[#C5A46D] flex-shrink-0">
                     {rev.dish}
                   </span>
                 </div>

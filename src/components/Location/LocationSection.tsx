@@ -4,11 +4,11 @@ import { restaurantData } from '../../data/restaurantData';
 
 export const LocationSection: React.FC = () => {
   return (
-    <section id="location" className="relative py-20 sm:py-24 lg:py-28 bg-[#123D2A] text-[#F8F6EE] overflow-hidden">
+    <section id="location" className="relative py-20 sm:py-24 lg:py-28 bg-black text-[#F8F6EE] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <MapPin className="w-3.5 h-3.5" />
             <span>Pathadipalam, Kochi</span>
           </div>
@@ -25,9 +25,9 @@ export const LocationSection: React.FC = () => {
           {/* Left Column: Contact Cards */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
             {/* Address Card */}
-            <div className="p-6 rounded-3xl bg-[#0B291E]/90 border border-[#176B45]/50 shadow-xl space-y-3">
+            <div className="p-6 rounded-3xl bg-[#0a0a0a] border border-white/10 shadow-xl space-y-3">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-[#123D2A] text-[#C5A46D] border border-[#176B45]">
+                <div className="p-2.5 rounded-2xl bg-white/5 text-[#C5A46D] border border-white/10">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
@@ -60,9 +60,9 @@ export const LocationSection: React.FC = () => {
             </div>
 
             {/* Timings Card */}
-            <div className="p-6 rounded-3xl bg-[#0B291E]/90 border border-[#176B45]/50 shadow-xl space-y-3">
+            <div className="p-6 rounded-3xl bg-[#0a0a0a] border border-white/10 shadow-xl space-y-3">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-[#123D2A] text-[#C5A46D] border border-[#176B45]">
+                <div className="p-2.5 rounded-2xl bg-white/5 text-[#C5A46D] border border-white/10">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
@@ -74,11 +74,11 @@ export const LocationSection: React.FC = () => {
               </div>
 
               <div className="space-y-2 text-xs text-[#DCE8D5] pt-1">
-                <div className="flex justify-between border-b border-[#176B45]/30 pb-1.5">
+                <div className="flex justify-between border-b border-white/10 pb-1.5">
                   <span className="text-[#A8BFA0]">All Day Service:</span>
                   <span className="font-mono text-[#F8F6EE] font-medium">{restaurantData.timings.allDay}</span>
                 </div>
-                <div className="flex justify-between border-b border-[#176B45]/30 pb-1.5">
+                <div className="flex justify-between border-b border-white/10 pb-1.5">
                   <span className="text-[#A8BFA0]">Banana Leaf Meals:</span>
                   <span className="font-mono text-[#C5A46D]">12:00 PM – 4:00 PM</span>
                 </div>
@@ -93,7 +93,7 @@ export const LocationSection: React.FC = () => {
             <div className="grid grid-cols-2 gap-3 pt-1">
               <a
                 href={`tel:${restaurantData.contact.phoneRaw}`}
-                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-[#176B45] hover:bg-[#1f8758] text-[#F8F6EE] text-xs font-semibold uppercase tracking-wider transition-colors shadow-lg"
+                className="flex items-center justify-center gap-2 py-3.5 px-4 rounded-full bg-[#C5A46D] hover:bg-[#d8b982] text-black text-xs font-semibold uppercase tracking-wider transition-colors shadow-lg cursor-pointer"
               >
                 <Phone className="w-4 h-4" />
                 <span>Call Directly</span>
@@ -112,7 +112,7 @@ export const LocationSection: React.FC = () => {
           </div>
 
           {/* Right Column: Google Maps & Verified Listing Banner */}
-          <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl overflow-hidden bg-[#0B291E] border border-[#176B45]/50 shadow-2xl relative min-h-[440px] lg:h-full">
+          <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl overflow-hidden bg-[#0a0a0a] border border-white/15 shadow-2xl relative min-h-[440px] lg:h-full">
             {/* Embed Map Card */}
             <div className="relative w-full h-full min-h-[360px] flex-1">
               <iframe
@@ -124,7 +124,7 @@ export const LocationSection: React.FC = () => {
               />
 
               {/* Floating Verified Badge */}
-              <div className="absolute top-4 left-4 p-3.5 rounded-2xl bg-[#0B291E]/95 border border-[#176B45] shadow-xl backdrop-blur-md max-w-xs space-y-1">
+              <div className="absolute top-4 left-4 p-3.5 rounded-2xl bg-black/95 border border-white/15 shadow-xl backdrop-blur-md max-w-xs space-y-1">
                 <div className="flex items-center gap-1.5 text-xs text-[#C5A46D] font-medium">
                   <Star className="w-3.5 h-3.5 fill-[#C5A46D]" />
                   <span>4.0 Star Rated (700+ Reviews)</span>
@@ -136,7 +136,7 @@ export const LocationSection: React.FC = () => {
             </div>
 
             {/* Bottom Bar */}
-            <div className="p-4 sm:p-5 bg-[#0B291E] border-t border-[#176B45]/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A8BFA0]">
+            <div className="p-4 sm:p-5 bg-[#0a0a0a] border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#A8BFA0]">
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#C5A46D]" />
                 <a href={`mailto:${restaurantData.contact.email}`} className="hover:text-[#F8F6EE]">

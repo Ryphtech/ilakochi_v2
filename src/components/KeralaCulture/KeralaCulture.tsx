@@ -35,7 +35,7 @@ export const KeralaCulture: React.FC = () => {
   ];
 
   return (
-    <section id="culture" className="relative py-20 sm:py-24 lg:py-28 bg-[#123D2A] text-[#F8F6EE] overflow-hidden">
+    <section id="culture" className="relative py-20 sm:py-24 lg:py-28 bg-black text-[#F8F6EE] overflow-hidden">
       {/* Background imagery subtle overlay */}
       <div
         className="absolute inset-0 opacity-10 bg-center bg-cover pointer-events-none mix-blend-overlay"
@@ -48,7 +48,7 @@ export const KeralaCulture: React.FC = () => {
         {/* Header */}
         <ScrollReveal direction="up" distance={40}>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <Leaf className="w-3.5 h-3.5 text-[#A8BFA0]" />
               <span>Living Heritage</span>
             </div>
@@ -73,9 +73,9 @@ export const KeralaCulture: React.FC = () => {
                 delay={index * 0.1}
                 className="h-full"
               >
-                <div className="group p-6 sm:p-7 rounded-3xl bg-[#0B291E]/80 border border-[#176B45]/50 hover:border-[#C5A46D]/60 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between h-full">
+                <div className="group p-6 sm:p-7 rounded-3xl bg-[#0a0a0a] border border-white/10 hover:border-[#C5A46D]/60 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between h-full">
                   <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#123D2A] border border-[#176B45] flex items-center justify-center text-[#C5A46D] group-hover:scale-105 transition-transform shadow-inner">
+                    <div className="w-12 h-12 rounded-2xl bg-black border border-white/15 flex items-center justify-center text-[#C5A46D] group-hover:scale-105 transition-transform shadow-inner">
                       <Icon className="w-5 h-5" />
                     </div>
 
@@ -93,7 +93,7 @@ export const KeralaCulture: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-[#176B45]/30 flex items-center justify-between text-[11px] tracking-wider text-[#A8BFA0] uppercase">
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] tracking-wider text-[#A8BFA0] uppercase">
                     <span>Tradition 0{index + 1}</span>
                     <span className="text-[#C5A46D]">✦</span>
                   </div>

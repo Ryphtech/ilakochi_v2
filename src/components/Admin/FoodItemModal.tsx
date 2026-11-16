@@ -123,11 +123,11 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-[#0B291E] border border-[#176B45]/70 rounded-3xl p-6 sm:p-8 shadow-2xl my-auto text-[#F8F6EE] max-h-[92vh] overflow-y-auto"
+        className="relative w-full max-w-2xl bg-[#0a0a0a] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl my-auto text-[#F8F6EE] max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#176B45]/40 pb-4 mb-6">
+        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#C5A46D] font-mono">
               <Sparkles className="w-3.5 h-3.5" />
@@ -139,7 +139,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full bg-[#123D2A] text-[#A8BFA0] hover:text-[#F8F6EE] border border-[#176B45]/50 transition-colors cursor-pointer"
+            className="p-2 rounded-full bg-white/5 text-[#A8BFA0] hover:text-[#F8F6EE] border border-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -167,7 +167,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 placeholder="e.g. Karimeen Pollichathu"
                 value={formData.name || ''}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
               />
             </div>
 
@@ -182,7 +182,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 placeholder="e.g. കരിമീൻ പൊള്ളിച്ചത്"
                 value={formData.malayalamName || ''}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
               />
             </div>
 
@@ -198,7 +198,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 placeholder="e.g. ₹360"
                 value={formData.price || ''}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] font-mono focus:outline-none focus:border-[#C5A46D] transition-colors"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] font-mono focus:outline-none focus:border-[#C5A46D] transition-colors"
               />
             </div>
 
@@ -211,7 +211,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 name="category"
                 value={formData.category || 'seafood'}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
               >
                 {menuCategories.filter(c => c.id !== 'all').map((c) => (
                   <option key={c.id} value={c.id}>
@@ -230,7 +230,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 name="dietary"
                 value={formData.dietary || 'seafood'}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
               >
                 <option value="seafood">Seafood</option>
                 <option value="non-veg">Non-Veg (Chicken / Beef)</option>
@@ -252,7 +252,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                     spiceLevel: Number(e.target.value) as 1 | 2 | 3,
                   }))
                 }
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors cursor-pointer"
               >
                 <option value={1}>Mild (★☆☆)</option>
                 <option value={2}>Medium Spiced (★★☆)</option>
@@ -271,7 +271,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 placeholder="e.g. Chef Signature, Catch of the Day, Popular Sadhya"
                 value={formData.badge || ''}
                 onChange={handleChange}
-                className="w-full h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+                className="w-full h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
               />
             </div>
 
@@ -287,12 +287,12 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                 placeholder="e.g. Whole pearl spot marinated in roasted shallots and wrapped in living plantain leaf..."
                 value={formData.description || ''}
                 onChange={handleChange}
-                className="w-full p-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors resize-none"
+                className="w-full p-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors resize-none"
               />
             </div>
 
             {/* Image URL & Upload to Cloudflare R2 */}
-            <div className="space-y-2 sm:col-span-2 pt-1 border-t border-[#176B45]/30">
+            <div className="space-y-2 sm:col-span-2 pt-1 border-t border-white/10">
               <label className="text-xs uppercase tracking-wider text-[#A8BFA0] font-medium block">
                 Dish Image (Cloudflare R2 CDN or Direct URL)
               </label>
@@ -304,10 +304,10 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
                   placeholder="https://pub-a15e46301b3045309b2a4a019cb939e9.r2.dev/dish.jpg"
                   value={formData.image || ''}
                   onChange={handleChange}
-                  className="w-full sm:flex-1 h-11 px-3.5 rounded-xl bg-[#123D2A] border border-[#176B45]/60 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+                  className="w-full sm:flex-1 h-11 px-3.5 rounded-xl bg-black border border-white/15 text-sm text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
                 />
 
-                <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#176B45] hover:bg-[#1f8758] text-[#F8F6EE] text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex-shrink-0">
+                <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#C5A46D] hover:bg-[#d8b982] text-black text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer flex-shrink-0">
                   <Upload className="w-4 h-4" />
                   <span>{isUploading ? 'Uploading to R2...' : 'Upload Image to R2'}</span>
                   <input
@@ -321,11 +321,11 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
               </div>
 
               {formData.image && (
-                <div className="mt-2 flex items-center gap-3 p-2 rounded-xl bg-[#123D2A]/60 border border-[#176B45]/40">
+                <div className="mt-2 flex items-center gap-3 p-2 rounded-xl bg-black border border-white/10">
                   <img
                     src={formData.image}
                     alt="Preview"
-                    className="w-14 h-14 rounded-lg object-cover border border-[#176B45]"
+                    className="w-14 h-14 rounded-lg object-cover border border-white/15"
                   />
                   <div className="text-xs text-[#DCE8D5] truncate flex-1">
                     <span className="text-[#C5A46D] block font-mono text-[10px]">Image Connected</span>
@@ -352,12 +352,12 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
           </div>
 
           {/* Action buttons */}
-          <div className="pt-4 border-t border-[#176B45]/40 flex items-center justify-end gap-3">
+          <div className="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#A8BFA0] hover:text-[#F8F6EE] border border-[#176B45] transition-colors cursor-pointer"
+              className="px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#A8BFA0] hover:text-[#F8F6EE] border border-white/10 transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -365,7 +365,7 @@ export const FoodItemModal: React.FC<FoodItemModalProps> = ({
             <button
               type="submit"
               disabled={isSaving || isUploading}
-              className="px-7 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0B291E] bg-[#C5A46D] hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer flex items-center gap-2"
+              className="px-7 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-black bg-[#C5A46D] hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer flex items-center gap-2"
             >
               <Check className="w-4 h-4" />
               <span>{isSaving ? 'Saving to Firestore...' : initialData ? 'Update Dish' : 'Add Dish'}</span>

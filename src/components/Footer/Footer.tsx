@@ -13,9 +13,9 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
   };
 
   return (
-    <footer className="bg-[#0B291E] text-[#F8F6EE] border-t border-[#176B45]/40 relative overflow-hidden">
+    <footer className="bg-black text-[#F8F6EE] border-t border-white/10 relative overflow-hidden">
       {/* SECTION: FINAL BRAND STATEMENT BANNER */}
-      <div className="relative py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 text-center bg-gradient-to-b from-[#123D2A] to-[#0B291E] border-b border-[#176B45]/30">
+      <div className="relative py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 text-center bg-[#0a0a0a] border-b border-white/10">
         <div className="max-w-3xl mx-auto space-y-6 relative z-10">
           {/* Logo prominently displayed without any circular border */}
           <div className="flex justify-center mb-6">
@@ -38,13 +38,13 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
           <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={onOpenReservation}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-[0.2em] text-[#0B291E] bg-[#C5A46D] hover:bg-[#d8b982] transition-all shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-[0.2em] text-black bg-[#C5A46D] hover:bg-[#d8b982] transition-all shadow-xl hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
             >
               Reserve Your Table
             </button>
             <a
               href="#menu"
-              className="w-full sm:w-auto px-7 py-3.5 rounded-full text-xs font-medium uppercase tracking-[0.2em] text-[#F8F6EE] border border-[#176B45] hover:border-[#C5A46D] bg-[#123D2A]/60 transition-all hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-7 py-3.5 rounded-full text-xs font-medium uppercase tracking-[0.2em] text-[#F8F6EE] border border-white/15 hover:border-[#C5A46D] bg-white/5 transition-all hover:-translate-y-0.5"
             >
               View Full Menu
             </a>
@@ -62,7 +62,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
               Authentic Kerala seafood dining celebrating the centuries-old southern custom of eating off fresh plantain leaves. Savor fresh harbor catch, tawa fries, and traditional clay-pot curries.
             </p>
             <div className="flex items-center space-x-3 text-xs text-[#A8BFA0]">
-              <span className="px-3 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-[#C5A46D] font-mono">
+              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#C5A46D] font-mono">
                 Google 4.0 ★ (700+ Reviews)
               </span>
             </div>
@@ -80,8 +80,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                 </a>
               </li>
               <li>
-                <a href="#story" className="text-[#DCE8D5] hover:text-[#C5A46D] transition-colors">
-                  Our Story
+                <a href="#about" className="text-[#DCE8D5] hover:text-[#C5A46D] transition-colors">
+                  About Us (ഞങ്ങളെക്കുറിച്ച്)
                 </a>
               </li>
               <li>
@@ -95,16 +95,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                 </a>
               </li>
               <li>
-                <a href="#culture" className="text-[#DCE8D5] hover:text-[#C5A46D] transition-colors">
-                  Kerala Culture
-                </a>
-              </li>
-              <li>
-                <a href="#experience" className="text-[#DCE8D5] hover:text-[#C5A46D] transition-colors">
-                  Dining Experience
-                </a>
-              </li>
-              <li>
                 <a href="#gallery" className="text-[#DCE8D5] hover:text-[#C5A46D] transition-colors">
                   Photo Gallery
                 </a>
@@ -114,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                   Find Us
                 </a>
               </li>
-              <li className="pt-2 border-t border-[#176B45]/20">
+              <li className="pt-2 border-t border-white/10">
                 <a
                   href="#admin"
                   className="text-[#A8BFA0]/70 hover:text-[#C5A46D] transition-colors inline-flex items-center gap-1.5 text-[11px]"
@@ -139,7 +129,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                   <span>11:30 AM – 11:00 PM</span>
                 </div>
               </div>
-              <div className="p-3.5 rounded-2xl bg-[#123D2A]/60 border border-[#176B45]/40 space-y-1.5">
+              <div className="p-3.5 rounded-2xl bg-[#0a0a0a] border border-white/10 space-y-1.5">
                 <div>
                   <span className="text-[11px] font-semibold text-[#C5A46D] block uppercase">
                     Banana Leaf Meals
@@ -148,7 +138,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                     12:00 PM – 4:00 PM (Lunch Sadhya)
                   </span>
                 </div>
-                <div className="pt-1 border-t border-[#176B45]/30">
+                <div className="pt-1 border-t border-white/10">
                   <span className="text-[11px] font-semibold text-[#C5A46D] block uppercase">
                     Live Seafood Tawa
                   </span>
@@ -191,7 +181,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                   href={restaurantData.social.googleMaps}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#C5A46D] transition-colors border border-[#176B45]/40"
+                  className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-[#C5A46D] transition-colors border border-white/10"
                   aria-label="Google Maps Location"
                   title="Google Maps"
                 >
@@ -201,7 +191,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
                   href={restaurantData.contact.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#25D366] transition-colors border border-[#176B45]/40"
+                  className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 text-[#25D366] transition-colors border border-white/10"
                   aria-label="WhatsApp Us"
                   title="Chat on WhatsApp"
                 >
@@ -213,7 +203,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
         </div>
 
         {/* Bottom Sub-footer */}
-        <div className="mt-16 pt-8 border-t border-[#176B45]/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#A8BFA0]">
+        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#A8BFA0]">
           <div>
             &copy; {new Date().getFullYear()} ILA KOCHI RESTAURANT (ഇല കൊച്ചി). Pathadipalam Metro Pillar 350. All rights reserved.
           </div>
@@ -222,7 +212,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
             <span className="hidden sm:inline">Rooted in Nature &middot; Inspired by the Coast</span>
             <a
               href="#admin"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#C5A46D] hover:text-[#F8F6EE] text-[10px] font-sans-ui border border-[#176B45]/40 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-[#C5A46D] hover:text-[#F8F6EE] text-[10px] font-sans-ui border border-white/10 transition-colors"
               title="Staff Portal (Menu, Media & Reservations)"
             >
               <Lock className="w-2.5 h-2.5" />
@@ -230,7 +220,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
             </a>
             <button
               onClick={scrollToTop}
-              className="p-2 rounded-full bg-[#123D2A] hover:bg-[#176B45] text-[#C5A46D] transition-colors border border-[#176B45]/40 cursor-pointer"
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-[#C5A46D] transition-colors border border-white/10 cursor-pointer"
               aria-label="Back to top"
             >
               <ArrowUp className="w-4 h-4" />

@@ -56,7 +56,7 @@ export const WebsitePreloader: React.FC<WebsitePreloaderProps> = ({ onComplete }
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#071B14] text-[#F8F6EE] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black text-[#F8F6EE] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
         isExiting ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
       aria-hidden={isExiting}
@@ -67,7 +67,7 @@ export const WebsitePreloader: React.FC<WebsitePreloaderProps> = ({ onComplete }
       aria-label="Website loading screen"
     >
       {/* Ambient background glows */}
-      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-[#176B45]/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
+      <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-white/[0.02] rounded-full blur-3xl pointer-events-none animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[#C5A46D]/15 rounded-full blur-3xl pointer-events-none animate-pulse delay-700" />
 
       {/* Centerpiece Container */}
@@ -103,9 +103,9 @@ export const WebsitePreloader: React.FC<WebsitePreloaderProps> = ({ onComplete }
         {/* Progress Bar & Percentage */}
         <div className="w-48 sm:w-56 space-y-2 pt-2">
           {/* Track */}
-          <div className="w-full h-1 bg-[#123D2A] rounded-full overflow-hidden border border-[#176B45]/40 p-0.5">
+          <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden border border-white/10 p-0.5">
             <div
-              className="h-full bg-gradient-to-r from-[#176B45] via-[#C5A46D] to-[#F8F6EE] rounded-full transition-all duration-75 ease-out shadow-[0_0_10px_#C5A46D]"
+              className="h-full bg-gradient-to-r from-[#C5A46D] via-[#C5A46D] to-[#F8F6EE] rounded-full transition-all duration-75 ease-out shadow-[0_0_10px_#C5A46D]"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -113,7 +113,7 @@ export const WebsitePreloader: React.FC<WebsitePreloaderProps> = ({ onComplete }
           {/* Number Counter */}
           <div className="flex items-center justify-between text-[10px] font-mono text-[#A8BFA0]">
             <span className="flex items-center gap-1">
-              <Leaf className="w-3 h-3 text-[#176B45]" />
+              <Leaf className="w-3 h-3 text-[#C5A46D]" />
               <span>Living Leaf Dining</span>
             </span>
             <span className="text-[#C5A46D] font-bold">{progress}%</span>
