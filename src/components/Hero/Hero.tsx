@@ -84,7 +84,7 @@ export const Hero: React.FC<HeroProps> = ({
           preload="auto"
           onLoadedData={() => setVideoLoaded(true)}
           poster="https://lh3.googleusercontent.com/aida/ALJJyrAanhjb8tcI01Q34Gd8cm4VdN5f_vXnq7M3qkOFKcIKZKBnI3qGqT-EvNs5w2d_qRPamIyMd5peONlf8YmeFc75au_Tx1rMHVyYJI2BhcA7Y_Ru1t8RmS7zgc7UhMd_NrrrzXmvR6f2L7FBim8BDYL91_Dwu1jRa_bjROVrKdGrnsRi6hM5IQQHpp-r04BqYykKyEVSfrxslr99xYZX1c0_FFE_gtSilvi2XkccOXaq_092e--jwAxKWw"
-          className={`w-full h-full object-cover object-center filter brightness-[0.40] contrast-[1.12] saturate-[1.15] scale-105 transition-opacity duration-1000 ${
+          className={`w-full h-full object-cover object-center filter brightness-[0.78] contrast-[1.08] saturate-[1.12] scale-105 transition-opacity duration-1000 ${
             videoLoaded ? 'opacity-100' : 'opacity-60'
           }`}
         >
@@ -93,21 +93,21 @@ export const Hero: React.FC<HeroProps> = ({
           <source src="/assets/videos/fish-cooking-sizzle.mp4" type="video/mp4" />
         </video>
 
-        {/* Cinematic Vignette Overlay (Dark edges, clear center for typography) */}
-        <div className="absolute inset-0 hero-vignette mix-blend-multiply" />
+        {/* Cinematic Vignette Overlay (Gentle and transparent) */}
+        <div className="absolute inset-0 hero-vignette opacity-70 pointer-events-none" />
 
-        {/* Vertical gradient contrast blankets for navbar & bottom stats */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#05130D]/90 via-[#0B291E]/35 to-[#05130D]/95" />
+        {/* Lightweight vertical gradient for text readability without obscuring video */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65 pointer-events-none" />
 
         {/* Warm Golden Ambient Glow Bloom behind headline */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[850px] h-[400px] md:h-[550px] bg-[#C5A46D]/10 rounded-full blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[850px] h-[400px] md:h-[550px] bg-[#C5A46D]/15 rounded-full blur-[140px] pointer-events-none" />
       </div>
 
       {/* Floating Video Audio & Playback Controls (Discrete, bottom-right) */}
       <div className="absolute top-24 sm:top-28 right-4 sm:right-8 z-30 flex items-center gap-2">
         <button
           onClick={toggleSound}
-          className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0B291E]/80 hover:bg-[#123D2A] border border-[#C5A46D]/40 hover:border-[#C5A46D] backdrop-blur-md text-[#F8F6EE] text-[11px] font-sans-ui uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer"
+          className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 hover:border-[#C5A46D] backdrop-blur-md text-[#F8F6EE] text-[11px] font-sans-ui uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer"
           title={isMuted ? 'Unmute authentic kitchen audio' : 'Mute audio'}
           aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
         >
@@ -126,7 +126,7 @@ export const Hero: React.FC<HeroProps> = ({
 
         <button
           onClick={togglePlayback}
-          className="p-2 rounded-full bg-[#0B291E]/80 hover:bg-[#123D2A] border border-[#C5A46D]/40 hover:border-[#C5A46D] backdrop-blur-md text-[#C5A46D] transition-all duration-300 shadow-lg cursor-pointer"
+          className="p-2 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 hover:border-[#C5A46D] backdrop-blur-md text-[#C5A46D] transition-all duration-300 shadow-lg cursor-pointer"
           title={isPlaying ? 'Pause background reel' : 'Play background reel'}
           aria-label={isPlaying ? 'Pause background reel' : 'Play background reel'}
         >
@@ -144,12 +144,12 @@ export const Hero: React.FC<HeroProps> = ({
       <div className="relative z-20 flex-1 flex flex-col items-center justify-center text-center max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-12 sm:pt-36 sm:pb-16 w-full">
         
         {/* 1. Location & Live Status Pill */}
-        <div className="inline-flex items-center gap-2.5 sm:gap-3.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-[#0B291E]/75 backdrop-blur-md border border-[#C5A46D]/35 text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_4px_25px_rgba(0,0,0,0.6)] mb-5 animate-subtle-pulse">
+        <div className="inline-flex items-center gap-2.5 sm:gap-3.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-black/35 backdrop-blur-lg border border-[#C5A46D]/40 text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_4px_25px_rgba(0,0,0,0.5)] mb-5 animate-subtle-pulse">
           <div className="flex items-center gap-1.5 text-[#E6C587] font-medium tracking-[0.14em]">
             <MapPin className="w-3.5 h-3.5 text-[#C5A46D]" />
             <span>Pathadipalam, Pillar 350, Kochi</span>
           </div>
-          <span className="w-[1px] h-3.5 bg-[#C5A46D]/30" />
+          <span className="w-[1px] h-3.5 bg-[#C5A46D]/40" />
           <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400 font-semibold tracking-[0.12em]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -178,17 +178,17 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
 
         {/* 4. Massive Bold Headline with Gold Gradient */}
-        <h1 className="font-serif-display text-5xl sm:text-7xl md:text-8xl lg:text-[102px] font-black uppercase tracking-tight leading-[0.95] gold-gradient-text gold-subtle-glow mb-4 select-none">
+        <h1 className="font-serif-display text-5xl sm:text-7xl md:text-8xl lg:text-[102px] font-black uppercase tracking-tight leading-[0.95] gold-gradient-text drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mb-4 select-none">
           {restaurantData.name}
         </h1>
 
         {/* 5. Brand Tagline with Ultra-wide Spacing */}
-        <p className="font-sans-ui text-xs sm:text-sm md:text-[15px] font-semibold tracking-[0.28em] uppercase text-[#F8F6EE]/90 mb-4 max-w-2xl text-center">
+        <p className="font-sans-ui text-xs sm:text-sm md:text-[15px] font-semibold tracking-[0.28em] uppercase text-[#F8F6EE] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] mb-4 max-w-2xl text-center">
           {restaurantData.tagline}
         </p>
 
         {/* 6. Culinary Narrative Snippet */}
-        <p className="text-xs sm:text-sm text-[#DCE8D5]/80 font-light max-w-xl mx-auto leading-relaxed mb-8 hidden sm:block">
+        <p className="text-xs sm:text-sm text-[#F8F6EE]/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] font-light max-w-xl mx-auto leading-relaxed mb-8 hidden sm:block">
           Fresh Harbour Catch slow-cooked in traditional unglazed clay pots (Meen Chatti) &amp; served steaming hot on living tender plantain leaf.
         </p>
 
@@ -197,7 +197,7 @@ export const Hero: React.FC<HeroProps> = ({
           {onOpenReservation && (
             <button
               onClick={onOpenReservation}
-              className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#C5A46D] via-[#D8B87B] to-[#C5A46D] hover:from-[#D8B87B] hover:to-[#EBD4A8] text-[#05130D] font-sans-ui font-bold text-xs uppercase tracking-[0.22em] shadow-[0_8px_30px_rgba(197,164,109,0.4)] hover:shadow-[0_8px_35px_rgba(216,184,123,0.6)] transition-all duration-300 hover:scale-105 active:scale-95 border border-[#F8F6EE]/30 cursor-pointer"
+              className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#C5A46D] via-[#D8B87B] to-[#C5A46D] hover:from-[#D8B87B] hover:to-[#EBD4A8] text-[#05130D] font-sans-ui font-bold text-xs uppercase tracking-[0.22em] shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_35px_rgba(216,184,123,0.7)] transition-all duration-300 hover:scale-105 active:scale-95 border border-[#F8F6EE]/30 cursor-pointer"
             >
               <Calendar className="w-4 h-4 text-[#05130D]" />
               <span>Reserve a Table</span>
@@ -206,7 +206,7 @@ export const Hero: React.FC<HeroProps> = ({
 
           <button
             onClick={onExploreMenu}
-            className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-[#0B291E]/60 hover:bg-[#123D2A]/80 backdrop-blur-md text-[#F8F6EE] hover:text-[#E6C587] font-sans-ui font-semibold text-xs uppercase tracking-[0.22em] border border-[#C5A46D]/60 hover:border-[#E6C587] shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
+            className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-[#F8F6EE] hover:text-[#E6C587] font-sans-ui font-semibold text-xs uppercase tracking-[0.22em] border border-[#C5A46D]/60 hover:border-[#E6C587] shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
           >
             <Leaf className="w-4 h-4 text-[#C5A46D] group-hover:rotate-12 transition-transform" />
             <span>Explore Menu</span>
@@ -216,7 +216,7 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Secondary Story Link */}
         <button
           onClick={onDiscoverStory}
-          className="inline-flex items-center gap-1.5 text-xs text-[#A8BFA0] hover:text-[#C5A46D] uppercase tracking-[0.18em] transition-colors mt-5 cursor-pointer"
+          className="inline-flex items-center gap-1.5 text-xs text-[#E6C587] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] hover:text-white uppercase tracking-[0.18em] transition-colors mt-5 cursor-pointer"
         >
           <Compass className="w-3.5 h-3.5 text-[#C5A46D]" />
           <span>Our Heritage Story</span>
@@ -229,8 +229,8 @@ export const Hero: React.FC<HeroProps> = ({
       <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-6 pt-2 flex flex-col items-center gap-4">
         
         {/* Horizontal 3-Column Stats Strip (Divided by gold lines) */}
-        <div className="w-full backdrop-blur-md bg-[#082117]/75 border border-[#C5A46D]/25 rounded-2xl py-3.5 px-4 sm:px-8 shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
-          <div className="grid grid-cols-1 md:grid-cols-3 items-center divide-y md:divide-y-0 md:divide-x divide-[#C5A46D]/25 text-center gap-2 md:gap-0">
+        <div className="w-full backdrop-blur-lg bg-black/35 border border-[#C5A46D]/30 rounded-2xl py-3.5 px-4 sm:px-8 shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center divide-y md:divide-y-0 md:divide-x divide-[#C5A46D]/30 text-center gap-2 md:gap-0">
             
             {/* Stat 1: Google Rating */}
             <div className="flex items-center justify-center gap-3 py-2 px-3">
