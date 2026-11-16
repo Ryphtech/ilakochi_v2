@@ -63,6 +63,30 @@
   animation: subtlePulse 4s ease-in-out infinite;
 }
 
+/* Stitch Luxury Styling Utilities */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FDE68A 0%, #D4AF37 50%, #C5A46D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  box-shadow: 0 0 25px -4px rgba(212, 175, 55, 0.25);
+}
+
+@keyframes pulseGoldGlow {
+  0%, 100% {
+    box-shadow: 0 4px 20px -2px rgba(197, 164, 109, 0.35);
+  }
+  50% {
+    box-shadow: 0 4px 30px 4px rgba(229, 195, 120, 0.65);
+  }
+}
+
+.pulse-gold {
+  animation: pulseGoldGlow 3s infinite ease-in-out;
+}
+
 /* Smooth custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
