@@ -87,6 +87,28 @@
   animation: pulseGoldGlow 3s infinite ease-in-out;
 }
 
+/* Cinematic Vignette & Lighting Effects */
+.hero-vignette {
+  background: radial-gradient(circle at 50% 50%, rgba(11, 41, 30, 0.35) 0%, rgba(5, 19, 13, 0.82) 60%, rgba(3, 10, 7, 0.98) 100%);
+}
+
+.gold-subtle-glow {
+  text-shadow: 0 4px 30px rgba(197, 164, 109, 0.35);
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-float {
+  animation: gentleFloat 2.5s infinite ease-in-out;
+}
+
 /* Smooth custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
