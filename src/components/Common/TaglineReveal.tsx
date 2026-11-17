@@ -61,12 +61,12 @@ export const TaglineReveal: React.FC<TaglineRevealProps> = ({
   return (
     <section
       ref={containerRef}
-      className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#0B291E] border-y border-[#176B45]/30 relative overflow-hidden select-none"
+      className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#050505] border-y border-[#262626]/30 relative overflow-hidden select-none"
       aria-label="Core Brand Tagline"
     >
       <div className="max-w-5xl mx-auto text-center space-y-6">
         {/* Subtle Pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-xs font-sans-ui uppercase tracking-[0.2em] text-[#C5A46D]">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs font-sans-ui uppercase tracking-[0.2em] text-[#C5A46D]">
           <span>The Ila Philosophy</span>
         </div>
 
@@ -86,7 +86,7 @@ export const TaglineReveal: React.FC<TaglineRevealProps> = ({
         </h2>
 
         {/* Supporting Narrative */}
-        <p className="text-sm sm:text-base md:text-lg text-[#DCE8D5]/90 font-light max-w-2xl mx-auto leading-relaxed text-pretty pt-2">
+        <p className="text-sm sm:text-base md:text-lg text-[#E5E5E5]/90 font-light max-w-2xl mx-auto leading-relaxed text-pretty pt-2">
           {subphraseWords.map((word, idx) => {
             const overallIndex = phraseWords.length + idx;
             return (

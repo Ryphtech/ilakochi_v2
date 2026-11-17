@@ -62,8 +62,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-[#0B291E]/90 backdrop-blur-xl border-b border-[#176B45]/20 py-3.5 shadow-2xl shadow-black/40'
-            : 'bg-gradient-to-b from-[#0B291E]/80 via-[#0B291E]/30 to-transparent py-5 md:py-6'
+            ? 'bg-[#050505]/90 backdrop-blur-xl border-b border-[#262626]/20 py-3.5 shadow-2xl shadow-black/40'
+            : 'bg-gradient-to-b from-[#050505]/80 via-[#050505]/30 to-transparent py-5 md:py-6'
         }`}
       >
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
@@ -112,7 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
             <div className="hidden sm:flex items-center space-x-4">
               <a
                 href={`tel:${restaurantData.contact.phoneRaw}`}
-                className="p-2 rounded-full text-[#A8BFA0] hover:text-[#C5A46D] hover:bg-[#123D2A]/60 transition-colors"
+                className="p-2 rounded-full text-[#A3A3A3] hover:text-[#C5A46D] hover:bg-[#121212]/60 transition-colors"
                 title={`Call ${restaurantData.contact.phone}`}
                 aria-label={`Call ${restaurantData.contact.phone}`}
               >
@@ -121,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
 
               <button
                 onClick={onOpenReservation}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] text-[#0B291E] bg-[#C5A46D] hover:bg-[#d8b982] transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-semibold uppercase tracking-[0.2em] text-[#050505] bg-[#C5A46D] hover:bg-[#d8b982] transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
               >
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Reserve Table</span>
@@ -132,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
             <div className="flex items-center sm:hidden space-x-2">
               <button
                 onClick={onOpenReservation}
-                className="px-3 py-1.5 rounded-full bg-[#C5A46D] text-[#0B291E] text-[10px] font-semibold uppercase tracking-wider"
+                className="px-3 py-1.5 rounded-full bg-[#C5A46D] text-[#050505] text-[10px] font-semibold uppercase tracking-wider"
                 aria-label="Reserve"
               >
                 Book
@@ -140,11 +140,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
 
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-lg text-[#F8F6EE] hover:bg-[#123D2A] focus:outline-none"
+                className="p-2 rounded-lg text-[#F8F6EE] hover:bg-[#121212] focus:outline-none"
                 aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
                 aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-[#DCE8D5]" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-[#E5E5E5]" />}
               </button>
             </div>
           </div>
@@ -158,14 +158,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
         }`}
       >
         <div
-          className="absolute inset-0 bg-[#0B291E]/95 backdrop-blur-2xl"
+          className="absolute inset-0 bg-[#050505]/95 backdrop-blur-2xl"
           onClick={() => setMobileMenuOpen(false)}
         />
 
         <div className="relative z-50 flex flex-col justify-between h-full pt-24 pb-10 px-8 overflow-y-auto">
           <div className="space-y-8">
-            <div className="border-b border-[#176B45]/30 pb-4">
-              <span className="text-[10px] uppercase tracking-[0.3em] text-[#A8BFA0]">
+            <div className="border-b border-[#262626]/30 pb-4">
+              <span className="text-[10px] uppercase tracking-[0.3em] text-[#A3A3A3]">
                 Ila Kochi Menu
               </span>
             </div>
@@ -184,19 +184,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
                   }`}
                 >
                   <span>{link.label}</span>
-                  <span className="text-xs text-[#A8BFA0]/60">→</span>
+                  <span className="text-xs text-[#A3A3A3]/60">→</span>
                 </a>
               ))}
             </nav>
           </div>
 
-          <div className="space-y-4 pt-6 border-t border-[#176B45]/30">
+          <div className="space-y-4 pt-6 border-t border-[#262626]/30">
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenReservation();
               }}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#0B291E] bg-[#C5A46D] shadow-lg cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#050505] bg-[#C5A46D] shadow-lg cursor-pointer"
             >
               <Calendar className="w-4 h-4" />
               <span>Reserve a Table</span>
@@ -204,13 +204,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenReservation }) => {
 
             <a
               href={`tel:${restaurantData.contact.phoneRaw}`}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-full text-xs tracking-wider text-[#F8F6EE] border border-[#176B45] bg-[#123D2A]/60"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full text-xs tracking-wider text-[#F8F6EE] border border-[#262626] bg-[#121212]/60"
             >
               <Phone className="w-4 h-4 text-[#C5A46D]" />
               <span>Call: {restaurantData.contact.phone}</span>
             </a>
 
-            <div className="text-center text-[10px] text-[#A8BFA0] font-sans-ui pt-1">
+            <div className="text-center text-[10px] text-[#A3A3A3] font-sans-ui pt-1">
               Metro Pillar 350, Pathadipalam, Kochi
             </div>
           </div>

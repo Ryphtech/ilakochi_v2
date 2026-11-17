@@ -62,11 +62,11 @@ export const ScrollMarquee: React.FC<ScrollMarqueeProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative py-12 md:py-16 overflow-hidden bg-[#0B291E] border-y border-[#176B45]/30 select-none z-10 pointer-events-none"
+      className="relative py-12 md:py-16 overflow-hidden bg-[#050505] border-y border-[#262626]/30 select-none z-10 pointer-events-none"
       aria-hidden="true"
     >
       {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0B291E] via-transparent to-[#0B291E] z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505] z-10 pointer-events-none" />
 
       {/* Track 1: Gliding Left */}
       <div className="flex whitespace-nowrap mb-3 will-change-transform">

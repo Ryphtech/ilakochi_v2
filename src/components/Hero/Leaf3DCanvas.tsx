@@ -71,10 +71,10 @@ export const Leaf3DCanvas: React.FC<Leaf3DCanvasProps> = ({ onLoaded }) => {
 
       // Botanical Chlorophyll Base Gradient
       const baseGrad = ctx.createLinearGradient(0, 0, 2048, 2048);
-      baseGrad.addColorStop(0, '#176B45'); // Vibrant Rich Emerald
-      baseGrad.addColorStop(0.25, '#123D2A'); // Deep Forest Green
-      baseGrad.addColorStop(0.65, '#1A5F3C'); // Lush Leaf Green
-      baseGrad.addColorStop(1, '#0B291E'); // Dark Botanical Base
+      baseGrad.addColorStop(0, '#262626'); // Vibrant Rich Emerald
+      baseGrad.addColorStop(0.25, '#121212'); // Deep Forest Green
+      baseGrad.addColorStop(0.65, '#262626'); // Lush Leaf Green
+      baseGrad.addColorStop(1, '#050505'); // Dark Botanical Base
       ctx.fillStyle = baseGrad;
       ctx.fillRect(0, 0, 2048, 2048);
 
@@ -543,7 +543,7 @@ export const Leaf3DCanvas: React.FC<Leaf3DCanvasProps> = ({ onLoaded }) => {
       aria-label="3D Interactive Tropical Leaf Visualization"
     >
       {/* Interactive 3D Hint Pill */}
-      <div className="absolute bottom-16 right-8 z-20 hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#123D2A]/80 border border-[#176B45]/50 backdrop-blur-md text-[10px] uppercase tracking-widest text-[#DCE8D5]/80 select-none pointer-events-none">
+      <div className="absolute bottom-16 right-8 z-20 hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#121212]/80 border border-[#262626]/50 backdrop-blur-md text-[10px] uppercase tracking-widest text-[#E5E5E5]/80 select-none pointer-events-none">
         <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46D] animate-ping" />
         <span>Drag to Inspect Leaf &bull; Scroll to Transition</span>
       </div>

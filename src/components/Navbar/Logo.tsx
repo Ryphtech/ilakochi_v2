@@ -13,9 +13,9 @@ export const Logo: React.FC<LogoProps> = ({
   showSubtitle = true,
   size = 'md',
 }) => {
-  const textColor = variant === 'dark' ? 'text-[#123D2A]' : variant === 'gold' ? 'text-[#C5A46D]' : 'text-[#F8F6EE]';
-  const accentColor = variant === 'dark' ? 'text-[#176B45]' : 'text-[#C5A46D]';
-  const subColor = variant === 'dark' ? 'text-[#315E43]' : 'text-[#A8BFA0]';
+  const textColor = variant === 'dark' ? 'text-black' : variant === 'gold' ? 'text-[#C5A46D]' : 'text-[#F8F6EE]';
+  const accentColor = variant === 'dark' ? 'text-[#C5A46D]' : 'text-[#C5A46D]';
+  const subColor = variant === 'dark' ? 'text-neutral-500' : 'text-[#A3A3A3]';
 
   const sizeClasses = {
     sm: 'h-8',

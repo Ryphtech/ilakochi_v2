@@ -35,7 +35,7 @@ export const KeralaCulture: React.FC = () => {
   ];
 
   return (
-    <section id="culture" className="relative py-20 sm:py-24 lg:py-28 bg-[#123D2A] text-[#F8F6EE] overflow-hidden">
+    <section id="culture" className="relative py-20 sm:py-24 lg:py-28 bg-[#121212] text-[#F8F6EE] overflow-hidden">
       {/* Background imagery subtle overlay */}
       <div
         className="absolute inset-0 opacity-10 bg-center bg-cover pointer-events-none mix-blend-overlay"
@@ -48,14 +48,14 @@ export const KeralaCulture: React.FC = () => {
         {/* Header */}
         <ScrollReveal direction="up" distance={40}>
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
-              <Leaf className="w-3.5 h-3.5 text-[#A8BFA0]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+              <Leaf className="w-3.5 h-3.5 text-[#A3A3A3]" />
               <span>Living Heritage</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
               The ritual of Kerala dining.
             </h2>
-            <p className="text-sm sm:text-base text-[#DCE8D5] font-light leading-relaxed text-pretty">
+            <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
               Where ancestral techniques meet contemporary coastal aesthetics. An unhurried celebration of natural textures, earthy aromas, and the timeless bounty of the Arabian Sea.
             </p>
           </div>
@@ -73,9 +73,9 @@ export const KeralaCulture: React.FC = () => {
                 delay={index * 0.1}
                 className="h-full"
               >
-                <div className="group p-6 sm:p-7 rounded-3xl bg-[#0B291E]/80 border border-[#176B45]/50 hover:border-[#C5A46D]/60 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between h-full">
+                <div className="group p-6 sm:p-7 rounded-3xl bg-[#050505]/80 border border-[#262626]/50 hover:border-[#C5A46D]/60 transition-all duration-300 hover:-translate-y-1 shadow-xl flex flex-col justify-between h-full">
                   <div className="space-y-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[#123D2A] border border-[#176B45] flex items-center justify-center text-[#C5A46D] group-hover:scale-105 transition-transform shadow-inner">
+                    <div className="w-12 h-12 rounded-2xl bg-[#121212] border border-[#262626] flex items-center justify-center text-[#C5A46D] group-hover:scale-105 transition-transform shadow-inner">
                       <Icon className="w-5 h-5" />
                     </div>
 
@@ -88,12 +88,12 @@ export const KeralaCulture: React.FC = () => {
                       </span>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-[#DCE8D5]/80 font-light leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#E5E5E5]/80 font-light leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-[#176B45]/30 flex items-center justify-between text-[11px] tracking-wider text-[#A8BFA0] uppercase">
+                  <div className="mt-6 pt-4 border-t border-[#262626]/30 flex items-center justify-between text-[11px] tracking-wider text-[#A3A3A3] uppercase">
                     <span>Tradition 0{index + 1}</span>
                     <span className="text-[#C5A46D]">✦</span>
                   </div>

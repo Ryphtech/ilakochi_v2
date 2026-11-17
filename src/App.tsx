@@ -6,6 +6,7 @@ import { SectionSkeleton } from './components/Common/SectionSkeleton';
 import { X, Calendar, MessageSquare } from 'lucide-react';
 import { restaurantData } from './data/restaurantData';
 import { MenuItem } from './data/menuData';
+import { subscribeThemeConfig } from './lib/theme';
 
 // Lazy-loaded Admin Portal
 const AdminPortal = lazy(() => import('./components/Admin/AdminPortal').then(m => ({ default: m.AdminPortal })));
@@ -58,6 +59,14 @@ export function App() {
     };
   }, []);
 
+  // Real-time synchronization of site-wide theme chosen by Admin
+  useEffect(() => {
+    const unsubscribe = subscribeThemeConfig(() => {
+      // Theme is automatically applied to DOM by applyTheme inside subscribeThemeConfig
+    });
+    return () => unsubscribe();
+  }, []);
+
   const handleExitAdmin = () => {
     window.location.hash = '';
     if (window.location.pathname === '/admin') {
@@ -76,7 +85,7 @@ export function App() {
   // If Admin Route is active, render the dedicated Staff Portal
   if (isAdminRoute) {
     return (
-      <div className="relative min-h-screen bg-[#0B291E] text-[#F8F6EE] selection:bg-[#176B45] selection:text-[#F8F6EE]">
+      <div className="relative min-h-screen bg-[#050505] text-[#F8F6EE] selection:bg-[#C5A46D] selection:text-black">
         <Suspense fallback={<SectionSkeleton height="min-h-screen" />}>
           <AdminPortal onExit={handleExitAdmin} />
         </Suspense>
@@ -85,7 +94,7 @@ export function App() {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0B291E] text-[#F8F6EE] selection:bg-[#176B45] selection:text-[#F8F6EE]">
+    <div className="relative min-h-screen bg-[#050505] text-[#F8F6EE] selection:bg-[#C5A46D] selection:text-black">
       {/* 00. Luxury Website Preloader & Entrance Animation */}
       {showPreloader && (
         <WebsitePreloader onComplete={() => setShowPreloader(false)} />
@@ -112,7 +121,7 @@ export function App() {
       </Suspense>
 
       {/* Kinetic Scroll Marquee 1 (Paragon Style) */}
-      <Suspense fallback={<div className="h-20 bg-[#0B291E]" />}>
+      <Suspense fallback={<div className="h-20 bg-[#050505]" />}>
         <ScrollMarquee
           textTop="AUTHENTIC KERALA SEAFOOD • BANANA LEAF DINING • FRESH HARBOUR CATCH • ILA KOCHI •"
           textBottom="ഇല കൊച്ചി • ROOTED IN NATURE • INSPIRED BY THE COAST • THE ART OF COASTAL COOKING •"
@@ -145,7 +154,7 @@ export function App() {
       </Suspense>
 
       {/* Kinetic Scroll Marquee 2 (Dishes & Aromas) */}
-      <Suspense fallback={<div className="h-20 bg-[#123D2A]" />}>
+      <Suspense fallback={<div className="h-20 bg-[#121212]" />}>
         <ScrollMarquee
           textTop="PEARL SPOT POLLICHATHU • KALANJI TAWA FRY • CHEMMEEN GHEE ROAST • KOONTHAL •"
           textBottom="WOOD PRESSED COCONUT OIL • MALABAR TAMARIND • LIVING PLANTAIN LEAF •"
@@ -210,7 +219,7 @@ export function App() {
           href={restaurantData.contact.whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-3.5 rounded-full bg-[#25D366] text-white shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center border-2 border-[#0B291E]"
+          className="p-3.5 rounded-full bg-[#25D366] text-white shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center border-2 border-[#050505]"
           aria-label="Direct WhatsApp Chat"
         >
           <MessageSquare className="w-5 h-5 fill-current" />
@@ -218,7 +227,7 @@ export function App() {
 
         <button
           onClick={() => setReservationModalOpen(true)}
-          className="hidden sm:inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#C5A46D] hover:bg-[#d8b982] text-[#0B291E] font-semibold text-xs uppercase tracking-wider shadow-2xl hover:scale-105 active:scale-95 transition-all border-2 border-[#0B291E] cursor-pointer"
+          className="hidden sm:inline-flex items-center gap-2 px-5 py-3 rounded-full bg-[#C5A46D] hover:bg-[#d8b982] text-[#050505] font-semibold text-xs uppercase tracking-wider shadow-2xl hover:scale-105 active:scale-95 transition-all border-2 border-[#050505] cursor-pointer"
         >
           <Calendar className="w-4 h-4" />
           <span>Book Table</span>
@@ -232,13 +241,13 @@ export function App() {
           onClick={() => setReservationModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-[#123D2A] border border-[#176B45]/70 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl my-auto scrollbar-thin scrollbar-thumb-[#176B45] scrollbar-track-transparent"
+            className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-[#121212] border border-[#262626]/70 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl my-auto scrollbar-thin scrollbar-thumb-[#262626] scrollbar-track-transparent"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={() => setReservationModalOpen(false)}
-              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-[#0B291E]/80 text-[#A8BFA0] hover:text-[#F8F6EE] border border-[#176B45]/60 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-20 p-2 rounded-full bg-[#050505]/80 text-[#A3A3A3] hover:text-[#F8F6EE] border border-[#262626]/60 transition-colors cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />

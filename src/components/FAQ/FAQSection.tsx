@@ -47,19 +47,19 @@ export const FAQSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#0B291E] border-t border-[#176B45]/30 relative overflow-hidden">
+    <section id="faq" className="py-20 sm:py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#050505] border-t border-[#262626]/30 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <ScrollReveal direction="up" distance={40}>
           <div className="text-center max-w-xl mx-auto space-y-3 mb-12 sm:mb-14">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#123D2A] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <HelpCircle className="w-3.5 h-3.5" />
               <span>Everything You Need to Know</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
               Frequently asked questions.
             </h2>
-            <p className="text-sm sm:text-base text-[#DCE8D5]/80 font-light leading-relaxed text-pretty">
+            <p className="text-sm sm:text-base text-[#E5E5E5]/80 font-light leading-relaxed text-pretty">
               Timings, location, parking, and banana leaf dining details.
             </p>
           </div>
@@ -71,7 +71,7 @@ export const FAQSection: React.FC = () => {
             const isOpen = openIndex === idx;
             return (
               <ScrollReveal key={idx} direction="up" distance={20} delay={idx * 0.05}>
-                <div className="rounded-2xl sm:rounded-3xl bg-[#123D2A]/60 border border-[#176B45]/40 overflow-hidden transition-all duration-300">
+                <div className="rounded-2xl sm:rounded-3xl bg-[#121212]/60 border border-[#262626]/40 overflow-hidden transition-all duration-300">
                   <button
                     onClick={() => toggle(idx)}
                     className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
@@ -81,7 +81,7 @@ export const FAQSection: React.FC = () => {
                       {faq.question}
                     </span>
                     <div
-                      className={`p-2 rounded-full bg-[#0B291E]/60 text-[#C5A46D] border border-[#176B45]/40 transition-transform duration-300 flex-shrink-0 ${
+                      className={`p-2 rounded-full bg-[#050505]/60 text-[#C5A46D] border border-[#262626]/40 transition-transform duration-300 flex-shrink-0 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
                     >
@@ -90,7 +90,7 @@ export const FAQSection: React.FC = () => {
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#DCE8D5]/80 font-light leading-relaxed border-t border-[#176B45]/20 pt-4">
+                    <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-xs sm:text-sm text-[#E5E5E5]/80 font-light leading-relaxed border-t border-[#262626]/20 pt-4">
                       {faq.answer}
                     </div>
                   )}

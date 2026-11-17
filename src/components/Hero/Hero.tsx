@@ -1,310 +1,323 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { restaurantData } from '../../data/restaurantData';
-import { getR2Url } from '../../lib/r2';
 import {
-  MapPin,
-  Calendar,
-  Utensils,
-  Leaf,
-  Star,
-  Clock,
+  HeroConfig,
+  defaultHeroConfig,
+  subscribeHeroConfig,
+} from '../../lib/firebase';
+import {
   ArrowDown,
+  Compass,
+  Utensils,
+  Calendar,
+  ArrowRight,
   Volume2,
   VolumeX,
-  Play,
-  Pause,
-  Sparkles,
-  Compass,
 } from 'lucide-react';
 
 interface HeroProps {
   onExploreMenu: () => void;
   onDiscoverStory: () => void;
   onOpenReservation?: () => void;
+  intervalMs?: number;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onExploreMenu,
   onDiscoverStory,
   onOpenReservation,
+  intervalMs: propIntervalMs,
 }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [heroConfig, setHeroConfig] = useState<HeroConfig>(defaultHeroConfig);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Subscribe to live Firestore hero configuration
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
-    }
+    const unsubscribe = subscribeHeroConfig((liveConfig) => {
+      setHeroConfig(liveConfig);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const toggleSound = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
-  };
+  const activeMode = heroConfig.mode || 'images';
+  const activeImages =
+    heroConfig.images && heroConfig.images.length > 0
+      ? heroConfig.images
+      : defaultHeroConfig.images;
+  const activeInterval =
+    propIntervalMs || heroConfig.intervalMs || 5000;
 
-  const togglePlayback = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      video.play();
-      setIsPlaying(true);
-    } else {
-      video.pause();
-      setIsPlaying(false);
+  // Automatic slide rotation when in images mode
+  useEffect(() => {
+    if (activeMode !== 'images' || isPaused || activeImages.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % activeImages.length);
+    }, activeInterval);
+
+    return () => clearInterval(timer);
+  }, [activeMode, isPaused, activeImages.length, activeInterval]);
+
+  // Autoplay video when in video mode
+  useEffect(() => {
+    if (activeMode === 'video' && videoRef.current) {
+      videoRef.current.play().catch(() => {});
     }
+  }, [activeMode, heroConfig.videoUrl]);
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
   };
 
   return (
     <section
       id="home"
-      className="relative w-full min-h-screen flex flex-col justify-between items-center overflow-hidden bg-[#05130D] text-[#F8F6EE]"
-      aria-label="Ila Kochi — Luxury Coastal Kerala Dining"
+      className="relative min-h-[100dvh] lg:min-h-[750px] xl:min-h-[820px] w-full flex items-center justify-center overflow-hidden bg-black"
+      aria-label="Welcome to ILA KOCHI"
     >
-      {/* =========================================================================
-          100% BLEED CINEMATIC BACKGROUND: Video Loop + Multi-layer Vignettes
-          ========================================================================= */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
-        {/* High-definition cooking video loop (R2 CDN with local fallback) */}
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted={isMuted}
-          playsInline
-          preload="auto"
-          onLoadedData={() => setVideoLoaded(true)}
-          poster="https://lh3.googleusercontent.com/aida/ALJJyrAanhjb8tcI01Q34Gd8cm4VdN5f_vXnq7M3qkOFKcIKZKBnI3qGqT-EvNs5w2d_qRPamIyMd5peONlf8YmeFc75au_Tx1rMHVyYJI2BhcA7Y_Ru1t8RmS7zgc7UhMd_NrrrzXmvR6f2L7FBim8BDYL91_Dwu1jRa_bjROVrKdGrnsRi6hM5IQQHpp-r04BqYykKyEVSfrxslr99xYZX1c0_FFE_gtSilvi2XkccOXaq_092e--jwAxKWw"
-          className={`w-full h-full object-cover object-center filter brightness-[0.78] contrast-[1.08] saturate-[1.12] scale-105 transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-100' : 'opacity-60'
-          }`}
-        >
-          <source src={getR2Url('ila-kochi-reel.mp4')} type="video/mp4" />
-          <source src="/assets/ila-kochi-reel.mp4" type="video/mp4" />
-          <source src="/assets/videos/fish-cooking-sizzle.mp4" type="video/mp4" />
-        </video>
+      {/* 01. FULL-WIDTH DYNAMIC BACKGROUND (Configured by Admin: Images or Video) */}
+      <div
+        className="absolute inset-0 w-full h-full overflow-hidden z-0"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Hero Background Media"
+      >
+        {activeMode === 'video' ? (
+          /* VIDEO MODE: Looping Full-Bleed Video from Cloudflare R2 / Admin */
+          <div className="absolute inset-0 w-full h-full bg-black">
+            <video
+              ref={videoRef}
+              src={heroConfig.videoUrl}
+              poster={heroConfig.videoPoster}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              preload="auto"
+              className="w-full h-full object-cover object-center filter brightness-95 contrast-105"
+            />
+          </div>
+        ) : (
+          /* IMAGES MODE: Smooth Crossfade Slideshow */
+          activeImages.map((img, index) => {
+            const isActive = index === currentSlide;
+            return (
+              <div
+                key={img.url + index}
+                className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out ${
+                  isActive
+                    ? 'opacity-100 scale-105 z-10'
+                    : 'opacity-0 scale-100 z-0 pointer-events-none'
+                }`}
+                style={{
+                  backgroundImage: `url('${img.url}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${index + 1} of ${activeImages.length}: ${img.caption}`}
+                aria-hidden={!isActive}
+              />
+            );
+          })
+        )}
 
-        {/* Cinematic Vignette Overlay (Gentle and transparent) */}
-        <div className="absolute inset-0 hero-vignette opacity-70 pointer-events-none" />
-
-        {/* Lightweight vertical gradient for text readability without obscuring video */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65 pointer-events-none" />
-
-        {/* Warm Golden Ambient Glow Bloom behind headline */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[850px] h-[400px] md:h-[550px] bg-[#C5A46D]/15 rounded-full blur-[140px] pointer-events-none" />
+        {/* Clean, Neutral Dark Scrim (NO green color, NO green wash, purely neutral contrast for text) */}
+        <div className="absolute inset-0 bg-black/40 z-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/25 z-20 pointer-events-none" />
+        {/* Soft top gradient under navbar */}
+        <div className="absolute inset-x-0 top-0 h-28 sm:h-36 bg-gradient-to-b from-black/75 to-transparent z-20 pointer-events-none" />
+        {/* Soft bottom gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-28 sm:h-36 bg-gradient-to-t from-black/80 to-transparent z-20 pointer-events-none" />
       </div>
 
-      {/* Floating Video Audio & Playback Controls (Discrete, bottom-right) */}
-      <div className="absolute top-24 sm:top-28 right-4 sm:right-8 z-30 flex items-center gap-2">
-        <button
-          onClick={toggleSound}
-          className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 hover:border-[#C5A46D] backdrop-blur-md text-[#F8F6EE] text-[11px] font-sans-ui uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer"
-          title={isMuted ? 'Unmute authentic kitchen audio' : 'Mute audio'}
-          aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
-        >
-          {isMuted ? (
-            <>
-              <VolumeX className="w-3.5 h-3.5 text-[#C5A46D]" />
-              <span className="hidden sm:inline text-[#DCE8D5]/90">Sound Off</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span className="hidden sm:inline text-emerald-400 font-semibold">Sound On 🔊</span>
-            </>
-          )}
-        </button>
+      {/* 02. MAIN CONTENT CONTAINER */}
+      <div className="relative z-20 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-28 pb-20 sm:pt-32 sm:pb-24 lg:pt-28 lg:pb-20 w-full flex items-center">
+        <div className="w-full lg:w-7/12 xl:w-3/5 text-center lg:text-left space-y-4 sm:space-y-5">
+          <h1 className="sr-only">ILA KOCHI — Traditional Kerala Seafood &amp; Banana Leaf Dining</h1>
 
-        <button
-          onClick={togglePlayback}
-          className="p-2 rounded-full bg-black/40 hover:bg-black/60 border border-white/20 hover:border-[#C5A46D] backdrop-blur-md text-[#C5A46D] transition-all duration-300 shadow-lg cursor-pointer"
-          title={isPlaying ? 'Pause background reel' : 'Play background reel'}
-          aria-label={isPlaying ? 'Pause background reel' : 'Play background reel'}
-        >
-          {isPlaying ? (
-            <Pause className="w-3.5 h-3.5" />
-          ) : (
-            <Play className="w-3.5 h-3.5 fill-current" />
-          )}
-        </button>
-      </div>
-
-      {/* =========================================================================
-          CENTER HERO STACK (Single column, centered vertical alignment)
-          ========================================================================= */}
-      <div className="relative z-20 flex-1 flex flex-col items-center justify-center text-center max-w-5xl mx-auto px-4 sm:px-6 pt-32 pb-12 sm:pt-36 sm:pb-16 w-full">
-        
-        {/* 1. Location & Live Status Pill */}
-        <div className="inline-flex items-center gap-2.5 sm:gap-3.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-black/35 backdrop-blur-lg border border-[#C5A46D]/40 text-[11px] sm:text-xs tracking-wider uppercase shadow-[0_4px_25px_rgba(0,0,0,0.5)] mb-5 animate-subtle-pulse">
-          <div className="flex items-center gap-1.5 text-[#E6C587] font-medium tracking-[0.14em]">
-            <MapPin className="w-3.5 h-3.5 text-[#C5A46D]" />
-            <span>Pathadipalam, Pillar 350, Kochi</span>
+          {/* ILA KOCHI Brand Logo Emblem */}
+          <div className="flex items-center justify-center lg:justify-start">
+            <div className="relative inline-flex items-center justify-center">
+              <div className="absolute -inset-3 bg-[#C5A46D]/15 rounded-full blur-xl pointer-events-none" />
+              <img
+                src="/assets/ila-kochi-logo-white.png"
+                alt="ILA KOCHI Emblem"
+                className="relative h-16 sm:h-20 md:h-24 w-auto object-contain drop-shadow-[0_6px_24px_rgba(197,164,109,0.35)] filter brightness-105 hover:scale-105 transition-transform duration-500 select-none"
+              />
+            </div>
           </div>
-          <span className="w-[1px] h-3.5 bg-[#C5A46D]/40" />
-          <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400 font-semibold tracking-[0.12em]">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 shadow-[0_0_8px_#10B981]" />
-            </span>
-            <span>Open Now • Till 11:00 PM</span>
+
+          {/* Tagline Eyebrow Pill */}
+          <div>
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-md shadow-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46D] animate-pulse" />
+              <span className="text-[11px] sm:text-xs font-sans-ui uppercase tracking-[0.24em] text-[#C5A46D] font-semibold">
+                {restaurantData.tagline}
+              </span>
+            </div>
           </div>
-        </div>
 
-        {/* 2. Restaurant Brand Emblem Logo */}
-        <div className="mb-3 transform hover:scale-105 transition-transform duration-500">
-          <img
-            src="/assets/ila-kochi-logo-white.png"
-            alt="ILA KOCHI Official Emblem"
-            className="h-20 sm:h-28 md:h-32 w-auto object-contain drop-shadow-[0_8px_32px_rgba(197,164,109,0.4)] select-none"
-          />
-        </div>
+          {/* Heading Statement: Grand Editorial Styling with Balanced Line Heights */}
+          <div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.4rem] xl:text-[3.9rem] font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-[1.12] text-balance">
+              Fresh Catch from the Harbour.
+              <span className="block font-editorial italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D8B982] via-[#F8F6EE] to-[#C5A46D] drop-shadow-[0_2px_15px_rgba(197,164,109,0.25)] pt-1 sm:pt-1.5">
+                Served on Living Banana Leaf.
+              </span>
+            </h2>
+          </div>
 
-        {/* 3. Traditional Malayalam Script Callout */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4 mb-2">
-          <span className="w-8 sm:w-16 h-[1px] bg-gradient-to-r from-transparent to-[#C5A46D]/70" />
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-serif text-[#E6C587] font-normal tracking-wide gold-subtle-glow opacity-95">
-            {restaurantData.nameMalayalam} വിരുന്ന്
-          </h2>
-          <span className="w-8 sm:w-16 h-[1px] bg-gradient-to-l from-transparent to-[#C5A46D]/70" />
-        </div>
+          {/* Desktop/Tablet 3-Pillar Strip */}
+          <div className="hidden sm:grid grid-cols-3 gap-3 sm:gap-4 py-3 sm:py-3.5 my-2 border-y border-white/15 max-w-lg mx-auto lg:mx-0 text-left backdrop-blur-[2px]">
+            <div className="space-y-0.5">
+              <span className="block text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#C5A46D] font-semibold">
+                01 &middot; Harbour Catch
+              </span>
+              <span className="block text-[11px] sm:text-xs text-[#E5E5E5]/90 font-light leading-snug">
+                Daily sea harvest
+              </span>
+            </div>
 
-        {/* 4. Massive Bold Headline with Gold Gradient */}
-        <h1 className="font-serif-display text-5xl sm:text-7xl md:text-8xl lg:text-[102px] font-black uppercase tracking-tight leading-[0.95] gold-gradient-text drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] mb-4 select-none">
-          {restaurantData.name}
-        </h1>
+            <div className="space-y-0.5 border-l border-white/15 pl-3 sm:pl-4">
+              <span className="block text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#C5A46D] font-semibold">
+                02 &middot; Cast Iron
+              </span>
+              <span className="block text-[11px] sm:text-xs text-[#E5E5E5]/90 font-light leading-snug">
+                Coconut oil roast
+              </span>
+            </div>
 
-        {/* 5. Brand Tagline with Ultra-wide Spacing */}
-        <p className="font-sans-ui text-xs sm:text-sm md:text-[15px] font-semibold tracking-[0.28em] uppercase text-[#F8F6EE] drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] mb-4 max-w-2xl text-center">
-          {restaurantData.tagline}
-        </p>
+            <div className="space-y-0.5 border-l border-white/15 pl-3 sm:pl-4">
+              <span className="block text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-[#C5A46D] font-semibold">
+                03 &middot; Plantain Leaf
+              </span>
+              <span className="block text-[11px] sm:text-xs text-[#E5E5E5]/90 font-light leading-snug">
+                Green leaf dining
+              </span>
+            </div>
+          </div>
 
-        {/* 6. Culinary Narrative Snippet */}
-        <p className="text-xs sm:text-sm text-[#F8F6EE]/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] font-light max-w-xl mx-auto leading-relaxed mb-8 hidden sm:block">
-          Fresh Harbour Catch slow-cooked in traditional unglazed clay pots (Meen Chatti) &amp; served steaming hot on living tender plantain leaf.
-        </p>
+          {/* Mobile Single-Row Culinary Tags */}
+          <div className="flex sm:hidden items-center justify-center gap-2.5 py-2 border-y border-white/15 text-[11px] font-mono text-[#E5E5E5]/90 backdrop-blur-[2px]">
+            <span className="text-[#C5A46D]">Daily Catch</span>
+            <span className="text-white/40">&bull;</span>
+            <span>Cast Iron Roast</span>
+            <span className="text-white/40">&bull;</span>
+            <span className="text-[#C5A46D]">Banana Leaf</span>
+          </div>
 
-        {/* 7. Action CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 w-full max-w-md pt-1">
-          {onOpenReservation && (
+          {/* Action CTAs: High Converting, Balanced Hierarchy */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-3.5 pt-1 w-full sm:w-auto">
+            {onOpenReservation && (
+              <button
+                onClick={onOpenReservation}
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-8 sm:py-4 rounded-full text-xs sm:text-sm font-semibold uppercase tracking-[0.18em] text-[#050505] bg-[#C5A46D] hover:bg-[#d8b982] transition-all duration-300 shadow-xl shadow-black/80 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+              >
+                <Calendar className="w-4 h-4 text-[#050505]" />
+                <span>Reserve Your Table</span>
+                <ArrowRight className="w-4 h-4 text-[#050505] transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            )}
+
             <button
-              onClick={onOpenReservation}
-              className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#C5A46D] via-[#D8B87B] to-[#C5A46D] hover:from-[#D8B87B] hover:to-[#EBD4A8] text-[#05130D] font-sans-ui font-bold text-xs uppercase tracking-[0.22em] shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_35px_rgba(216,184,123,0.7)] transition-all duration-300 hover:scale-105 active:scale-95 border border-[#F8F6EE]/30 cursor-pointer"
+              onClick={onExploreMenu}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:px-7 sm:py-4 rounded-full text-xs sm:text-sm font-medium uppercase tracking-[0.18em] text-[#F8F6EE] border border-white/25 hover:border-[#C5A46D] bg-black/50 hover:bg-black/70 transition-all duration-300 backdrop-blur-md cursor-pointer hover:-translate-y-0.5 shadow-lg"
             >
-              <Calendar className="w-4 h-4 text-[#05130D]" />
-              <span>Reserve a Table</span>
+              <Utensils className="w-4 h-4 text-[#C5A46D]" />
+              <span>Explore Menu</span>
             </button>
-          )}
+          </div>
 
-          <button
-            onClick={onExploreMenu}
-            className="w-full sm:w-auto min-w-[200px] inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-[#F8F6EE] hover:text-[#E6C587] font-sans-ui font-semibold text-xs uppercase tracking-[0.22em] border border-[#C5A46D]/60 hover:border-[#E6C587] shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
-          >
-            <Leaf className="w-4 h-4 text-[#C5A46D] group-hover:rotate-12 transition-transform" />
-            <span>Explore Menu</span>
-          </button>
+          {/* Story Link */}
+          <div className="pt-1 flex justify-center lg:justify-start">
+            <button
+              onClick={onDiscoverStory}
+              className="group inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.16em] text-[#E5E5E5]/80 hover:text-[#C5A46D] transition-colors cursor-pointer py-1"
+            >
+              <Compass className="w-3.5 h-3.5 text-[#C5A46D] transition-transform duration-300 group-hover:rotate-45" />
+              <span className="border-b border-transparent group-hover:border-[#C5A46D] pb-0.5 transition-all">
+                Our Story
+              </span>
+            </button>
+          </div>
         </div>
-
-        {/* Secondary Story Link */}
-        <button
-          onClick={onDiscoverStory}
-          className="inline-flex items-center gap-1.5 text-xs text-[#E6C587] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] hover:text-white uppercase tracking-[0.18em] transition-colors mt-5 cursor-pointer"
-        >
-          <Compass className="w-3.5 h-3.5 text-[#C5A46D]" />
-          <span>Our Heritage Story</span>
-        </button>
       </div>
 
-      {/* =========================================================================
-          BOTTOM SECTION: Horizontal Stats Strip & Floating Scroll Indicator
-          ========================================================================= */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-6 pt-2 flex flex-col items-center gap-4">
-        
-        {/* Horizontal 3-Column Stats Strip (Divided by gold lines) */}
-        <div className="w-full backdrop-blur-lg bg-black/35 border border-[#C5A46D]/30 rounded-2xl py-3.5 px-4 sm:px-8 shadow-[0_12px_40px_rgba(0,0,0,0.6)]">
-          <div className="grid grid-cols-1 md:grid-cols-3 items-center divide-y md:divide-y-0 md:divide-x divide-[#C5A46D]/30 text-center gap-2 md:gap-0">
-            
-            {/* Stat 1: Google Rating */}
-            <div className="flex items-center justify-center gap-3 py-2 px-3">
-              <div className="w-9 h-9 rounded-full bg-[#C5A46D]/15 border border-[#C5A46D]/35 flex items-center justify-center text-[#E6C587]">
-                <Star className="w-4 h-4 fill-current" />
-              </div>
-              <div className="text-left">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-serif-display font-bold text-base sm:text-lg text-[#F8F6EE]">
-                    {restaurantData.stats.rating}
-                  </span>
-                  <div className="flex text-amber-400 text-xs">
-                    {'★★★★'.split('').map((s, i) => (
-                      <span key={i}>{s}</span>
-                    ))}
-                    <span className="text-[#C5A46D]/40">★</span>
-                  </div>
-                </div>
-                <p className="text-[11px] uppercase tracking-wider text-[#DCE8D5]/75 font-medium">
-                  {restaurantData.stats.reviewsCount} Google Reviews
-                </p>
-              </div>
-            </div>
-
-            {/* Stat 2: Pricing */}
-            <div className="flex items-center justify-center gap-3 py-2 px-3">
-              <div className="w-9 h-9 rounded-full bg-[#C5A46D]/15 border border-[#C5A46D]/35 flex items-center justify-center text-[#E6C587]">
-                <span className="text-sm font-bold">₹</span>
-              </div>
-              <div className="text-left">
-                <span className="font-serif-display font-bold text-base sm:text-lg text-[#F8F6EE] tracking-tight">
-                  {restaurantData.stats.priceRange}
+      {/* 03. INTERACTIVE CORNER CONTROLS (Bottom Right) */}
+      <div className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 z-30 flex items-center gap-3">
+        {activeMode === 'video' ? (
+          /* Video Sound Toggle Button */
+          <button
+            onClick={toggleMute}
+            className="p-3 sm:px-4 sm:py-2 rounded-full bg-black/60 hover:bg-black/80 text-[#F8F6EE] border border-white/20 hover:border-[#C5A46D] backdrop-blur-md transition-all shadow-xl flex items-center gap-2 cursor-pointer group"
+            aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+          >
+            {isMuted ? (
+              <>
+                <VolumeX className="w-4 h-4 text-[#C5A46D] group-hover:scale-110 transition-transform" />
+                <span className="hidden sm:inline text-xs font-sans-ui uppercase tracking-wider text-[#E5E5E5]">
+                  Unmute Sound
                 </span>
-                <p className="text-[11px] uppercase tracking-wider text-[#DCE8D5]/75 font-medium">
-                  Average Per Person
-                </p>
-              </div>
-            </div>
-
-            {/* Stat 3: Timings */}
-            <div className="flex items-center justify-center gap-3 py-2 px-3">
-              <div className="w-9 h-9 rounded-full bg-[#C5A46D]/15 border border-[#C5A46D]/35 flex items-center justify-center text-[#E6C587]">
-                <Clock className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <span className="font-serif-display font-bold text-base sm:text-lg text-[#F8F6EE]">
-                  {restaurantData.timings.allDay}
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4 text-[#C5A46D] group-hover:scale-110 transition-transform" />
+                <span className="hidden sm:inline text-xs font-sans-ui uppercase tracking-wider text-[#E5E5E5]">
+                  Audio Playing
                 </span>
-                <p className="text-[11px] uppercase tracking-wider text-[#DCE8D5]/75 font-medium">
-                  Open All 7 Days • Fresh Catch Daily
-                </p>
-              </div>
+              </>
+            )}
+          </button>
+        ) : (
+          /* Images Mode: Slide Indicators with Caption */
+          <div className="flex items-center gap-2 px-3.5 py-1.5 sm:py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs shadow-xl">
+            <span className="text-[10px] sm:text-[11px] font-mono text-[#C5A46D] font-medium pr-1">
+              {activeImages[currentSlide]?.caption}
+            </span>
+            <div className="flex items-center gap-1.5" role="tablist" aria-label="Slideshow pagination">
+              {activeImages.map((img, idx) => (
+                <button
+                  key={img.url + idx}
+                  onClick={() => setCurrentSlide(idx)}
+                  className={`transition-all duration-300 rounded-full cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#C5A46D] ${
+                    idx === currentSlide
+                      ? 'w-5 h-1.5 bg-[#C5A46D]'
+                      : 'w-1.5 h-1.5 bg-white/40 hover:bg-white'
+                  }`}
+                  role="tab"
+                  aria-selected={idx === currentSlide}
+                  aria-label={`Slide ${idx + 1}: ${img.caption}`}
+                />
+              ))}
             </div>
-
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Scroll Cue Indicator */}
+      {/* 04. Scroll Down Indicator */}
+      <div className="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex-col items-center gap-1 pointer-events-auto">
         <button
           onClick={onDiscoverStory}
-          className="inline-flex flex-col items-center gap-1 text-[#DCE8D5]/75 hover:text-[#C5A46D] transition-colors cursor-pointer py-1 group focus:outline-none"
-          aria-label="Scroll down to discover more about Ila Kochi"
+          className="group flex flex-col items-center gap-1 text-center focus:outline-none cursor-pointer"
+          aria-label="Scroll to learn more about Ila Kochi"
         >
-          <span className="text-[10px] uppercase tracking-[0.25em] font-medium font-sans-ui opacity-80 group-hover:opacity-100 transition-opacity">
-            Discover More
+          <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.3em] text-[#A3A3A3] group-hover:text-[#C5A46D] transition-colors">
+            Scroll to Explore
           </span>
-          <div className="w-6 h-6 rounded-full border border-[#C5A46D]/40 flex items-center justify-center animate-float group-hover:border-[#C5A46D] group-hover:bg-[#123D2A]/50 transition-all">
-            <ArrowDown className="w-3.5 h-3.5 text-[#C5A46D]" />
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#C5A46D] group-hover:bg-black/60 transition-all">
+            <ArrowDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C5A46D] animate-bounce" />
           </div>
         </button>
-
       </div>
     </section>
   );
 };
-
-export default Hero;

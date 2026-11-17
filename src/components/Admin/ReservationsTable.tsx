@@ -56,16 +56,16 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
   return (
     <div className="space-y-6">
       {/* Top Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#0B291E] border border-[#176B45]/40">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#050505] border border-[#262626]/40">
         {/* Search */}
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8BFA0]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A3A3]" />
           <input
             type="text"
             placeholder="Search guest or phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#123D2A] border border-[#176B45]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
           />
         </div>
 
@@ -77,8 +77,8 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 rounded-lg text-xs uppercase tracking-wider font-medium capitalize transition-all cursor-pointer ${
                 statusFilter === st
-                  ? 'bg-[#C5A46D] text-[#0B291E] font-semibold'
-                  : 'bg-[#123D2A]/80 text-[#DCE8D5] hover:bg-[#176B45]'
+                  ? 'bg-[#C5A46D] text-[#050505] font-semibold'
+                  : 'bg-[#121212]/80 text-[#E5E5E5] hover:bg-[#262626]'
               }`}
             >
               {st}
@@ -89,8 +89,8 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
 
       {/* Reservations List */}
       {filteredReservations.length === 0 ? (
-        <div className="text-center py-16 rounded-3xl bg-[#0B291E]/60 border border-[#176B45]/30">
-          <p className="text-sm text-[#A8BFA0]">No reservations found matching the criteria.</p>
+        <div className="text-center py-16 rounded-3xl bg-[#050505]/60 border border-[#262626]/30">
+          <p className="text-sm text-[#A3A3A3]">No reservations found matching the criteria.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -102,7 +102,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
             return (
               <div
                 key={res.id}
-                className="p-5 rounded-2xl bg-[#0B291E] border border-[#176B45]/50 hover:border-[#C5A46D]/60 transition-all shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
+                className="p-5 rounded-2xl bg-[#050505] border border-[#262626]/50 hover:border-[#C5A46D]/60 transition-all shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4"
               >
                 {/* Guest Details */}
                 <div className="space-y-1.5 min-w-0 flex-1">
@@ -126,7 +126,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-[#A8BFA0] pt-1">
+                  <div className="flex flex-wrap items-center gap-4 text-xs text-[#A3A3A3] pt-1">
                     <span className="flex items-center gap-1">
                       <Users className="w-3.5 h-3.5 text-[#C5A46D]" />
                       {res.guests}
@@ -142,7 +142,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
                   </div>
 
                   {res.notes && (
-                    <p className="text-xs text-[#DCE8D5]/80 bg-[#123D2A]/60 p-2.5 rounded-xl border border-[#176B45]/30 mt-2 font-light">
+                    <p className="text-xs text-[#E5E5E5]/80 bg-[#121212]/60 p-2.5 rounded-xl border border-[#262626]/30 mt-2 font-light">
                       <span className="text-[#C5A46D] font-medium">Notes / Pre-order: </span>
                       {res.notes}
                     </p>
@@ -163,7 +163,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
                   {isPending && (
                     <button
                       onClick={() => res.id && handleStatusChange(res.id, 'confirmed')}
-                      className="p-2 rounded-xl bg-[#176B45] hover:bg-[#1f8758] text-[#F8F6EE] transition-colors cursor-pointer"
+                      className="p-2 rounded-xl bg-[#262626] hover:bg-[#1f8758] text-[#F8F6EE] transition-colors cursor-pointer"
                       title="Confirm Reservation"
                     >
                       <Check className="w-4 h-4" />
@@ -173,7 +173,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
                   {!isCancelled && (
                     <button
                       onClick={() => res.id && handleStatusChange(res.id, 'cancelled')}
-                      className="p-2 rounded-xl bg-[#123D2A] hover:bg-red-950/60 text-[#A8BFA0] hover:text-red-400 border border-[#176B45]/40 transition-colors cursor-pointer"
+                      className="p-2 rounded-xl bg-[#121212] hover:bg-red-950/60 text-[#A3A3A3] hover:text-red-400 border border-[#262626]/40 transition-colors cursor-pointer"
                       title="Cancel Reservation"
                     >
                       <X className="w-4 h-4" />
@@ -182,7 +182,7 @@ We look forward to serving you fresh seafood and banana leaf dining. See you soo
 
                   <button
                     onClick={() => res.id && handleDelete(res.id, res.name)}
-                    className="p-2 rounded-xl text-[#A8BFA0] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
+                    className="p-2 rounded-xl text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
                     title="Delete record"
                   >
                     <Trash2 className="w-4 h-4" />

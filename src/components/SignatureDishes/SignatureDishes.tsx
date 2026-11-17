@@ -39,9 +39,9 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
   ];
 
   return (
-    <section id="signatures" className="relative py-20 sm:py-24 lg:py-28 bg-[#123D2A] text-[#F8F6EE] overflow-hidden">
+    <section id="signatures" className="relative py-20 sm:py-24 lg:py-28 bg-[#121212] text-[#F8F6EE] overflow-hidden">
       {/* Background Malayalam Calligraphy Watermark */}
-      <div className="absolute -top-10 right-8 text-[16vw] font-serif-display text-[#176B45]/10 select-none pointer-events-none leading-none">
+      <div className="absolute -top-10 right-8 text-[16vw] font-serif-display text-[#262626]/10 select-none pointer-events-none leading-none">
         തീരം
       </div>
 
@@ -50,14 +50,14 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-6">
           <ScrollReveal direction="left" distance={60} duration={1.0}>
             <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0B291E] border border-[#176B45]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Harbour to Hearth</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display tracking-tight text-[#F8F6EE] leading-tight text-balance">
                 The essence of the coast.
               </h2>
-              <p className="text-sm sm:text-base text-[#DCE8D5] font-light leading-relaxed text-pretty">
+              <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
                 Every morning, wild catch arrives from local Kochi fishing boats. By noon and night, our heavy cast-iron tawas and clay chattis sizzle with cold-pressed coconut oil, charred banana leaves, and stone-ground spices.
               </p>
             </div>
@@ -65,13 +65,13 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
 
           {/* Quick Hero Switcher Tabs */}
           <ScrollReveal direction="right" distance={45} delay={0.2}>
-            <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-[#0B291E]/90 border border-[#176B45]/60 self-start md:self-end shadow-lg">
+            <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-[#050505]/90 border border-[#262626]/60 self-start md:self-end shadow-lg">
               <button
                 onClick={() => setActiveHeroId('karimeen-pollichathu')}
                 className={`px-4 py-2 rounded-full text-xs font-sans-ui uppercase tracking-wider transition-all cursor-pointer ${
                   activeHeroId === 'karimeen-pollichathu'
-                    ? 'bg-[#C5A46D] text-[#0B291E] font-semibold shadow-md'
-                    : 'text-[#DCE8D5] hover:text-[#F8F6EE]'
+                    ? 'bg-[#C5A46D] text-[#050505] font-semibold shadow-md'
+                    : 'text-[#E5E5E5] hover:text-[#F8F6EE]'
                 }`}
               >
                 Pearl Spot &bull; Pollichathu
@@ -80,8 +80,8 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                 onClick={() => setActiveHeroId('kalanji-tawa-fry')}
                 className={`px-4 py-2 rounded-full text-xs font-sans-ui uppercase tracking-wider transition-all cursor-pointer ${
                   activeHeroId === 'kalanji-tawa-fry'
-                    ? 'bg-[#C5A46D] text-[#0B291E] font-semibold shadow-md'
-                    : 'text-[#DCE8D5] hover:text-[#F8F6EE]'
+                    ? 'bg-[#C5A46D] text-[#050505] font-semibold shadow-md'
+                    : 'text-[#E5E5E5] hover:text-[#F8F6EE]'
                 }`}
               >
                 Kalanji &bull; Tawa Fry
@@ -97,7 +97,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
             <ScrollReveal direction="left" distance={60} duration={1.0} className="h-full">
               <div
                 onClick={() => onSelectDish && onSelectDish(activeHeroDish)}
-                className="group relative rounded-3xl overflow-hidden bg-[#0B291E] border border-[#176B45]/60 hover:border-[#C5A46D]/80 transition-all duration-500 shadow-2xl flex flex-col justify-between cursor-pointer h-full"
+                className="group relative rounded-3xl overflow-hidden bg-[#050505] border border-[#262626]/60 hover:border-[#C5A46D]/80 transition-all duration-500 shadow-2xl flex flex-col justify-between cursor-pointer h-full"
               >
                 {/* Visual Header & Image */}
                 <div className="relative aspect-[16/10] sm:aspect-[16/11] w-full overflow-hidden">
@@ -107,14 +107,14 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E] via-[#0B291E]/30 to-black/30" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/30 to-black/30" />
 
                   {/* Badges Overlay */}
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
-                    <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#0B291E]/90 text-[#C5A46D] border border-[#C5A46D]/40 backdrop-blur-md">
+                    <span className="px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#050505]/90 text-[#C5A46D] border border-[#C5A46D]/40 backdrop-blur-md">
                       {activeHeroDish.badge || 'Chef Signature'}
                     </span>
-                    <span className="px-4 py-1.5 rounded-full text-sm font-mono font-bold bg-[#176B45]/90 text-[#F8F6EE] border border-[#A8BFA0]/40 backdrop-blur-sm shadow-lg">
+                    <span className="px-4 py-1.5 rounded-full text-sm font-mono font-bold bg-[#262626]/90 text-[#F8F6EE] border border-[#A3A3A3]/40 backdrop-blur-sm shadow-lg">
                       {activeHeroDish.price}
                     </span>
                   </div>
@@ -128,7 +128,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                       {activeHeroDish.name}
                     </h3>
                     {activeHeroDish.malayalamName && (
-                      <span className="text-sm sm:text-base text-[#A8BFA0] font-sans-ui block mt-1">
+                      <span className="text-sm sm:text-base text-[#A3A3A3] font-sans-ui block mt-1">
                         {activeHeroDish.malayalamName}
                       </span>
                     )}
@@ -137,13 +137,13 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
 
                 {/* Editorial Narrative & Specs */}
                 <div className="p-5 sm:p-7 space-y-5 flex-1 flex flex-col justify-between">
-                  <p className="text-sm sm:text-base text-[#DCE8D5]/90 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-[#E5E5E5]/90 font-light leading-relaxed">
                     {activeHeroDish.description}
                   </p>
 
                   {/* Specs & Click Cue */}
-                  <div className="pt-4 border-t border-[#176B45]/30 flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 text-xs text-[#A8BFA0]">
+                  <div className="pt-4 border-t border-[#262626]/30 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 text-xs text-[#A3A3A3]">
                       <div className="flex items-center gap-1.5">
                         <Flame className="w-4 h-4 text-[#C5A46D]" />
                         <span>Spice Level:</span>
@@ -153,7 +153,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        <Leaf className="w-4 h-4 text-[#A8BFA0]" />
+                        <Leaf className="w-4 h-4 text-[#A3A3A3]" />
                         <span className="capitalize">{activeHeroDish.dietary}</span>
                       </div>
                     </div>
@@ -181,7 +181,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
               >
                 <div
                   onClick={() => onSelectDish && onSelectDish(dish)}
-                  className="group relative h-full rounded-2xl overflow-hidden bg-[#0B291E]/90 border border-[#176B45]/50 hover:border-[#C5A46D]/70 p-3.5 sm:p-4 transition-all duration-300 hover:-translate-y-0.5 shadow-xl flex items-center gap-3.5 sm:gap-4 cursor-pointer"
+                  className="group relative h-full rounded-2xl overflow-hidden bg-[#050505]/90 border border-[#262626]/50 hover:border-[#C5A46D]/70 p-3.5 sm:p-4 transition-all duration-300 hover:-translate-y-0.5 shadow-xl flex items-center gap-3.5 sm:gap-4 cursor-pointer"
                 >
                   {/* Thumbnail */}
                   <div className="relative w-20 sm:w-24 h-20 sm:h-24 rounded-xl overflow-hidden flex-shrink-0">
@@ -191,7 +191,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B291E]/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/60 to-transparent" />
                   </div>
 
                   {/* Info */}
@@ -200,7 +200,7 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                       <span className="text-[10px] font-mono uppercase tracking-wider text-[#C5A46D] block truncate">
                         {dish.badge || 'Coastal Specialty'}
                       </span>
-                      <span className="text-xs font-mono font-semibold text-[#F8F6EE] px-2 py-0.5 rounded bg-[#176B45]/80 border border-[#A8BFA0]/30 flex-shrink-0">
+                      <span className="text-xs font-mono font-semibold text-[#F8F6EE] px-2 py-0.5 rounded bg-[#262626]/80 border border-[#A3A3A3]/30 flex-shrink-0">
                         {dish.price}
                       </span>
                     </div>
@@ -210,12 +210,12 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
                     </h4>
 
                     {dish.malayalamName && (
-                      <span className="text-[11px] text-[#A8BFA0] font-sans-ui block truncate">
+                      <span className="text-[11px] text-[#A3A3A3] font-sans-ui block truncate">
                         {dish.malayalamName}
                       </span>
                     )}
 
-                    <p className="text-xs text-[#DCE8D5]/70 line-clamp-1 font-light">
+                    <p className="text-xs text-[#E5E5E5]/70 line-clamp-1 font-light">
                       {dish.description}
                     </p>
                   </div>
@@ -226,15 +226,15 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
         </div>
 
         {/* 3-Column Quality Assurance Footer Strip */}
-        <div className="mt-12 sm:mt-16 pt-8 border-t border-[#176B45]/30 grid grid-cols-1 md:grid-cols-3 gap-5 text-xs text-[#DCE8D5]">
+        <div className="mt-12 sm:mt-16 pt-8 border-t border-[#262626]/30 grid grid-cols-1 md:grid-cols-3 gap-5 text-xs text-[#E5E5E5]">
           <ScrollReveal direction="left" distance={40} delay={0.1}>
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#0B291E]/60 border border-[#176B45]/40 h-full">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#050505]/60 border border-[#262626]/40 h-full">
               <Waves className="w-5 h-5 text-[#C5A46D] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold text-[#F8F6EE] block uppercase tracking-wider text-[11px]">
                   Daily Harbour Catch
                 </span>
-                <p className="text-[#A8BFA0] mt-0.5 font-light leading-relaxed">
+                <p className="text-[#A3A3A3] mt-0.5 font-light leading-relaxed">
                   Direct from Munambam and Fort Kochi landing centers. Never frozen.
                 </p>
               </div>
@@ -242,13 +242,13 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
           </ScrollReveal>
 
           <ScrollReveal direction="up" distance={40} delay={0.2}>
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#0B291E]/60 border border-[#176B45]/40 h-full">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#050505]/60 border border-[#262626]/40 h-full">
               <Flame className="w-5 h-5 text-[#C5A46D] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold text-[#F8F6EE] block uppercase tracking-wider text-[11px]">
                   Wood-Pressed Coconut Oil
                 </span>
-                <p className="text-[#A8BFA0] mt-0.5 font-light leading-relaxed">
+                <p className="text-[#A3A3A3] mt-0.5 font-light leading-relaxed">
                   Cooked exclusively in pure cold-pressed oil and roasted Tellicherry pepper.
                 </p>
               </div>
@@ -256,13 +256,13 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
           </ScrollReveal>
 
           <ScrollReveal direction="right" distance={40} delay={0.3}>
-            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#0B291E]/60 border border-[#176B45]/40 h-full">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-[#050505]/60 border border-[#262626]/40 h-full">
               <Leaf className="w-5 h-5 text-[#C5A46D] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold text-[#F8F6EE] block uppercase tracking-wider text-[11px]">
                   Served on Living Leaf (ഇല)
                 </span>
-                <p className="text-[#A8BFA0] mt-0.5 font-light leading-relaxed">
+                <p className="text-[#A3A3A3] mt-0.5 font-light leading-relaxed">
                   Hot feasts on fresh plantain leaves for natural aroma and Ayurvedic digestion.
                 </p>
               </div>
