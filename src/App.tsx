@@ -34,21 +34,26 @@ export function App() {
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
   const [selectedDish, setSelectedDish] = useState<MenuItem | null>(null);
 
-  // Admin portal route detection: '#admin', '#/admin', or '/admin'
-  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const hash = (window.location.hash || '').toLowerCase();
-      const path = (window.location.pathname || '').toLowerCase();
-      return hash === '#admin' || hash === '#/admin' || path === '/admin';
-    }
-    return false;
-  });
+  // Admin portal route detection: '#admin', '#/admin', '/admin', or '/admin/'
+  const checkIsAdmin = () => {
+    if (typeof window === 'undefined') return false;
+    const hash = (window.location.hash || '').toLowerCase();
+    const path = (window.location.pathname || '').toLowerCase();
+    return (
+      hash === '#admin' ||
+      hash === '#/admin' ||
+      hash.startsWith('#admin') ||
+      path === '/admin' ||
+      path === '/admin/' ||
+      path.startsWith('/admin')
+    );
+  };
+
+  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => checkIsAdmin());
 
   useEffect(() => {
     const checkRoute = () => {
-      const hash = (window.location.hash || '').toLowerCase();
-      const path = (window.location.pathname || '').toLowerCase();
-      setIsAdminRoute(hash === '#admin' || hash === '#/admin' || path === '/admin');
+      setIsAdminRoute(checkIsAdmin());
     };
 
     window.addEventListener('hashchange', checkRoute);
@@ -69,7 +74,7 @@ export function App() {
 
   const handleExitAdmin = () => {
     window.location.hash = '';
-    if (window.location.pathname === '/admin') {
+    if (window.location.pathname.startsWith('/admin')) {
       window.history.pushState(null, '', '/');
     }
     setIsAdminRoute(false);
