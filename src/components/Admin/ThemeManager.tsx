@@ -19,10 +19,6 @@ import {
   Calendar,
   Utensils,
   ExternalLink,
-  Copy,
-  ShieldAlert,
-  ChevronDown,
-  ChevronUp,
 } from 'lucide-react';
 
 interface ThemeManagerProps {
@@ -37,8 +33,6 @@ export const ThemeManager: React.FC<ThemeManagerProps> = ({ onSuccessNotice }) =
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSyncedCloud, setIsSyncedCloud] = useState<boolean | null>(null);
   const [isCustomExpanded, setIsCustomExpanded] = useState(false);
-  const [showRulesHelper, setShowRulesHelper] = useState(false);
-  const [copiedRules, setCopiedRules] = useState(false);
 
   // Subscribe to live Firestore theme config
   useEffect(() => {
@@ -127,29 +121,6 @@ export const ThemeManager: React.FC<ThemeManagerProps> = ({ onSuccessNotice }) =
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const handleCopyRules = () => {
-    const rules = `rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /site_settings/{document} {
-      allow read, write: if true;
-    }
-    match /menu_items/{itemId} {
-      allow read, write: if true;
-    }
-    match /reservations/{reservationId} {
-      allow read, write: if true;
-    }
-    match /media_uploads/{mediaId} {
-      allow read, write: if true;
-    }
-  }
-}`;
-    navigator.clipboard.writeText(rules);
-    setCopiedRules(true);
-    setTimeout(() => setCopiedRules(false), 3000);
   };
 
   // Reset to default Obsidian Black
@@ -638,92 +609,6 @@ service cloud.firestore {
                   />
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 5. Firebase Security Rules Troubleshooting Helper */}
-      <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/50 space-y-4">
-        <div
-          onClick={() => setShowRulesHelper(!showRulesHelper)}
-          className="flex items-center justify-between cursor-pointer select-none"
-        >
-          <div className="flex items-center gap-2.5">
-            <ShieldAlert className="w-4 h-4 text-[#C5A46D]" />
-            <div>
-              <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#F8F6EE] font-mono">
-                Firebase Firestore Permissions Guide (Multi-Device Sync)
-              </h3>
-              <p className="text-[11px] text-[#A3A3A3] mt-0.5">
-                If the browser console says &ldquo;Missing or insufficient permissions&rdquo;, update your Firestore rules in Firebase Console.
-              </p>
-            </div>
-          </div>
-
-          <button className="p-2 rounded-full text-[#A3A3A3] hover:text-[#F8F6EE] hover:bg-[#121212] transition-colors">
-            {showRulesHelper ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {showRulesHelper && (
-          <div className="pt-4 border-t border-[#262626]/50 space-y-4 text-xs text-[#A3A3A3] animate-fadeIn">
-            <p>
-              By default, Firebase Firestore projects in test mode expire after 30 days or require custom security rules. To allow your Admin Portal to save theme and menu settings across all devices:
-            </p>
-
-            <ol className="list-decimal list-inside space-y-1.5 text-xs text-[#E5E5E5] pl-1">
-              <li>
-                Open{' '}
-                <a
-                  href="https://console.firebase.google.com/project/ilakochi-809fb/firestore/rules"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#C5A46D] hover:underline font-semibold"
-                >
-                  Firebase Console &rarr; Firestore Database &rarr; Rules
-                </a>
-              </li>
-              <li>Replace existing rules with the configuration below:</li>
-              <li>Click <strong>Publish</strong>.</li>
-            </ol>
-
-            <div className="relative rounded-2xl bg-[#121212] border border-[#262626]/60 p-4 font-mono text-[11px] text-[#F8F6EE] overflow-x-auto">
-              <button
-                onClick={handleCopyRules}
-                className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#050505] hover:bg-[#1a1a1a] border border-[#262626] text-[10px] text-[#C5A46D] transition-colors cursor-pointer"
-              >
-                {copiedRules ? (
-                  <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3" />
-                    <span>Copy Rules</span>
-                  </>
-                )}
-              </button>
-              <pre className="text-xs leading-relaxed text-[#D8B982]">
-{`rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /site_settings/{document} {
-      allow read, write: if true;
-    }
-    match /menu_items/{itemId} {
-      allow read, write: if true;
-    }
-    match /reservations/{reservationId} {
-      allow read, write: if true;
-    }
-    match /media_uploads/{mediaId} {
-      allow read, write: if true;
-    }
-  }
-}`}
-              </pre>
             </div>
           </div>
         )}
