@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
             <img
               src="/assets/ila-kochi-logo-white.png"
               alt="ILA KOCHI Emblem"
-              className="h-28 sm:h-36 md:h-44 w-auto object-contain drop-shadow-[0_8px_30px_rgba(197,164,109,0.35)] filter brightness-105 hover:scale-105 transition-transform duration-500 select-none"
+              className="h-36 sm:h-48 md:h-56 w-auto object-contain drop-shadow-[0_12px_40px_rgba(197,164,109,0.4)] filter brightness-105 hover:scale-105 transition-transform duration-500 select-none"
             />
           </div>
 

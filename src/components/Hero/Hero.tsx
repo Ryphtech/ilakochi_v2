@@ -147,11 +147,11 @@ export const Hero: React.FC<HeroProps> = ({
           {/* ILA KOCHI Brand Logo Emblem */}
           <div className="flex items-center justify-center lg:justify-start">
             <div className="relative inline-flex items-center justify-center">
-              <div className="absolute -inset-3 bg-[#C5A46D]/15 rounded-full blur-xl pointer-events-none" />
+              <div className="absolute -inset-4 bg-[#C5A46D]/20 rounded-full blur-2xl pointer-events-none" />
               <img
                 src="/assets/ila-kochi-logo-white.png"
                 alt="ILA KOCHI Emblem"
-                className="relative h-16 sm:h-20 md:h-24 w-auto object-contain drop-shadow-[0_6px_24px_rgba(197,164,109,0.35)] filter brightness-105 hover:scale-105 transition-transform duration-500 select-none"
+                className="relative h-24 sm:h-32 md:h-36 lg:h-44 w-auto object-contain drop-shadow-[0_8px_32px_rgba(197,164,109,0.4)] filter brightness-105 hover:scale-105 transition-transform duration-500 select-none"
               />
             </div>
           </div>

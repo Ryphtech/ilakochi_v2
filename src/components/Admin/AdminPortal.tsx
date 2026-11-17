@@ -197,7 +197,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             <img
               src="/assets/ila-kochi-logo-white.png"
               alt="Ila Kochi Logo"
-              className="h-9 w-auto object-contain"
+              className="h-11 sm:h-12 w-auto object-contain"
             />
             <div>
               <span className="text-sm sm:text-base font-serif-display font-medium text-[#F8F6EE] block leading-tight">
