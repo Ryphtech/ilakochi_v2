@@ -10,10 +10,14 @@ import { MenuItem, menuCategories } from '../../data/menuData';
 import { FoodItemModal } from './FoodItemModal';
 import { MediaUploadZone } from './MediaUploadZone';
 import { ReservationsTable } from './ReservationsTable';
+import { HeroBackgroundManager } from './HeroBackgroundManager';
+import { ThemeManager } from './ThemeManager';
 import {
   Utensils,
   Film,
   Calendar,
+  Image as ImageIcon,
+  Palette,
   Plus,
   Edit2,
   Trash2,
@@ -41,7 +45,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   const [pinError, setPinError] = useState(false);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations'>('dishes');
+  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme'>('dishes');
 
   // Menu State
   const [dishes, setDishes] = useState<MenuItem[]>([]);
@@ -129,9 +133,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   // 1. PIN GATE LOGIN VIEW
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black text-[#F8F6EE] flex items-center justify-center p-4">
-        <div className="w-full max-w-md p-8 rounded-3xl bg-[#0a0a0a] border border-white/15 shadow-2xl space-y-6 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-white/5 border border-[#C5A46D]/60 flex items-center justify-center mx-auto text-[#C5A46D] shadow-xl">
+      <div className="min-h-screen bg-[#000000] text-[#F8F6EE] flex items-center justify-center p-4">
+        <div className="w-full max-w-md p-8 rounded-3xl bg-[#050505] border border-[#262626]/70 shadow-2xl space-y-6 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-[#121212] border border-[#C5A46D]/60 flex items-center justify-center mx-auto text-[#C5A46D] shadow-xl">
             <Lock className="w-8 h-8" />
           </div>
 
@@ -139,7 +143,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             <h2 className="text-2xl font-serif-display font-medium text-[#F8F6EE]">
               ILA KOCHI Admin Portal
             </h2>
-            <p className="text-xs text-[#A8BFA0]">
+            <p className="text-xs text-[#A3A3A3]">
               Enter staff security PIN to access Food Items, Media &amp; Reservations
             </p>
           </div>
@@ -153,7 +157,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                 setPinInput(e.target.value);
                 setPinError(false);
               }}
-              className="w-full text-center tracking-[0.3em] font-mono text-lg py-3 rounded-xl bg-black border border-white/20 text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
+              className="w-full text-center tracking-[0.3em] font-mono text-lg py-3 rounded-xl bg-[#121212] border border-[#262626] text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D] transition-colors"
               autoFocus
             />
 
@@ -165,7 +169,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-black bg-[#C5A46D] hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer"
+              className="w-full py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#050505] bg-[#C5A46D] hover:bg-[#d8b982] transition-colors shadow-lg cursor-pointer"
             >
               Access Admin Portal
             </button>
@@ -173,7 +177,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
           <button
             onClick={onExit}
-            className="text-xs text-[#A8BFA0] hover:text-[#F8F6EE] underline cursor-pointer"
+            className="text-xs text-[#A3A3A3] hover:text-[#F8F6EE] underline cursor-pointer"
           >
             &larr; Back to Website
           </button>
@@ -184,22 +188,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
   // 2. MAIN ADMIN PORTAL VIEW
   return (
-    <div className="min-h-screen bg-black text-[#F8F6EE]">
+    <div className="min-h-screen bg-[#000000] text-[#F8F6EE]">
       {/* Top Admin Header */}
-      <header className="sticky top-0 z-40 bg-black/95 border-b border-white/10 backdrop-blur-md px-4 sm:px-8 py-3.5">
+      <header className="sticky top-0 z-40 bg-[#050505]/95 border-b border-[#262626]/50 backdrop-blur-md px-4 sm:px-8 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Brand */}
           <div className="flex items-center gap-3">
             <img
               src="/assets/ila-kochi-logo-white.png"
               alt="Ila Kochi Logo"
-              className="h-9 w-auto object-contain"
+              className="h-11 sm:h-12 w-auto object-contain"
             />
             <div>
               <span className="text-sm sm:text-base font-serif-display font-medium text-[#F8F6EE] block leading-tight">
                 ILA KOCHI <span className="text-[#C5A46D] font-mono text-xs">ADMIN</span>
               </span>
-              <span className="text-[10px] text-[#A8BFA0] font-sans-ui block">
+              <span className="text-[10px] text-[#A3A3A3] font-sans-ui block">
                 Firebase Firestore &bull; Cloudflare R2 Connected
               </span>
             </div>
@@ -209,7 +213,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
           <div className="flex items-center gap-3">
             <button
               onClick={onExit}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs text-[#DCE8D5] hover:text-[#F8F6EE] bg-white/5 border border-white/10 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs text-[#E5E5E5] hover:text-[#F8F6EE] bg-[#121212] border border-[#262626]/50 transition-colors cursor-pointer"
             >
               <span>View Website</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -217,7 +221,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
             <button
               onClick={handleLogout}
-              className="p-2 rounded-full text-[#A8BFA0] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
+              className="p-2 rounded-full text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
               title="Logout from Admin"
             >
               <LogOut className="w-4 h-4" />
@@ -230,20 +234,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
       <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8">
         {/* Success Alert Banner */}
         {actionSuccess && (
-          <div className="p-4 rounded-2xl bg-white/5 border border-[#C5A46D]/50 text-xs text-[#C5A46D] flex items-center gap-2 animate-fadeIn">
-            <CheckCircle className="w-4 h-4 text-[#C5A46D] flex-shrink-0" />
+          <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/50 text-xs text-emerald-200 flex items-center gap-2 animate-fadeIn">
+            <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
             <span>{actionSuccess}</span>
           </div>
         )}
 
         {/* Tab Selector Navigation */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+        <div className="flex items-center gap-2 border-b border-[#262626]/40 pb-3 overflow-x-auto">
           <button
             onClick={() => setActiveTab('dishes')}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'dishes'
-                ? 'bg-[#C5A46D] text-black shadow-lg'
-                : 'text-[#DCE8D5] hover:bg-white/5 border border-transparent'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
             }`}
           >
             <Utensils className="w-4 h-4" />
@@ -254,8 +258,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             onClick={() => setActiveTab('media')}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'media'
-                ? 'bg-[#C5A46D] text-black shadow-lg'
-                : 'text-[#DCE8D5] hover:bg-white/5 border border-transparent'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
             }`}
           >
             <Film className="w-4 h-4" />
@@ -266,12 +270,36 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             onClick={() => setActiveTab('reservations')}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === 'reservations'
-                ? 'bg-[#C5A46D] text-black shadow-lg'
-                : 'text-[#DCE8D5] hover:bg-white/5 border border-transparent'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
             }`}
           >
             <Calendar className="w-4 h-4" />
             <span>Table Reservations</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('hero')}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'hero'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
+            }`}
+          >
+            <ImageIcon className="w-4 h-4" />
+            <span>Hero Background</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('theme')}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'theme'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
+            }`}
+          >
+            <Palette className="w-4 h-4" />
+            <span>Theme &amp; Colors</span>
           </button>
         </div>
 
@@ -279,24 +307,24 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
         {activeTab === 'dishes' && (
           <div className="space-y-6">
             {/* Top Toolbar */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#0a0a0a] border border-white/10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#050505] border border-[#262626]/50">
               {/* Search & Category Filter */}
               <div className="flex items-center gap-3 w-full md:w-auto flex-1">
                 <div className="relative flex-1 max-w-sm">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8BFA0]" />
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A3A3A3]" />
                   <input
                     type="text"
                     placeholder="Search dishes..."
                     value={dishSearch}
                     onChange={(e) => setDishSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-black border border-white/15 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D]"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D]"
                   />
                 </div>
 
                 <select
                   value={dishCategoryFilter}
                   onChange={(e) => setDishCategoryFilter(e.target.value)}
-                  className="h-9 px-3 rounded-xl bg-black border border-white/15 text-xs text-[#F8F6EE] cursor-pointer"
+                  className="h-9 px-3 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] cursor-pointer"
                 >
                   {menuCategories.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -311,7 +339,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                 <button
                   onClick={handleSeedDefaults}
                   disabled={isSeeding}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-[#DCE8D5] border border-white/10 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#121212] hover:bg-[#262626] text-xs text-[#E5E5E5] border border-[#262626]/50 transition-colors cursor-pointer"
                   title="Seed default 14 dishes to Firestore"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isSeeding ? 'animate-spin' : ''}`} />
@@ -323,7 +351,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                     setEditingDish(null);
                     setIsDishModalOpen(true);
                   }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C5A46D] hover:bg-[#d8b982] text-xs font-semibold uppercase tracking-wider text-black transition-colors shadow-lg cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C5A46D] hover:bg-[#d8b982] text-xs font-semibold uppercase tracking-wider text-[#050505] transition-colors shadow-lg cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add New Dish</span>
@@ -333,15 +361,15 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
             {/* Dishes Grid */}
             {filteredDishes.length === 0 ? (
-              <div className="text-center py-16 rounded-3xl bg-[#0a0a0a] border border-white/10">
-                <p className="text-sm text-[#A8BFA0]">No dishes found. Click "+ Add New Dish" or "Seed Defaults".</p>
+              <div className="text-center py-16 rounded-3xl bg-[#050505]/60 border border-[#262626]/30">
+                <p className="text-sm text-[#A3A3A3]">No dishes found. Click "+ Add New Dish" or "Seed Defaults".</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredDishes.map((dish) => (
                   <div
                     key={dish.id}
-                    className="p-4 rounded-3xl bg-[#0a0a0a] border border-white/10 hover:border-[#C5A46D]/60 transition-all shadow-xl flex flex-col justify-between space-y-3"
+                    className="p-4 rounded-3xl bg-[#050505] border border-[#262626]/50 hover:border-[#C5A46D]/60 transition-all shadow-xl flex flex-col justify-between space-y-3"
                   >
                     <div>
                       {/* Image & Badges */}
@@ -354,18 +382,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                         />
                         <div className="absolute top-2 left-2 flex flex-col gap-1">
                           {dish.badge && (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-black/90 text-[#C5A46D] border border-[#C5A46D]/40">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-[#050505]/90 text-[#C5A46D] border border-[#C5A46D]/40">
                               {dish.badge}
                             </span>
                           )}
                           {dish.featured && (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-white/10 text-[#C5A46D] border border-[#C5A46D]/40">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-emerald-950/90 text-emerald-300 border border-emerald-500/40">
                               Featured
                             </span>
                           )}
                         </div>
 
-                        <span className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-[#C5A46D] text-black">
+                        <span className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-[#262626] text-[#F8F6EE]">
                           {dish.price}
                         </span>
                       </div>
@@ -376,7 +404,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                           <h4 className="text-base font-serif-display font-medium text-[#F8F6EE] leading-snug">
                             {dish.name}
                           </h4>
-                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-white/5 text-[#A8BFA0] flex-shrink-0">
+                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-[#121212] text-[#A3A3A3] flex-shrink-0">
                             {dish.category}
                           </span>
                         </div>
@@ -387,21 +415,21 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                           </span>
                         )}
 
-                        <p className="text-xs text-[#DCE8D5]/80 line-clamp-2 font-light leading-relaxed pt-1">
+                        <p className="text-xs text-[#E5E5E5]/80 line-clamp-2 font-light leading-relaxed pt-1">
                           {dish.description}
                         </p>
                       </div>
                     </div>
 
                     {/* Bottom Toolbar */}
-                    <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#A8BFA0]">
+                    <div className="pt-3 border-t border-[#262626]/30 flex items-center justify-between text-xs text-[#A3A3A3]">
                       <div className="flex items-center gap-1 font-mono text-[10px] text-[#C5A46D]">
                         {dish.spiceLevel && (
                           <span title={`Spice level: ${dish.spiceLevel}`}>
                             {'★'.repeat(dish.spiceLevel)}
                           </span>
                         )}
-                        <span className="text-[#A8BFA0] uppercase ml-1.5">({dish.dietary})</span>
+                        <span className="text-[#A3A3A3] uppercase ml-1.5">({dish.dietary})</span>
                       </div>
 
                       <div className="flex items-center gap-1.5">
@@ -410,7 +438,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
                             setEditingDish(dish);
                             setIsDishModalOpen(true);
                           }}
-                          className="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-[#DCE8D5] hover:text-[#F8F6EE] transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-[#121212] hover:bg-[#262626] text-[#E5E5E5] hover:text-[#F8F6EE] transition-colors cursor-pointer"
                           title="Edit Dish"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
@@ -418,7 +446,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
                         <button
                           onClick={() => handleDeleteDish(dish.id, dish.name)}
-                          className="p-1.5 rounded-lg text-[#A8BFA0] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
                           title="Delete Dish"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -437,6 +465,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
         {/* TAB 3: TABLE RESERVATIONS */}
         {activeTab === 'reservations' && <ReservationsTable />}
+
+        {/* TAB 4: HERO BACKGROUND MANAGEMENT (Images vs Video) */}
+        {activeTab === 'hero' && <HeroBackgroundManager />}
+
+        {/* TAB 5: WEBSITE THEME & COLOR PALETTE */}
+        {activeTab === 'theme' && (
+          <ThemeManager
+            onSuccessNotice={(msg) => {
+              setActionSuccess(msg);
+              setTimeout(() => setActionSuccess(''), 3500);
+            }}
+          />
+        )}
       </main>
 
       {/* Dish Add/Edit Modal */}

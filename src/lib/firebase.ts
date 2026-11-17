@@ -225,3 +225,132 @@ export const deleteMediaUploadMeta = async (id: string) => {
   const docRef = doc(db, 'media_uploads', id);
   await deleteDoc(docRef);
 };
+
+// ==========================================
+// 4. HERO SECTION SETTINGS (Images vs Video)
+// ==========================================
+
+export interface HeroImageConfig {
+  url: string;
+  alt: string;
+  caption: string;
+}
+
+export interface HeroConfig {
+  mode: 'images' | 'video';
+  videoUrl: string;
+  videoPoster?: string;
+  images: HeroImageConfig[];
+  intervalMs?: number;
+  updatedAt?: unknown;
+}
+
+export const defaultHeroConfig: HeroConfig = {
+  mode: 'images',
+  videoUrl: 'https://pub-a15e46301b3045309b2a4a019cb939e9.r2.dev/ila-kochi-reel.mp4',
+  videoPoster: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=1600&q=80',
+  intervalMs: 5000,
+  images: [
+    {
+      url: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=1600&q=80',
+      alt: 'Sizzling Kalanji tawa fish fry marinated in ground spices and coconut oil',
+      caption: 'Signature Tawa Fry',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1600&q=80',
+      alt: 'Traditional Kerala seafood meal served on fresh banana leaf',
+      caption: 'Banana Leaf Feast',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1600&q=80',
+      alt: 'Fresh catch from local fishing harbour prepared daily',
+      caption: 'Daily Harbour Catch',
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1600&q=80',
+      alt: 'Kerala spiced tiger prawns roast with curry leaves',
+      caption: 'Chemmeen Ghee Roast',
+    },
+  ],
+};
+
+const HERO_STORAGE_KEY = 'ila_hero_config';
+
+/**
+ * Read cached hero config from localStorage
+ */
+export const getStoredHeroConfig = (): HeroConfig => {
+  if (typeof window === 'undefined') return defaultHeroConfig;
+  try {
+    const raw = localStorage.getItem(HERO_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && (parsed.images || parsed.videoUrl)) {
+        return parsed as HeroConfig;
+      }
+    }
+  } catch {}
+  return defaultHeroConfig;
+};
+
+/**
+ * Save or update Hero configuration in Firestore (site_settings / hero)
+ * Always persists locally even if Firestore permissions are restricted
+ */
+export const saveHeroConfig = async (config: Partial<HeroConfig>) => {
+  // 1. Persist locally first
+  try {
+    const current = getStoredHeroConfig();
+    const updated = { ...current, ...config };
+    localStorage.setItem(HERO_STORAGE_KEY, JSON.stringify(updated));
+  } catch {}
+
+  // 2. Persist to Firestore
+  try {
+    const docRef = doc(db, 'site_settings', 'hero');
+    await setDoc(
+      docRef,
+      {
+        ...config,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+    return { success: true, syncedToCloud: true };
+  } catch (err: any) {
+    console.warn('Firebase Firestore hero sync skipped (check Firestore Security Rules):', err?.message || err);
+    return { success: true, syncedToCloud: false, error: err };
+  }
+};
+
+/**
+ * Real-time subscription to Hero configuration
+ */
+export const subscribeHeroConfig = (callback: (config: HeroConfig) => void) => {
+  const docRef = doc(db, 'site_settings', 'hero');
+  return onSnapshot(
+    docRef,
+    (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data() as Partial<HeroConfig>;
+        const resolved: HeroConfig = {
+          mode: data.mode || 'images',
+          videoUrl: data.videoUrl || defaultHeroConfig.videoUrl,
+          videoPoster: data.videoPoster || defaultHeroConfig.videoPoster,
+          images: data.images && data.images.length > 0 ? data.images : defaultHeroConfig.images,
+          intervalMs: data.intervalMs || 5000,
+        };
+        try {
+          localStorage.setItem(HERO_STORAGE_KEY, JSON.stringify(resolved));
+        } catch {}
+        callback(resolved);
+      } else {
+        callback(getStoredHeroConfig());
+      }
+    },
+    (err) => {
+      console.warn('Firestore hero sync paused (running on local hero cache):', err?.message || err);
+      callback(getStoredHeroConfig());
+    }
+  );
+};

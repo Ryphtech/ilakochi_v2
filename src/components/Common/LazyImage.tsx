@@ -19,10 +19,10 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden bg-white/5 ${aspectRatioClass} ${containerClassName}`}>
-      {/* Neutral Shimmer Placeholder */}
+    <div className={`relative overflow-hidden bg-[#121212]/60 ${aspectRatioClass} ${containerClassName}`}>
+      {/* Botanical Shimmer Placeholder */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-white/10 to-white/5 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#121212] to-[#050505] animate-pulse" />
       )}
 
       {/* Image Element */}

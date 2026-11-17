@@ -62,17 +62,17 @@ export const ScrollMarquee: React.FC<ScrollMarqueeProps> = ({
   return (
     <div
       ref={containerRef}
-      className="relative py-12 md:py-16 overflow-hidden bg-black border-y border-white/10 select-none z-10 pointer-events-none"
+      className="relative py-12 md:py-16 overflow-hidden bg-[#050505] border-y border-[#262626]/30 select-none z-10 pointer-events-none"
       aria-hidden="true"
     >
       {/* Subtle background glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505] z-10 pointer-events-none" />
 
       {/* Track 1: Gliding Left */}
       <div className="flex whitespace-nowrap mb-3 will-change-transform">
         <div
           ref={track1Ref}
-          className="text-4xl sm:text-6xl md:text-7xl font-serif-display font-medium tracking-[0.15em] uppercase text-[#F8F6EE]/35 hover:text-[#F8F6EE]/60 transition-colors whitespace-nowrap"
+          className="text-4xl sm:text-6xl md:text-7xl font-serif-display font-medium tracking-[0.15em] uppercase text-[#F8F6EE]/15 hover:text-[#F8F6EE]/30 transition-colors whitespace-nowrap"
         >
           {repeatedTop}
         </div>
@@ -82,7 +82,7 @@ export const ScrollMarquee: React.FC<ScrollMarqueeProps> = ({
       <div className="flex whitespace-nowrap will-change-transform">
         <div
           ref={track2Ref}
-          className="text-3xl sm:text-5xl md:text-6xl font-serif-display italic tracking-[0.18em] text-[#C5A46D]/50 whitespace-nowrap"
+          className="text-3xl sm:text-5xl md:text-6xl font-serif-display italic tracking-[0.18em] text-[#C5A46D]/25 whitespace-nowrap"
           style={{ transform: 'translateX(-30%)' }}
         >
           {repeatedBottom}
