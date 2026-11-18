@@ -1,8 +1,11 @@
 import React from 'react';
 import { Waves, Flame, Leaf, ArrowRight } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
+import { useHeadings } from '../../lib/headings';
 
 export const HowItWorks: React.FC = () => {
+  const { headings } = useHeadings();
+  const ritualHeadings = headings.howItWorks;
   const steps = [
     {
       step: '01',
@@ -35,13 +38,13 @@ export const HowItWorks: React.FC = () => {
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <Leaf className="w-3.5 h-3.5" />
-              <span>Harbour to Plate Journey</span>
+              <span>{ritualHeadings.eyebrow || 'Harbour to Plate Journey'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-              How the feast unfolds.
+              {ritualHeadings.title}
             </h2>
             <p className="text-sm sm:text-base text-[#E5E5E5]/80 font-light leading-relaxed text-pretty">
-              Three unhurried steps from the morning tides of Kochi to your living banana leaf table.
+              {ritualHeadings.subtitle || 'Three unhurried steps from the morning tides of Kochi to your living banana leaf table.'}
             </p>
           </div>
         </ScrollReveal>

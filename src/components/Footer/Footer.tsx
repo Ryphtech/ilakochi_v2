@@ -1,6 +1,7 @@
 import React from 'react';
 import { Logo } from '../Navbar/Logo';
 import { restaurantData } from '../../data/restaurantData';
+import { useHeadings } from '../../lib/headings';
 import { MapPin, Phone, Mail, Clock, ArrowUp, MessageSquare, Lock } from 'lucide-react';
 
 interface FooterProps {
@@ -8,6 +9,8 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
+  const { headings } = useHeadings();
+  const footerHeadings = headings.footer;
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -27,12 +30,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenReservation }) => {
           </div>
 
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-            Rooted in Nature. <br />
-            <span className="italic font-editorial text-[#C5A46D]">Inspired by the Coast.</span>
+            {footerHeadings.title}
           </h2>
 
           <p className="text-base sm:text-lg text-[#E5E5E5]/90 font-light max-w-xl mx-auto text-pretty">
-            Discover the spirit of Kerala, one flavour at a time. Served fresh on living banana leaves at Pathadipalam, Kochi.
+            {footerHeadings.subtitle || 'Discover the spirit of Kerala, one flavour at a time. Served fresh on living banana leaves at Pathadipalam, Kochi.'}
           </p>
 
           <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4">

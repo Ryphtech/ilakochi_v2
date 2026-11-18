@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Users, Clock, Sparkles, MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
 import { saveReservationToFirestore } from '../../lib/firebase';
+import { useHeadings } from '../../lib/headings';
 
 interface ReservationSectionProps {
   isModal?: boolean;
@@ -8,6 +9,8 @@ interface ReservationSectionProps {
 }
 
 export const ReservationSection: React.FC<ReservationSectionProps> = ({ isModal = false, onClose }) => {
+  const { headings } = useHeadings();
+  const resHeadings = headings.reservation;
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -66,13 +69,13 @@ Please confirm table availability. Thank you!`;
       <div className="text-center max-w-xl mx-auto space-y-2.5 mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Table Inquiry &amp; Booking</span>
+          <span>{resHeadings.eyebrow || 'Table Inquiry & Booking'}</span>
         </div>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-          Your table is waiting.
+          {resHeadings.title}
         </h2>
         <p className="text-xs sm:text-sm text-[#E5E5E5]/80 font-light leading-relaxed max-w-md mx-auto text-pretty">
-          Reserve your spot for authentic Kerala seafood dining on fresh banana leaves. Connects directly with our manager on WhatsApp.
+          {resHeadings.subtitle || 'Reserve your spot for authentic Kerala seafood dining on fresh banana leaves. Connects directly with our manager on WhatsApp.'}
         </p>
       </div>
 

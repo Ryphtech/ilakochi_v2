@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, MessageSquare } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
 import { restaurantData } from '../../data/restaurantData';
+import { useHeadings } from '../../lib/headings';
 
 interface FAQItem {
   question: string;
@@ -40,6 +41,8 @@ const faqs: FAQItem[] = [
 ];
 
 export const FAQSection: React.FC = () => {
+  const { headings } = useHeadings();
+  const faqHeadings = headings.faq;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggle = (index: number) => {
@@ -54,13 +57,13 @@ export const FAQSection: React.FC = () => {
           <div className="text-center max-w-xl mx-auto space-y-3 mb-12 sm:mb-14">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <HelpCircle className="w-3.5 h-3.5" />
-              <span>Everything You Need to Know</span>
+              <span>{faqHeadings.eyebrow || 'Everything You Need to Know'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-              Frequently asked questions.
+              {faqHeadings.title}
             </h2>
             <p className="text-sm sm:text-base text-[#E5E5E5]/80 font-light leading-relaxed text-pretty">
-              Timings, location, parking, and banana leaf dining details.
+              {faqHeadings.subtitle || 'Timings, location, parking, and banana leaf dining details.'}
             </p>
           </div>
         </ScrollReveal>

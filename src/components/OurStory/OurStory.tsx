@@ -1,8 +1,11 @@
 import React from 'react';
 import { Leaf, Compass, Heart } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
+import { useHeadings } from '../../lib/headings';
 
 export const OurStory: React.FC = () => {
+  const { headings } = useHeadings();
+  const storyHeadings = headings.ourStory;
   return (
     <section id="story" className="relative py-20 sm:py-24 lg:py-28 bg-[#050505] text-[#F8F6EE] overflow-hidden">
       {/* Background botanical foliage silhouettes */}
@@ -58,11 +61,15 @@ export const OurStory: React.FC = () => {
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
                   <Leaf className="w-3.5 h-3.5" />
-                  <span>Origins &amp; Philosophy</span>
+                  <span>{storyHeadings.eyebrow || 'Origins & Philosophy'}</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-                  Inspired by nature. <br />
-                  <span className="italic font-editorial text-[#C5A46D]">Rooted in Kerala.</span>
+                  {storyHeadings.title}
+                  {storyHeadings.subtitle && (
+                    <span className="block text-sm sm:text-base text-[#E5E5E5] font-light font-sans-ui mt-2">
+                      {storyHeadings.subtitle}
+                    </span>
+                  )}
                 </h2>
               </div>
             </ScrollReveal>

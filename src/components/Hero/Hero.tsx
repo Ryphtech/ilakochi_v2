@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { restaurantData } from '../../data/restaurantData';
+import { useHeadings } from '../../lib/headings';
 import {
   HeroConfig,
   defaultHeroConfig,
@@ -28,6 +29,7 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenReservation,
   intervalMs: propIntervalMs,
 }) => {
+  const { headings } = useHeadings();
   const [heroConfig, setHeroConfig] = useState<HeroConfig>(defaultHeroConfig);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -161,18 +163,20 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/20 backdrop-blur-md shadow-md">
               <span className="w-1.5 h-1.5 rounded-full bg-[#C5A46D] animate-pulse" />
               <span className="text-[11px] sm:text-xs font-sans-ui uppercase tracking-[0.24em] text-[#C5A46D] font-semibold">
-                {restaurantData.tagline}
+                {headings.hero?.eyebrow || restaurantData.tagline}
               </span>
             </div>
           </div>
 
           {/* Heading Statement: Grand Editorial Styling with Balanced Line Heights */}
           <div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.4rem] xl:text-[3.9rem] font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-[1.12] text-balance">
-              Fresh Catch from the Harbour.
-              <span className="block font-editorial italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D8B982] via-[#F8F6EE] to-[#C5A46D] drop-shadow-[0_2px_15px_rgba(197,164,109,0.25)] pt-1 sm:pt-1.5">
-                Served on Living Banana Leaf.
-              </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.4rem] xl:text-[3.9rem] font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-[1.14] text-balance">
+              {headings.hero?.title || 'Fresh Catch from the Harbour.'}
+              {headings.hero?.subtitle && (
+                <span className="block font-editorial italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#D8B982] via-[#F8F6EE] to-[#C5A46D] drop-shadow-[0_2px_15px_rgba(197,164,109,0.25)] pt-1 sm:pt-1.5">
+                  {headings.hero.subtitle}
+                </span>
+              )}
             </h2>
           </div>
 

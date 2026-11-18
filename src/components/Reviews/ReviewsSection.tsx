@@ -1,8 +1,11 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
+import { useHeadings } from '../../lib/headings';
 
 export const ReviewsSection: React.FC = () => {
+  const { headings } = useHeadings();
+  const reviewsHeadings = headings.reviews;
   const reviews = [
     {
       author: 'Arun K. Pillai',
@@ -35,10 +38,10 @@ export const ReviewsSection: React.FC = () => {
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <Star className="w-3.5 h-3.5 fill-[#C5A46D]" />
-              <span>Verified Patron Experiences</span>
+              <span>{reviewsHeadings.eyebrow || 'Verified Patron Experiences'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-              Loved across Kochi.
+              {reviewsHeadings.title}
             </h2>
             <div className="flex items-center justify-center gap-2 pt-1 text-xs text-[#A3A3A3]">
               <div className="flex items-center text-[#C5A46D]">

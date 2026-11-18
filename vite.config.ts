@@ -2,7 +2,7 @@ import { defineConfig, type ViteDevServer, type PluginOption } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'http';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 
 const r2Client = new S3Client({
   region: 'auto',
@@ -21,6 +21,27 @@ function r2UploadPlugin(): PluginOption {
     name: 'r2-upload-middleware',
     configureServer(server: ViteDevServer) {
       server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next: () => void) => {
+        if (req.url === '/api/r2-media' && req.method === 'GET') {
+          try {
+            const listRes = await r2Client.send(new ListObjectsV2Command({ Bucket: r2Bucket }));
+            const items = (listRes.Contents || []).map((obj) => ({
+              key: obj.Key,
+              url: `${r2PublicUrl}/${obj.Key}`,
+              size: obj.Size,
+              lastModified: obj.LastModified,
+            }));
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, items }));
+          } catch (err: unknown) {
+            console.error('Server R2 list error:', err);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            const errorMsg = err instanceof Error ? err.message : 'List failed';
+            res.end(JSON.stringify({ success: false, error: errorMsg }));
+          }
+          return;
+        }
+
         if (req.url === '/api/upload' && req.method === 'POST') {
           try {
             const rawFileName = (req.headers['x-filename'] as string) || `upload-${Date.now()}`;

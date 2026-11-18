@@ -1,8 +1,12 @@
 import React from 'react';
 import { Waves, Sparkles, Flame, Leaf } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
+import { useHeadings } from '../../lib/headings';
 
 export const BrandIntro: React.FC = () => {
+  const { headings } = useHeadings();
+  const introHeadings = headings.brandIntro;
+
   return (
     <section
       id="intro"
@@ -20,11 +24,16 @@ export const BrandIntro: React.FC = () => {
               <div className="space-y-3">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
                   <Leaf className="w-3.5 h-3.5 text-[#A3A3A3]" />
-                  <span>The Culinary Soul of Kochi</span>
+                  <span>{introHeadings.eyebrow || 'The Culinary Soul of Kochi'}</span>
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-                  More than a meal. <br />
-                  <span className="italic font-editorial text-[#C5A46D]">A living taste of Kerala.</span>
+                  {introHeadings.title}
+                  {introHeadings.highlight && (
+                    <>
+                      <br />
+                      <span className="italic font-editorial text-[#C5A46D]">{introHeadings.highlight}</span>
+                    </>
+                  )}
                 </h2>
               </div>
             </ScrollReveal>

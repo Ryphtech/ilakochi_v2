@@ -12,12 +12,14 @@ import { MediaUploadZone } from './MediaUploadZone';
 import { ReservationsTable } from './ReservationsTable';
 import { HeroBackgroundManager } from './HeroBackgroundManager';
 import { ThemeManager } from './ThemeManager';
+import { HeadingsManager } from './HeadingsManager';
 import {
   Utensils,
   Film,
   Calendar,
   Image as ImageIcon,
   Palette,
+  Languages,
   Plus,
   Edit2,
   Trash2,
@@ -45,7 +47,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   const [pinError, setPinError] = useState(false);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme'>('dishes');
+  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme' | 'headings'>('dishes');
 
   // Menu State
   const [dishes, setDishes] = useState<MenuItem[]>([]);
@@ -301,6 +303,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             <Palette className="w-4 h-4" />
             <span>Theme &amp; Colors</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('headings')}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'headings'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
+            }`}
+          >
+            <Languages className="w-4 h-4" />
+            <span>Headings &amp; മലയാളം</span>
+          </button>
         </div>
 
         {/* TAB 1: FOOD ITEMS & MENU MANAGEMENT */}
@@ -472,6 +486,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
         {/* TAB 5: WEBSITE THEME & COLOR PALETTE */}
         {activeTab === 'theme' && (
           <ThemeManager
+            onSuccessNotice={(msg) => {
+              setActionSuccess(msg);
+              setTimeout(() => setActionSuccess(''), 3500);
+            }}
+          />
+        )}
+
+        {/* TAB 6: WEBSITE HEADINGS & MALAYALAM MANAGER */}
+        {activeTab === 'headings' && (
+          <HeadingsManager
             onSuccessNotice={(msg) => {
               setActionSuccess(msg);
               setTimeout(() => setActionSuccess(''), 3500);

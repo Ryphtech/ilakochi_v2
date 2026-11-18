@@ -1,7 +1,10 @@
 import React from 'react';
 import { Sparkles, Utensils, Clock, Users } from 'lucide-react';
+import { useHeadings } from '../../lib/headings';
 
 export const DiningExperience: React.FC = () => {
+  const { headings } = useHeadings();
+  const expHeadings = headings.diningExperience;
   return (
     <section id="experience" className="relative py-20 sm:py-24 lg:py-28 bg-[#121212] text-[#F8F6EE] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -9,13 +12,13 @@ export const DiningExperience: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Atmosphere &amp; Hospitality</span>
+            <span>{expHeadings.eyebrow || 'Atmosphere & Hospitality'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-            An experience worth savouring.
+            {expHeadings.title}
           </h2>
           <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
-            Step away from the bustling city into a warm, botanical retreat where the aroma of roasting spices and simmering coconut curries greets you at the door.
+            {expHeadings.subtitle || 'Step away from the bustling city into a warm, botanical retreat where the aroma of roasting spices and simmering coconut curries greets you at the door.'}
           </p>
         </div>
 

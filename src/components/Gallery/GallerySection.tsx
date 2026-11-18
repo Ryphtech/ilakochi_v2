@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { galleryImages } from '../../data/galleryData';
+import { useHeadings } from '../../lib/headings';
 import { X, ChevronLeft, ChevronRight, Maximize2, Sparkles } from 'lucide-react';
 
 export const GallerySection: React.FC = () => {
+  const { headings } = useHeadings();
+  const galleryHeadings = headings.gallery;
   const [activeCategory, setActiveCategory] = useState<'all' | 'seafood' | 'ambience' | 'heritage' | 'kitchen'>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
@@ -41,13 +44,13 @@ export const GallerySection: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Visual Tapestry</span>
+            <span>{galleryHeadings.eyebrow || 'Visual Tapestry'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-            Moments at ILA.
+            {galleryHeadings.title}
           </h2>
           <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
-            A glimpse into our fiery tawas, fresh banana leaves, and the authentic flavours that define every afternoon in Kochi.
+            {galleryHeadings.subtitle || 'A glimpse into our fiery tawas, fresh banana leaves, and the authentic flavours that define every afternoon in Kochi.'}
           </p>
         </div>
 

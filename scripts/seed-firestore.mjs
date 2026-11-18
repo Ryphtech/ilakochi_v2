@@ -332,6 +332,88 @@ async function seedAll() {
   await setDoc(doc(db, 'site_settings', 'restaurant'), { ...restaurantProfile, updatedAt: serverTimestamp() });
   console.log('  ✓ Synced site_settings/restaurant');
 
+  // 5. Site Headings & Malayalam Settings
+  await sleep(600);
+  console.log('Writing site_settings/headings...');
+  const initialHeadings = {
+    languageMode: 'en',
+    sections: {
+      hero: {
+        eyebrow: 'AUTHENTIC KERALA SEAFOOD · ഇല കൊച്ചി',
+        title: 'Fresh Catch from the Harbour.',
+        subtitle: 'Served on Living Banana Leaf.',
+      },
+      brandIntro: {
+        eyebrow: 'The Culinary Soul of Kochi',
+        title: 'More than a meal.',
+        highlight: 'A living taste of Kerala.',
+        subtitle: 'For generations, dining in Kerala has been bound to the land and the sea.',
+      },
+      signatureDishes: {
+        eyebrow: 'Harbour to Hearth',
+        title: 'The essence of the coast.',
+        subtitle: 'Six signature preparations that define what we do best.',
+      },
+      howItWorks: {
+        eyebrow: 'The Ila Kochi Ritual',
+        title: 'From Ocean Tides to Banana Leaf',
+        subtitle: 'Every plate honours the timeless coastline traditions of Malabar.',
+      },
+      ourStory: {
+        eyebrow: 'Our Heritage & Craft',
+        title: 'Why We Serve on "ILA"',
+        subtitle: 'The banana leaf is not a novelty plate. It is a philosophy of pure, living nourishment.',
+      },
+      keralaCulture: {
+        eyebrow: 'Living Traditions',
+        title: 'The Sacred Art of Banana Leaf Dining',
+        subtitle: 'An ancient ritual that awakens all five senses.',
+      },
+      reviews: {
+        eyebrow: 'Guest Experiences',
+        title: 'Loved by Seafood Connoisseurs',
+        subtitle: 'True words from travelers, local foodies, and families dining on living leaves.',
+      },
+      menu: {
+        eyebrow: 'Coastal Culinary Repertoire',
+        title: 'Explore Our Menu',
+        subtitle: 'Traditional backwater delicacies, fiery tawa fries, and slow-simmered earthen curries.',
+      },
+      diningExperience: {
+        eyebrow: 'Atmosphere & Senses',
+        title: 'A Feast for All Five Senses',
+        subtitle: 'From sizzling cast iron to fragrant banana leaves, experience dining the way Kerala intended.',
+      },
+      gallery: {
+        eyebrow: 'Visual Journey',
+        title: 'Glimpses of Ila Kochi',
+        subtitle: 'Moments, flavors, and memories crafted daily on Pathadipalam.',
+      },
+      faq: {
+        eyebrow: 'Helpful Information',
+        title: 'Frequently Asked Questions',
+        subtitle: 'Everything you need to know about our dining ritual, fresh catch, and reservations.',
+      },
+      location: {
+        eyebrow: 'Find Our Kitchen',
+        title: 'Visit Us at Pathadipalam',
+        subtitle: 'Easy to reach, right off the highway with dedicated parking.',
+      },
+      reservation: {
+        eyebrow: 'Direct Table Booking',
+        title: 'Reserve Your Banana Leaf Experience',
+        subtitle: 'Skip the queue. Book your fresh catch meal in advance.',
+      },
+      footer: {
+        title: 'Rooted in Nature. Inspired by the Coast.',
+        subtitle: "Kochi's premier banana leaf seafood destination.",
+      },
+    },
+    updatedAt: serverTimestamp(),
+  };
+  await setDoc(doc(db, 'site_settings', 'headings'), initialHeadings);
+  console.log('  ✓ Synced site_settings/headings');
+
   console.log('\n===============================================');
   console.log('SUCCESS: All current data written to Firestore!');
   console.log('===============================================');

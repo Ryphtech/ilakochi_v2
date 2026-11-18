@@ -8,7 +8,12 @@ import {
   subscribeMediaUploads,
   MediaUploadItem,
 } from '../../lib/firebase';
-import { uploadFileToR2 } from '../../lib/r2';
+import {
+  uploadFileToR2,
+  listR2Objects,
+  CORE_R2_MEDIA,
+  R2MediaItem,
+} from '../../lib/r2';
 import {
   Image as ImageIcon,
   Film,
@@ -16,40 +21,80 @@ import {
   Trash2,
   Upload,
   CheckCircle,
-  ExternalLink,
   Sparkles,
   Play,
-  RotateCw,
   Clock,
   Layers,
+  Check,
+  ExternalLink,
+  Copy,
 } from 'lucide-react';
 
 export const HeroBackgroundManager: React.FC = () => {
   const [config, setConfig] = useState<HeroConfig>(defaultHeroConfig);
-  const [mediaLibrary, setMediaLibrary] = useState<MediaUploadItem[]>([]);
+  const [r2MediaList, setR2MediaList] = useState<R2MediaItem[]>(CORE_R2_MEDIA);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Add new image form state
   const [newImageUrl, setNewImageUrl] = useState('');
   const [newImageCaption, setNewImageCaption] = useState('');
   const [newImageAlt, setNewImageAlt] = useState('');
-  const [showMediaPicker, setShowMediaPicker] = useState<'image' | 'video' | null>(null);
 
+  // 1. Subscribe to live Firestore hero config
   useEffect(() => {
     const unsubHero = subscribeHeroConfig((liveConfig) => {
       setConfig(liveConfig);
     });
 
-    const unsubMedia = subscribeMediaUploads((items) => {
-      setMediaLibrary(items);
+    return () => unsubHero();
+  }, []);
+
+  // 2. Fetch live R2 media objects and combine with Firestore uploads
+  useEffect(() => {
+    let isMounted = true;
+
+    // Load from R2
+    listR2Objects().then((items) => {
+      if (isMounted && items.length > 0) {
+        setR2MediaList(items);
+      }
+    });
+
+    // Also subscribe to Firestore media_uploads
+    const unsubUploads = subscribeMediaUploads((uploadedItems: MediaUploadItem[]) => {
+      if (!isMounted || uploadedItems.length === 0) return;
+
+      setR2MediaList((prev) => {
+        const map = new Map<string, R2MediaItem>();
+        prev.forEach((item) => map.set(item.url, item));
+
+        uploadedItems.forEach((upload) => {
+          const isVideo = upload.type?.startsWith('video') || upload.url.endsWith('.mp4');
+          if (!map.has(upload.url)) {
+            map.set(upload.url, {
+              id: upload.id || `up-${Date.now()}`,
+              key: upload.key,
+              url: upload.url,
+              name: upload.name,
+              title: upload.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
+              caption: upload.name.replace(/\.[^/.]+$/, ''),
+              size: upload.size,
+              type: isVideo ? 'video' : 'image',
+            });
+          }
+        });
+
+        return Array.from(map.values());
+      });
     });
 
     return () => {
-      unsubHero();
-      unsubMedia();
+      isMounted = false;
+      unsubUploads();
     };
   }, []);
 
@@ -67,8 +112,8 @@ export const HeroBackgroundManager: React.FC = () => {
     }
   };
 
-  const handleAddImage = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddImage = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!newImageUrl.trim()) return;
 
     const newImg: HeroImageConfig = {
@@ -85,6 +130,39 @@ export const HeroBackgroundManager: React.FC = () => {
     setNewImageUrl('');
     setNewImageCaption('');
     setNewImageAlt('');
+  };
+
+  const handleQuickAddR2Image = (item: R2MediaItem) => {
+    // Check if already in slideshow
+    const alreadyExists = config.images.some((img) => img.url === item.url);
+    if (alreadyExists) {
+      alert(`"${item.title}" is already in your slideshow.`);
+      return;
+    }
+
+    const newImg: HeroImageConfig = {
+      url: item.url,
+      caption: item.caption || item.title || 'Fresh Catch Highlight',
+      alt: item.title || 'Ila Kochi Specialty',
+    };
+
+    setConfig((prev) => ({
+      ...prev,
+      images: [...prev.images, newImg],
+    }));
+  };
+
+  const handleFillFormFromR2 = (item: R2MediaItem) => {
+    setNewImageUrl(item.url);
+    setNewImageCaption(item.caption || item.title);
+    setNewImageAlt(item.title);
+  };
+
+  const handleSelectR2Video = (item: R2MediaItem) => {
+    setConfig((prev) => ({
+      ...prev,
+      videoUrl: item.url,
+    }));
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
@@ -129,29 +207,38 @@ export const HeroBackgroundManager: React.FC = () => {
     }
   };
 
+  const copyUrl = (url: string, key: string) => {
+    navigator.clipboard.writeText(url);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
+
+  const r2Videos = r2MediaList.filter((m) => m.type === 'video');
+  const r2Images = r2MediaList.filter((m) => m.type === 'image');
+
   return (
-    <div className="space-y-8">
-      {/* Save Success Alert */}
+    <div className="space-y-8 animate-fadeIn">
+      {/* 1. Save Success Alert */}
       {saveSuccess && (
-        <div className="p-4 rounded-2xl bg-[#121212] border border-[#C5A46D] text-[#C5A46D] flex items-center gap-3 animate-fadeIn">
-          <CheckCircle className="w-5 h-5 flex-shrink-0" />
+        <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 flex items-center gap-3 animate-fadeIn">
+          <CheckCircle className="w-5 h-5 flex-shrink-0 text-emerald-400" />
           <span className="text-xs sm:text-sm font-medium">
             Hero background settings saved and published live to the website!
           </span>
         </div>
       )}
 
-      {/* Top Controller Header: Mode Switcher & Save Button */}
+      {/* 2. Top Controller Header: Mode Switcher & Save Button */}
       <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
         <div className="space-y-1 text-center sm:text-left">
           <div className="flex items-center gap-2 justify-center sm:justify-start">
             <Sparkles className="w-4 h-4 text-[#C5A46D]" />
             <h3 className="text-lg font-serif-display font-medium text-[#F8F6EE]">
-              Hero Background Mode
+              Hero Background Media Controller
             </h3>
           </div>
           <p className="text-xs text-[#A3A3A3]">
-            Choose whether to show a rotating slideshow of photos or a video in the background.
+            Choose whether to show a rotating slideshow of photos or a video stream from Cloudflare R2.
           </p>
         </div>
 
@@ -196,25 +283,28 @@ export const HeroBackgroundManager: React.FC = () => {
         </div>
       </div>
 
-      {/* MODE 1: BACKGROUND VIDEO SETTINGS */}
+      {/* ========================================================
+          MODE 1: BACKGROUND VIDEO SETTINGS
+      ======================================================== */}
       {config.mode === 'video' && (
         <div className="space-y-6 animate-fadeIn">
-          <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 space-y-6">
-            <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#262626]/30 pb-4">
+          {/* A. CLOUDFLARE R2 CURRENT VIDEOS SECTION */}
+          <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 space-y-4">
+            <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#262626]/30 pb-3">
               <div>
                 <h4 className="text-base font-serif-display font-medium text-[#F8F6EE] flex items-center gap-2">
                   <Film className="w-4 h-4 text-[#C5A46D]" />
-                  <span>Video Settings</span>
+                  <span>Current Videos in Cloudflare R2 ({r2Videos.length})</span>
                 </h4>
                 <p className="text-xs text-[#A3A3A3]">
-                  Configure the video that plays seamlessly in the background across the hero.
+                  Select any video below to instantly set it as the background video stream for the hero section.
                 </p>
               </div>
 
               {/* Upload to R2 Button */}
               <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs uppercase tracking-wider font-medium bg-[#121212] hover:bg-[#262626] text-[#F8F6EE] border border-[#262626] cursor-pointer transition-colors shadow">
                 <Upload className="w-3.5 h-3.5 text-[#C5A46D]" />
-                <span>Upload Video to R2</span>
+                <span>Upload New Video to R2</span>
                 <input
                   type="file"
                   accept="video/*"
@@ -230,10 +320,110 @@ export const HeroBackgroundManager: React.FC = () => {
               </div>
             )}
 
-            {/* Video URL Input */}
+            {/* Grid of Cloudflare R2 Videos */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+              {r2Videos.map((video) => {
+                const isSelected = config.videoUrl === video.url;
+                const sizeMb = video.size ? (video.size / (1024 * 1024)).toFixed(1) : null;
+
+                return (
+                  <div
+                    key={video.id}
+                    onClick={() => handleSelectR2Video(video)}
+                    className={`group relative rounded-2xl overflow-hidden border p-3 flex flex-col justify-between transition-all cursor-pointer shadow-lg ${
+                      isSelected
+                        ? 'bg-[#151208] border-[#C5A46D] ring-2 ring-[#C5A46D]/30'
+                        : 'bg-[#121212] border-[#262626]/50 hover:border-[#C5A46D]/60'
+                    }`}
+                  >
+                    <div className="space-y-3">
+                      {/* Video Preview thumbnail/player */}
+                      <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-black flex items-center justify-center">
+                        <video
+                          src={video.url}
+                          muted
+                          loop
+                          playsInline
+                          preload="metadata"
+                          onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                          onMouseLeave={(e) => e.currentTarget.pause()}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors flex items-center justify-center pointer-events-none">
+                          <div className="p-2 rounded-full bg-black/60 text-[#C5A46D] backdrop-blur-sm group-hover:scale-110 transition-transform">
+                            <Play className="w-4 h-4 fill-[#C5A46D]" />
+                          </div>
+                        </div>
+
+                        {isSelected && (
+                          <div className="absolute top-2 left-2 px-2.5 py-1 rounded-md bg-[#C5A46D] text-black font-bold text-[10px] font-mono flex items-center gap-1 shadow">
+                            <Check className="w-3 h-3" />
+                            <span>ACTIVE HERO</span>
+                          </div>
+                        )}
+
+                        {sizeMb && (
+                          <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-mono text-[#E5E5E5]">
+                            {sizeMb} MB
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Video Info */}
+                      <div>
+                        <h5 className="text-xs font-semibold text-[#F8F6EE] line-clamp-1">
+                          {video.title}
+                        </h5>
+                        <p className="text-[10px] text-[#A3A3A3] font-mono line-clamp-1 mt-0.5">
+                          {video.name}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Action Footer */}
+                    <div className="pt-3 mt-2 border-t border-[#262626]/40 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectR2Video(video);
+                        }}
+                        className={`flex-1 py-1.5 px-3 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-colors cursor-pointer text-center ${
+                          isSelected
+                            ? 'bg-[#C5A46D] text-black'
+                            : 'bg-[#1a1a1a] hover:bg-[#262626] text-[#C5A46D]'
+                        }`}
+                      >
+                        {isSelected ? 'Selected' : 'Use Video'}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyUrl(video.url, video.id);
+                        }}
+                        className="p-1.5 rounded-lg bg-[#1a1a1a] hover:bg-[#262626] text-[#A3A3A3] hover:text-[#F8F6EE] transition-colors"
+                        title="Copy CDN URL"
+                      >
+                        {copiedKey === video.id ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* B. Custom Video URL & Live Player Box */}
+          <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 space-y-5">
             <div className="space-y-2">
               <label className="text-xs font-mono uppercase tracking-wider text-[#A3A3A3] block">
-                Video Stream URL (MP4 / WebM / Cloudflare R2 CDN)
+                Active Video Stream URL (Cloudflare R2 CDN)
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -241,15 +431,8 @@ export const HeroBackgroundManager: React.FC = () => {
                   value={config.videoUrl}
                   onChange={(e) => setConfig((prev) => ({ ...prev, videoUrl: e.target.value }))}
                   placeholder="https://pub-...r2.dev/video.mp4"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D]"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] font-mono focus:outline-none focus:border-[#C5A46D]"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowMediaPicker('video')}
-                  className="px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider bg-[#121212] hover:bg-[#262626] text-[#C5A46D] border border-[#262626]/60 transition-colors whitespace-nowrap cursor-pointer"
-                >
-                  Pick from R2
-                </button>
               </div>
             </div>
 
@@ -262,7 +445,7 @@ export const HeroBackgroundManager: React.FC = () => {
                 type="url"
                 value={config.videoPoster || ''}
                 onChange={(e) => setConfig((prev) => ({ ...prev, videoPoster: e.target.value }))}
-                placeholder="https://images.unsplash.com/... or R2 link"
+                placeholder="https://... or Cloudflare R2 image link"
                 className="w-full px-4 py-2.5 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D]"
               />
             </div>
@@ -270,7 +453,7 @@ export const HeroBackgroundManager: React.FC = () => {
             {/* Live Video Preview Box */}
             <div className="space-y-2 pt-2">
               <span className="text-xs font-mono uppercase tracking-wider text-[#C5A46D] block">
-                Live Video Preview
+                Live Video Preview (Playing on Hero)
               </span>
               <div className="relative aspect-[16/9] max-w-2xl rounded-2xl overflow-hidden border border-[#262626]/60 bg-black shadow-2xl">
                 <video
@@ -291,10 +474,12 @@ export const HeroBackgroundManager: React.FC = () => {
         </div>
       )}
 
-      {/* MODE 2: ROTATING IMAGES SETTINGS */}
+      {/* ========================================================
+          MODE 2: ROTATING IMAGES SETTINGS
+      ======================================================== */}
       {config.mode === 'images' && (
         <div className="space-y-6 animate-fadeIn">
-          {/* Rotation Interval Setting */}
+          {/* Rotation Speed Setting */}
           <div className="p-5 rounded-2xl bg-[#050505] border border-[#262626]/50 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Clock className="w-5 h-5 text-[#C5A46D]" />
@@ -314,7 +499,7 @@ export const HeroBackgroundManager: React.FC = () => {
                   key={ms}
                   type="button"
                   onClick={() => setConfig((prev) => ({ ...prev, intervalMs: ms }))}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-colors cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-mono transition-colors cursor-pointer ${
                     (config.intervalMs || 5000) === ms
                       ? 'bg-[#C5A46D] text-[#050505] font-bold shadow'
                       : 'bg-[#121212] text-[#E5E5E5] hover:bg-[#262626]'
@@ -379,50 +564,149 @@ export const HeroBackgroundManager: React.FC = () => {
             </div>
           </div>
 
-          {/* Add New Slide Card */}
-          <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 space-y-4">
-            <h4 className="text-base font-serif-display font-medium text-[#F8F6EE] flex items-center gap-2">
-              <Plus className="w-4 h-4 text-[#C5A46D]" />
-              <span>Add New Background Image</span>
-            </h4>
+          {/* ========================================================
+              SECTION: ADD NEW BACKGROUND IMAGE / VIDEO
+              Includes Live Cloudflare R2 Images + Form + Direct Upload
+          ======================================================== */}
+          <div className="p-6 rounded-3xl bg-[#050505] border border-[#262626]/60 space-y-6">
+            <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#262626]/30 pb-3">
+              <div>
+                <h4 className="text-base font-serif-display font-medium text-[#F8F6EE] flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-[#C5A46D]" />
+                  <span>Add New Background Image / Video</span>
+                </h4>
+                <p className="text-xs text-[#A3A3A3]">
+                  Select from current Cloudflare R2 images below or upload a new photo directly to Cloudflare R2.
+                </p>
+              </div>
 
-            <form onSubmit={handleAddImage} className="space-y-4">
+              {/* Direct Upload Button */}
+              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs uppercase tracking-wider font-medium bg-[#121212] hover:bg-[#262626] text-[#F8F6EE] border border-[#262626] cursor-pointer transition-colors shadow">
+                <Upload className="w-3.5 h-3.5 text-[#C5A46D]" />
+                <span>Upload New Photo to R2</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileUpload(e, 'image')}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
+            {/* Current Cloudflare R2 Images Gallery */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#C5A46D] font-semibold">
+                  Current Cloudflare R2 Images ({r2Images.length})
+                </span>
+                <span className="text-[11px] text-[#A3A3A3]">
+                  Click &ldquo;+ Add to Slideshow&rdquo; or click any image to fill into the form
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 max-h-[380px] overflow-y-auto p-1 rounded-2xl bg-[#0c0c0c] border border-[#262626]/40">
+                {r2Images.map((item) => {
+                  const isInSlideshow = config.images.some((img) => img.url === item.url);
+                  const slideNumber = config.images.findIndex((img) => img.url === item.url);
+
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => handleFillFormFromR2(item)}
+                      className={`group relative rounded-xl overflow-hidden border p-2 flex flex-col justify-between transition-all cursor-pointer ${
+                        isInSlideshow
+                          ? 'bg-[#151208] border-[#C5A46D]/80'
+                          : 'bg-[#121212] border-[#262626]/50 hover:border-[#C5A46D]'
+                      }`}
+                    >
+                      <div className="space-y-2">
+                        <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-black">
+                          <img
+                            src={item.url}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                          />
+                          {isInSlideshow && (
+                            <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-[#C5A46D] text-black font-mono text-[9px] font-bold shadow">
+                              Slide {slideNumber + 1}
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <span className="text-[11px] font-semibold text-[#F8F6EE] block truncate">
+                            {item.title}
+                          </span>
+                          <span className="text-[10px] text-[#A3A3A3] font-mono block truncate">
+                            {item.name}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Quick Add Button */}
+                      <div className="pt-2 mt-2 border-t border-[#262626]/30 flex items-center justify-between gap-1.5">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuickAddR2Image(item);
+                          }}
+                          disabled={isInSlideshow}
+                          className={`flex-1 py-1 px-2 rounded-lg text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer text-center ${
+                            isInSlideshow
+                              ? 'bg-transparent text-[#A3A3A3] cursor-default'
+                              : 'bg-[#1e1e1e] hover:bg-[#C5A46D] hover:text-black text-[#C5A46D]'
+                          }`}
+                        >
+                          {isInSlideshow ? 'In Slideshow' : '+ Add Slide'}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyUrl(item.url, item.id);
+                          }}
+                          className="p-1 rounded bg-[#1e1e1e] text-[#A3A3A3] hover:text-[#F8F6EE]"
+                          title="Copy R2 URL"
+                        >
+                          {copiedKey === item.id ? (
+                            <Check className="w-3 h-3 text-emerald-400" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Custom Image Form & Fine Adjustment */}
+            <form onSubmit={handleAddImage} className="space-y-4 pt-2 border-t border-[#262626]/30">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#A3A3A3] block">
+                Custom Image URL or Selected Image Adjustments
+              </span>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="md:col-span-2 space-y-1.5">
                   <label className="text-xs font-mono uppercase tracking-wider text-[#A3A3A3] block">
                     Image URL
                   </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="url"
-                      required
-                      placeholder="https://... or Cloudflare R2 link"
-                      value={newImageUrl}
-                      onChange={(e) => setNewImageUrl(e.target.value)}
-                      className="flex-1 px-4 py-2 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] focus:outline-none focus:border-[#C5A46D]"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowMediaPicker('image')}
-                      className="px-3.5 py-2 rounded-xl text-xs uppercase font-mono tracking-wider bg-[#121212] hover:bg-[#262626] text-[#C5A46D] border border-[#262626]/60 transition-colors whitespace-nowrap cursor-pointer"
-                    >
-                      Pick R2
-                    </button>
-                    <label className="p-2 rounded-xl bg-[#121212] hover:bg-[#262626] text-[#C5A46D] border border-[#262626]/60 transition-colors cursor-pointer" title="Upload directly from computer">
-                      <Upload className="w-4 h-4" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleFileUpload(e, 'image')}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
+                  <input
+                    type="url"
+                    required
+                    placeholder="https://... or click any R2 image above"
+                    value={newImageUrl}
+                    onChange={(e) => setNewImageUrl(e.target.value)}
+                    className="w-full px-4 py-2 rounded-xl bg-[#121212] border border-[#262626]/50 text-xs text-[#F8F6EE] font-mono focus:outline-none focus:border-[#C5A46D]"
+                  />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono uppercase tracking-wider text-[#A3A3A3] block">
-                    Slide Caption (Shown on Indicator)
+                    Slide Caption (Indicator Label)
                   </label>
                   <input
                     type="text"
@@ -456,78 +740,12 @@ export const HeroBackgroundManager: React.FC = () => {
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#262626] hover:bg-[#208b5a] text-[#F8F6EE] transition-all cursor-pointer shadow"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#C5A46D] hover:bg-[#d8b982] text-[#050505] transition-all cursor-pointer shadow-lg font-semibold"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Image to Slideshow</span>
               </button>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* R2 MEDIA PICKER MODAL */}
-      {showMediaPicker && (
-        <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setShowMediaPicker(null)}
-        >
-          <div
-            className="w-full max-w-2xl bg-[#050505] border border-[#262626] rounded-3xl p-6 space-y-4 max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-[#262626]/30 pb-3">
-              <h4 className="text-base font-serif-display font-medium text-[#F8F6EE]">
-                Select from Cloudflare R2 Uploads
-              </h4>
-              <button
-                onClick={() => setShowMediaPicker(null)}
-                className="text-xs text-[#A3A3A3] hover:text-[#F8F6EE] cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-
-            {mediaLibrary.length === 0 ? (
-              <p className="text-xs text-[#A3A3A3] py-8 text-center">
-                No uploads found in R2 library. Upload files first in the Cloudflare R2 tab.
-              </p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {mediaLibrary
-                  .filter((item) =>
-                    showMediaPicker === 'video'
-                      ? item.type?.startsWith('video') || item.url.endsWith('.mp4')
-                      : !item.type?.startsWith('video') && !item.url.endsWith('.mp4')
-                  )
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => {
-                        if (showMediaPicker === 'video') {
-                          setConfig((prev) => ({ ...prev, videoUrl: item.url }));
-                        } else {
-                          setNewImageUrl(item.url);
-                          setNewImageCaption(item.name.replace(/\.[^/.]+$/, ''));
-                        }
-                        setShowMediaPicker(null);
-                      }}
-                      className="group p-2 rounded-xl bg-[#121212] border border-[#262626]/50 hover:border-[#C5A46D] cursor-pointer transition-all space-y-1"
-                    >
-                      <div className="aspect-[16/10] bg-black rounded-lg overflow-hidden flex items-center justify-center text-xs text-[#A3A3A3]">
-                        {showMediaPicker === 'video' ? (
-                          <Film className="w-6 h-6 text-[#C5A46D]" />
-                        ) : (
-                          <img src={item.url} alt={item.name} className="w-full h-full object-cover" />
-                        )}
-                      </div>
-                      <span className="text-[11px] text-[#F8F6EE] font-mono block truncate">
-                        {item.name}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            )}
           </div>
         </div>
       )}

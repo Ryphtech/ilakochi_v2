@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { menuCategories, menuItems as fallbackMenuItems, MenuItem } from '../../data/menuData';
 import { subscribeMenuItems } from '../../lib/firebase';
+import { useHeadings } from '../../lib/headings';
 import { Search, Flame, Sparkles, Filter, ArrowRight } from 'lucide-react';
 
 interface MenuSectionProps {
@@ -9,6 +10,8 @@ interface MenuSectionProps {
 }
 
 export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onSelectDish }) => {
+  const { headings } = useHeadings();
+  const menuHeadings = headings.menu;
   const [items, setItems] = useState<MenuItem[]>(fallbackMenuItems);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -54,13 +57,13 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ onOpenReservation, onS
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-12 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#121212] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Curated Culinary Offerings</span>
+            <span>{menuHeadings.eyebrow || 'Curated Culinary Offerings'}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-            Explore our menu.
+            {menuHeadings.title}
           </h2>
           <p className="text-sm sm:text-base text-[#E5E5E5]/85 font-light leading-relaxed text-pretty">
-            Fresh fish brought daily, wood-pressed coconut oil, stone-ground Malabar spices, and traditional meals served on steaming green plantain leaves.
+            {menuHeadings.subtitle || 'Fresh fish brought daily, wood-pressed coconut oil, stone-ground Malabar spices, and traditional meals served on steaming green plantain leaves.'}
           </p>
 
           {/* Search bar */}

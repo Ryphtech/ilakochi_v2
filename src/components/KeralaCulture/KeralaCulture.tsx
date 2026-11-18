@@ -1,8 +1,11 @@
 import React from 'react';
 import { Leaf, Award, Waves, Sun } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
+import { useHeadings } from '../../lib/headings';
 
 export const KeralaCulture: React.FC = () => {
+  const { headings } = useHeadings();
+  const cultureHeadings = headings.keralaCulture;
   const traditions = [
     {
       title: 'The Banana Leaf Ritual',
@@ -50,13 +53,13 @@ export const KeralaCulture: React.FC = () => {
           <div className="text-center max-w-2xl mx-auto space-y-3 mb-12 sm:mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
               <Leaf className="w-3.5 h-3.5 text-[#A3A3A3]" />
-              <span>Living Heritage</span>
+              <span>{cultureHeadings.eyebrow || 'Living Heritage'}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display font-medium tracking-tight text-[#F8F6EE] leading-tight text-balance">
-              The ritual of Kerala dining.
+              {cultureHeadings.title}
             </h2>
             <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
-              Where ancestral techniques meet contemporary coastal aesthetics. An unhurried celebration of natural textures, earthy aromas, and the timeless bounty of the Arabian Sea.
+              {cultureHeadings.subtitle || 'Where ancestral techniques meet contemporary coastal aesthetics. An unhurried celebration of natural textures, earthy aromas, and the timeless bounty of the Arabian Sea.'}
             </p>
           </div>
         </ScrollReveal>

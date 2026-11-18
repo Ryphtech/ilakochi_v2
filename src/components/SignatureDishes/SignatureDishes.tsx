@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { menuItems as defaultDishes, MenuItem } from '../../data/menuData';
 import { subscribeMenuItems } from '../../lib/firebase';
+import { useHeadings } from '../../lib/headings';
 import { Flame, Sparkles, Leaf, ArrowRight, Waves } from 'lucide-react';
 import { ScrollReveal } from '../Common/ScrollReveal';
 
@@ -9,6 +10,8 @@ interface SignatureDishesProps {
 }
 
 export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }) => {
+  const { headings } = useHeadings();
+  const signatureHeadings = headings.signatureDishes;
   const [dishes, setDishes] = useState<MenuItem[]>(defaultDishes);
 
   useEffect(() => {
@@ -52,13 +55,13 @@ export const SignatureDishes: React.FC<SignatureDishesProps> = ({ onSelectDish }
             <div className="space-y-3 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#050505] border border-[#262626]/50 text-xs uppercase tracking-[0.2em] text-[#C5A46D] font-sans-ui">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Harbour to Hearth</span>
+                <span>{signatureHeadings.eyebrow || 'Harbour to Hearth'}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif-display tracking-tight text-[#F8F6EE] leading-tight text-balance">
-                The essence of the coast.
+                {signatureHeadings.title}
               </h2>
               <p className="text-sm sm:text-base text-[#E5E5E5] font-light leading-relaxed text-pretty">
-                Every morning, wild catch arrives from local Kochi fishing boats. By noon and night, our heavy cast-iron tawas and clay chattis sizzle with cold-pressed coconut oil, charred banana leaves, and stone-ground spices.
+                {signatureHeadings.subtitle || 'Every morning, wild catch arrives from local Kochi fishing boats. By noon and night, our heavy cast-iron tawas and clay chattis sizzle with cold-pressed coconut oil, charred banana leaves, and stone-ground spices.'}
               </p>
             </div>
           </ScrollReveal>
