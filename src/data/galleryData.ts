@@ -4,7 +4,9 @@ export interface GalleryImage {
   caption: string;
   category: 'seafood' | 'ambience' | 'heritage' | 'kitchen';
   image: string;
-  span: 'col-span-1' | 'col-span-2' | 'row-span-2';
+  span?: 'col-span-1' | 'col-span-2' | 'row-span-2';
+  order?: number;
+  updatedAt?: unknown;
 }
 
 export const galleryImages: GalleryImage[] = [

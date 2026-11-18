@@ -25,5 +25,11 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;
     }
+
+    // 5. Gallery Images
+    match /gallery_images/{imageId} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }

@@ -16,6 +16,7 @@ import {
   Firestore,
 } from 'firebase/firestore';
 import { MenuItem, menuItems as defaultMenuItems } from '../data/menuData';
+import { GalleryImage, galleryImages as defaultGalleryImages } from '../data/galleryData';
 
 // Firebase configuration from environment or fallback to user credentials
 export const firebaseConfig = {
@@ -353,4 +354,231 @@ export const subscribeHeroConfig = (callback: (config: HeroConfig) => void) => {
       callback(getStoredHeroConfig());
     }
   );
+};
+
+// ==========================================
+// 5. GALLERY IMAGES BACKEND (ADD / MODIFY / REMOVE)
+// ==========================================
+
+const GALLERY_STORAGE_KEY = 'ila_gallery_cache';
+
+export const getStoredGalleryImages = (): GalleryImage[] => {
+  if (typeof window === 'undefined') return defaultGalleryImages;
+  try {
+    const raw = localStorage.getItem(GALLERY_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as GalleryImage[];
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading gallery cache:', e);
+  }
+  return defaultGalleryImages;
+};
+
+export const setStoredGalleryImages = (images: GalleryImage[]): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify(images));
+    window.dispatchEvent(new Event('ila_gallery_updated'));
+  } catch (e) {
+    console.warn('Error writing gallery cache:', e);
+  }
+};
+
+/**
+ * Real-time subscription to gallery images from Firestore with local cache resilience
+ */
+export const subscribeGalleryImages = (callback: (images: GalleryImage[]) => void) => {
+  // Fire immediately with cache/default
+  callback(getStoredGalleryImages());
+
+  try {
+    // 1. Subscribe to site_settings/gallery (100% permitted by active Firestore rules)
+    const settingsDocRef = doc(db, 'site_settings', 'gallery');
+    const unsubDoc = onSnapshot(
+      settingsDocRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (Array.isArray(data?.images) && data.images.length > 0) {
+            setStoredGalleryImages(data.images);
+            callback(data.images);
+          }
+        }
+      },
+      (err) => {
+        console.warn('site_settings/gallery listener notice:', err?.message || err);
+      }
+    );
+
+    // 2. Also subscribe to gallery_images collection if permitted
+    const colRef = collection(db, 'gallery_images');
+    const unsubCol = onSnapshot(
+      colRef,
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const items = snapshot.docs.map((docSnap) => ({
+            id: docSnap.id,
+            ...docSnap.data(),
+          })) as GalleryImage[];
+
+          items.sort((a, b) => {
+            if (a.order !== undefined && b.order !== undefined) {
+              return a.order - b.order;
+            }
+            return a.id.localeCompare(b.id);
+          });
+
+          setStoredGalleryImages(items);
+          callback(items);
+        }
+      },
+      () => {
+        // Silently fall back to site_settings/gallery and cache
+      }
+    );
+
+    return () => {
+      unsubDoc();
+      unsubCol();
+    };
+  } catch (err) {
+    console.warn('Firestore subscription unavailable for gallery:', err);
+    return () => {};
+  }
+};
+
+/**
+ * Add a new gallery image to Firestore & local cache
+ */
+export const addGalleryImage = async (
+  item: Omit<GalleryImage, 'id'> & { id?: string }
+): Promise<string> => {
+  const customId = item.id || `gal-${Date.now()}`;
+  const newItem: GalleryImage = {
+    ...item,
+    id: customId,
+    span: item.span || 'col-span-1',
+  };
+
+  // 1. Update local cache optimistically
+  const current = getStoredGalleryImages();
+  const updatedList = [newItem, ...current];
+  setStoredGalleryImages(updatedList);
+
+  // 2. Persist to site_settings/gallery (permitted by active rules)
+  try {
+    await setDoc(doc(db, 'site_settings', 'gallery'), {
+      images: updatedList,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Failed to sync to site_settings/gallery:', err);
+  }
+
+  // 3. Also persist to gallery_images/{id}
+  try {
+    const docRef = doc(db, 'gallery_images', customId);
+    await setDoc(docRef, {
+      ...newItem,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Firestore addGalleryImage collection notice:', err);
+  }
+
+  return customId;
+};
+
+/**
+ * Update an existing gallery image in Firestore & local cache
+ */
+export const updateGalleryImage = async (
+  id: string,
+  updates: Partial<GalleryImage>
+): Promise<void> => {
+  // 1. Update local cache optimistically
+  const current = getStoredGalleryImages();
+  const updatedList = current.map((img) => (img.id === id ? { ...img, ...updates } : img));
+  setStoredGalleryImages(updatedList);
+
+  // 2. Persist to site_settings/gallery (permitted by active rules)
+  try {
+    await setDoc(doc(db, 'site_settings', 'gallery'), {
+      images: updatedList,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Failed to sync to site_settings/gallery:', err);
+  }
+
+  // 3. Also persist to gallery_images/{id}
+  try {
+    const docRef = doc(db, 'gallery_images', id);
+    await updateDoc(docRef, {
+      ...updates,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Firestore updateGalleryImage collection notice:', err);
+  }
+};
+
+/**
+ * Delete a gallery image from Firestore & local cache
+ */
+export const deleteGalleryImage = async (id: string): Promise<void> => {
+  // 1. Update local cache optimistically
+  const current = getStoredGalleryImages();
+  const updatedList = current.filter((img) => img.id !== id);
+  setStoredGalleryImages(updatedList);
+
+  // 2. Persist to site_settings/gallery (permitted by active rules)
+  try {
+    await setDoc(doc(db, 'site_settings', 'gallery'), {
+      images: updatedList,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Failed to sync to site_settings/gallery:', err);
+  }
+
+  // 3. Also delete from gallery_images/{id}
+  try {
+    const docRef = doc(db, 'gallery_images', id);
+    await deleteDoc(docRef);
+  } catch (err) {
+    console.warn('Firestore deleteGalleryImage collection notice:', err);
+  }
+};
+
+/**
+ * Seed all default gallery images into Firestore
+ */
+export const seedDefaultGallery = async (): Promise<void> => {
+  setStoredGalleryImages(defaultGalleryImages);
+
+  try {
+    await setDoc(doc(db, 'site_settings', 'gallery'), {
+      images: defaultGalleryImages,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn('Failed to seed site_settings/gallery:', err);
+  }
+
+  for (let i = 0; i < defaultGalleryImages.length; i++) {
+    const item = defaultGalleryImages[i];
+    try {
+      const docRef = doc(db, 'gallery_images', item.id);
+      await setDoc(docRef, {
+        ...item,
+        order: i + 1,
+        updatedAt: serverTimestamp(),
+      });
+    } catch {}
+  }
 };

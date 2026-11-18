@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
-import { galleryImages } from '../../data/galleryData';
+import React, { useState, useEffect } from 'react';
+import { galleryImages as fallbackImages, GalleryImage } from '../../data/galleryData';
+import { subscribeGalleryImages } from '../../lib/firebase';
 import { useHeadings } from '../../lib/headings';
 import { X, ChevronLeft, ChevronRight, Maximize2, Sparkles } from 'lucide-react';
 
 export const GallerySection: React.FC = () => {
   const { headings } = useHeadings();
   const galleryHeadings = headings.gallery;
+  const [images, setImages] = useState<GalleryImage[]>(fallbackImages);
   const [activeCategory, setActiveCategory] = useState<'all' | 'seafood' | 'ambience' | 'heritage' | 'kitchen'>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const filteredImages = galleryImages.filter((img) =>
+  useEffect(() => {
+    const unsubscribe = subscribeGalleryImages((liveImages) => {
+      if (liveImages && liveImages.length > 0) {
+        setImages(liveImages);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const filteredImages = images.filter((img) =>
     activeCategory === 'all' ? true : img.category === activeCategory
   );
 

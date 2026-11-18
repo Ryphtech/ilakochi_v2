@@ -13,6 +13,8 @@ import { ReservationsTable } from './ReservationsTable';
 import { HeroBackgroundManager } from './HeroBackgroundManager';
 import { ThemeManager } from './ThemeManager';
 import { HeadingsManager } from './HeadingsManager';
+import { GalleryManager } from './GalleryManager';
+import { subscribeGalleryImages } from '../../lib/firebase';
 import {
   Utensils,
   Film,
@@ -20,6 +22,7 @@ import {
   Image as ImageIcon,
   Palette,
   Languages,
+  Camera,
   Plus,
   Edit2,
   Trash2,
@@ -47,7 +50,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   const [pinError, setPinError] = useState(false);
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme' | 'headings'>('dishes');
+  const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme' | 'headings' | 'gallery'>('dishes');
 
   // Menu State
   const [dishes, setDishes] = useState<MenuItem[]>([]);
@@ -57,12 +60,22 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
   const [actionSuccess, setActionSuccess] = useState('');
+  const [galleryCount, setGalleryCount] = useState<number>(8);
 
   // Subscribe to real-time menu items from Firestore
   useEffect(() => {
     if (!isAuthenticated) return;
     const unsubscribe = subscribeMenuItems((items) => {
       setDishes(items);
+    });
+    return () => unsubscribe();
+  }, [isAuthenticated]);
+
+  // Subscribe to real-time gallery items count
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const unsubscribe = subscribeGalleryImages((items) => {
+      setGalleryCount(items.length);
     });
     return () => unsubscribe();
   }, [isAuthenticated]);
@@ -315,6 +328,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
             <Languages className="w-4 h-4" />
             <span>Headings &amp; മലയാളം</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('gallery')}
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === 'gallery'
+                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
+                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
+            }`}
+          >
+            <Camera className="w-4 h-4" />
+            <span>Gallery Photos ({galleryCount})</span>
+          </button>
         </div>
 
         {/* TAB 1: FOOD ITEMS & MENU MANAGEMENT */}
@@ -496,6 +521,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
         {/* TAB 6: WEBSITE HEADINGS & MALAYALAM MANAGER */}
         {activeTab === 'headings' && (
           <HeadingsManager
+            onSuccessNotice={(msg) => {
+              setActionSuccess(msg);
+              setTimeout(() => setActionSuccess(''), 3500);
+            }}
+          />
+        )}
+
+        {/* TAB 7: GALLERY PHOTOGRAPHS MANAGER */}
+        {activeTab === 'gallery' && (
+          <GalleryManager
             onSuccessNotice={(msg) => {
               setActionSuccess(msg);
               setTimeout(() => setActionSuccess(''), 3500);
