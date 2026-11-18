@@ -35,6 +35,9 @@ import {
   ShieldCheck,
   Flame,
   CheckCircle,
+  Menu,
+  X,
+  ChevronRight,
 } from 'lucide-react';
 
 interface AdminPortalProps {
@@ -51,6 +54,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<'dishes' | 'media' | 'reservations' | 'hero' | 'theme' | 'headings' | 'gallery'>('dishes');
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Menu State
   const [dishes, setDishes] = useState<MenuItem[]>([]);
@@ -145,6 +149,68 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
     return matchesCat && matchesSearch;
   });
 
+  // Navigation Items for Admin Sidebar
+  const navItems = [
+    {
+      id: 'dishes' as const,
+      label: 'Food Items & Menu',
+      shortLabel: 'Menu',
+      icon: Utensils,
+      badge: dishes.length,
+      description: 'Manage signature dishes, categories, pricing, and Malayali translations',
+    },
+    {
+      id: 'gallery' as const,
+      label: 'Gallery Photos',
+      shortLabel: 'Gallery',
+      icon: Camera,
+      badge: galleryCount,
+      description: 'Curate restaurant ambiance, dining hall, and culinary captures',
+    },
+    {
+      id: 'hero' as const,
+      label: 'Hero Background',
+      shortLabel: 'Hero',
+      icon: ImageIcon,
+      badge: undefined,
+      description: 'Switch between cinematic 4K video reel and dynamic image slideshow',
+    },
+    {
+      id: 'headings' as const,
+      label: 'Headings & മലയാളം',
+      shortLabel: 'Headings',
+      icon: Languages,
+      badge: 'Bilingual',
+      description: 'Customize section titles with 1-click English, Malayalam, or Bilingual mode',
+    },
+    {
+      id: 'theme' as const,
+      label: 'Theme & Colors',
+      shortLabel: 'Theme',
+      icon: Palette,
+      badge: 'Live',
+      description: 'Fine-tune primary colors, typography styles, and dark luxury accents',
+    },
+    {
+      id: 'media' as const,
+      label: 'Cloudflare R2 Media',
+      shortLabel: 'Media',
+      icon: Film,
+      badge: 'Uploads',
+      description: 'Upload high-resolution dish photos and video files to Cloudflare R2',
+    },
+    {
+      id: 'reservations' as const,
+      label: 'Table Reservations',
+      shortLabel: 'Bookings',
+      icon: Calendar,
+      badge: undefined,
+      description: 'Review guest table bookings, guest counts, and special requests',
+    },
+  ];
+
+  const currentTabInfo = navItems.find((item) => item.id === activeTab) || navItems[0];
+
   // 1. PIN GATE LOGIN VIEW
   if (!isAuthenticated) {
     return (
@@ -203,144 +269,306 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
 
   // 2. MAIN ADMIN PORTAL VIEW
   return (
-    <div className="min-h-screen bg-[#000000] text-[#F8F6EE]">
-      {/* Top Admin Header */}
-      <header className="sticky top-0 z-40 bg-[#050505]/95 border-b border-[#262626]/50 backdrop-blur-md px-4 sm:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Brand */}
-          <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-[#000000] text-[#F8F6EE] flex flex-col md:flex-row">
+      {/* Mobile Top App Bar (Visible on < md) */}
+      <div className="md:hidden sticky top-0 z-40 bg-[#050505]/95 border-b border-[#262626]/60 backdrop-blur-md px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsMobileNavOpen(true)}
+            className="p-2 rounded-xl bg-[#121212] border border-[#262626] text-[#F8F6EE] hover:border-[#C5A46D] transition-colors cursor-pointer"
+            aria-label="Open Navigation Menu"
+          >
+            <Menu className="w-5 h-5 text-[#C5A46D]" />
+          </button>
+          <div className="flex items-center gap-2.5">
             <img
               src="/assets/ila-kochi-logo-white.png"
               alt="Ila Kochi Logo"
-              className="h-11 sm:h-12 w-auto object-contain"
+              className="h-8 w-auto object-contain"
             />
             <div>
-              <span className="text-sm sm:text-base font-serif-display font-medium text-[#F8F6EE] block leading-tight">
-                ILA KOCHI <span className="text-[#C5A46D] font-mono text-xs">ADMIN</span>
+              <span className="font-serif-display font-medium text-xs text-[#F8F6EE] block leading-tight">
+                ILA KOCHI <span className="text-[#C5A46D] font-mono text-[10px]">ADMIN</span>
               </span>
               <span className="text-[10px] text-[#A3A3A3] font-sans-ui block">
-                Firebase Firestore &bull; Cloudflare R2 Connected
+                {currentTabInfo.shortLabel}
               </span>
             </div>
           </div>
+        </div>
 
-          {/* Quick Actions */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onExit}
+            className="px-2.5 py-1.5 rounded-lg text-xs bg-[#121212] border border-[#262626] text-[#E5E5E5] hover:text-[#F8F6EE] flex items-center gap-1 cursor-pointer"
+          >
+            <ExternalLink className="w-3 h-3 text-[#C5A46D]" />
+            <span>Site</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="p-1.5 rounded-lg text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Sidebar Drawer (Slide-in Backdrop & Panel) */}
+      {isMobileNavOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsMobileNavOpen(false)}
+          />
+
+          {/* Drawer Panel */}
+          <div className="relative w-72 max-w-[85vw] bg-[#070707] border-r border-[#262626] p-5 flex flex-col justify-between z-10 h-full overflow-y-auto shadow-2xl">
+            <div className="space-y-6">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-4 border-b border-[#262626]/60">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/assets/ila-kochi-logo-white.png"
+                    alt="Ila Kochi Logo"
+                    className="h-10 w-auto object-contain"
+                  />
+                  <div>
+                    <div className="font-serif-display font-medium text-sm text-[#F8F6EE]">
+                      ILA KOCHI
+                    </div>
+                    <div className="text-[10px] text-[#C5A46D] font-mono tracking-wider">
+                      ADMIN PORTAL
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMobileNavOpen(false)}
+                  className="p-1.5 rounded-lg text-[#A3A3A3] hover:text-[#F8F6EE] hover:bg-[#161616] cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Status Pill */}
+              <div className="px-3 py-2 rounded-xl bg-[#121212] border border-[#262626]/70 flex items-center gap-2 text-[11px] text-[#A3A3A3]">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+                <span>Firestore &amp; R2 Connected</span>
+              </div>
+
+              {/* Navigation Items */}
+              <div className="space-y-1">
+                <div className="text-[10px] uppercase tracking-wider text-[#737373] px-2 font-semibold mb-2">
+                  Management
+                </div>
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeTab === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab(item.id);
+                        setIsMobileNavOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#C5A46D] text-[#050505] font-semibold shadow-md'
+                          : 'text-[#D4D4D4] hover:text-[#F8F6EE] hover:bg-[#141414]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[#050505]' : 'text-[#C5A46D]'}`} />
+                        <span className="truncate">{item.label}</span>
+                      </div>
+                      {item.badge !== undefined && (
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-full font-mono flex-shrink-0 ${
+                            isActive
+                              ? 'bg-black/20 text-[#050505] font-bold'
+                              : 'bg-[#181818] text-[#A3A3A3] border border-[#262626]'
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Drawer Footer Actions */}
+            <div className="pt-6 border-t border-[#262626]/60 space-y-2">
+              <button
+                onClick={onExit}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs text-[#E5E5E5] hover:text-[#F8F6EE] bg-[#121212] border border-[#262626] transition-colors cursor-pointer"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#C5A46D]" />
+                <span>View Public Website</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Side Navigation Bar (w-72, sticky top-0, h-screen) */}
+      <aside className="hidden md:flex w-72 shrink-0 h-screen sticky top-0 bg-[#070707] border-r border-[#262626]/60 flex-col justify-between p-5 overflow-y-auto">
+        <div className="space-y-6">
+          {/* Brand Header */}
+          <div className="space-y-3 pb-4 border-b border-[#262626]/60">
+            <div className="flex items-center gap-3">
+              <img
+                src="/assets/ila-kochi-logo-white.png"
+                alt="Ila Kochi Logo"
+                className="h-12 w-auto object-contain"
+              />
+              <div>
+                <div className="font-serif-display font-medium text-base text-[#F8F6EE] leading-tight">
+                  ILA KOCHI
+                </div>
+                <div className="inline-flex items-center gap-1.5 mt-0.5">
+                  <span className="text-[10px] font-mono tracking-widest text-[#C5A46D] uppercase font-bold">
+                    ADMIN
+                  </span>
+                  <span className="text-[10px] text-[#525252]">&bull;</span>
+                  <span className="text-[10px] text-[#A3A3A3] font-mono">v2.0</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Connection Status Pill */}
+            <div className="px-3 py-1.5 rounded-lg bg-[#121212] border border-[#262626]/60 flex items-center justify-between text-[11px] text-[#A3A3A3]">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[#A3A3A3]">Live Connected</span>
+              </div>
+              <span className="text-[10px] font-mono text-[#737373]">Firestore</span>
+            </div>
+          </div>
+
+          {/* Navigation Items */}
+          <div className="space-y-1">
+            <div className="text-[10px] uppercase tracking-wider text-[#737373] px-3 font-semibold mb-2 flex items-center justify-between">
+              <span>Management</span>
+              <span className="font-mono text-[9px] text-[#525252]">{navItems.length} SECTIONS</span>
+            </div>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-medium transition-all group cursor-pointer ${
+                    isActive
+                      ? 'bg-[#C5A46D] text-[#050505] font-semibold shadow-md shadow-[#C5A46D]/15'
+                      : 'text-[#D4D4D4] hover:text-[#F8F6EE] hover:bg-[#141414] border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <Icon
+                      className={`w-4 h-4 flex-shrink-0 transition-transform group-hover:scale-110 ${
+                        isActive ? 'text-[#050505]' : 'text-[#C5A46D]'
+                      }`}
+                    />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+
+                  {item.badge !== undefined && (
+                    <span
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-mono flex-shrink-0 ${
+                        isActive
+                          ? 'bg-black/20 text-[#050505] font-bold'
+                          : 'bg-[#181818] text-[#A3A3A3] border border-[#262626]'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="pt-4 border-t border-[#262626]/60 space-y-2 mt-6">
+          <button
+            onClick={onExit}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs text-[#E5E5E5] hover:text-[#F8F6EE] bg-[#121212] hover:bg-[#1a1a1a] border border-[#262626]/70 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <ExternalLink className="w-3.5 h-3.5 text-[#C5A46D]" />
+              <span>View Website</span>
+            </div>
+            <span className="text-[10px] text-[#737373] font-mono">&rarr;</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/20 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
+            </div>
+            <span className="text-[10px] text-[#525252] font-mono">PIN 350</span>
+          </button>
+
+          <div className="text-[10px] text-[#525252] text-center pt-1 font-sans-ui">
+            Ila Kochi Authentic Cuisine &bull; Kalamassery
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 min-w-0 flex flex-col min-h-screen">
+        {/* Desktop Content Header */}
+        <header className="hidden md:flex sticky top-0 z-30 bg-[#050505]/90 border-b border-[#262626]/50 backdrop-blur-md px-8 py-4 items-center justify-between">
+          <div>
+            <h1 className="text-lg font-serif-display font-medium text-[#F8F6EE] flex items-center gap-2.5">
+              <span>{currentTabInfo.label}</span>
+              {currentTabInfo.badge !== undefined && (
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#181818] border border-[#262626] text-[#C5A46D] font-mono font-medium">
+                  {currentTabInfo.badge}
+                </span>
+              )}
+            </h1>
+            <p className="text-xs text-[#A3A3A3] mt-0.5">
+              {currentTabInfo.description}
+            </p>
+          </div>
+
           <div className="flex items-center gap-3">
             <button
               onClick={onExit}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs text-[#E5E5E5] hover:text-[#F8F6EE] bg-[#121212] border border-[#262626]/50 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs text-[#E5E5E5] hover:text-[#F8F6EE] bg-[#121212] hover:bg-[#1a1a1a] border border-[#262626]/60 transition-colors cursor-pointer"
             >
               <span>View Website</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="p-2 rounded-full text-[#A3A3A3] hover:text-red-400 hover:bg-red-950/40 transition-colors cursor-pointer"
-              title="Logout from Admin"
-            >
-              <LogOut className="w-4 h-4" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#C5A46D]" />
             </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main Body */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-8 py-8 space-y-8">
-        {/* Success Alert Banner */}
-        {actionSuccess && (
-          <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/50 text-xs text-emerald-200 flex items-center gap-2 animate-fadeIn">
-            <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-            <span>{actionSuccess}</span>
-          </div>
-        )}
-
-        {/* Tab Selector Navigation */}
-        <div className="flex items-center gap-2 border-b border-[#262626]/40 pb-3 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('dishes')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'dishes'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Utensils className="w-4 h-4" />
-            <span>Food Items &amp; Menu ({dishes.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('media')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'media'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Film className="w-4 h-4" />
-            <span>Cloudflare R2 Media (Uploads)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('reservations')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'reservations'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Table Reservations</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('hero')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'hero'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <ImageIcon className="w-4 h-4" />
-            <span>Hero Background</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('theme')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'theme'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Palette className="w-4 h-4" />
-            <span>Theme &amp; Colors</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('headings')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'headings'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Languages className="w-4 h-4" />
-            <span>Headings &amp; മലയാളം</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('gallery')}
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === 'gallery'
-                ? 'bg-[#C5A46D] text-[#050505] shadow-lg'
-                : 'text-[#E5E5E5] hover:bg-[#121212] border border-transparent'
-            }`}
-          >
-            <Camera className="w-4 h-4" />
-            <span>Gallery Photos ({galleryCount})</span>
-          </button>
-        </div>
+        {/* Content Body */}
+        <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+          {/* Success Alert Banner */}
+          {actionSuccess && (
+            <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/50 text-xs text-emerald-200 flex items-center gap-2 animate-fadeIn">
+              <CheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <span>{actionSuccess}</span>
+            </div>
+          )}
 
         {/* TAB 1: FOOD ITEMS & MENU MANAGEMENT */}
         {activeTab === 'dishes' && (
@@ -538,6 +766,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onExit }) => {
           />
         )}
       </main>
+      </div>
 
       {/* Dish Add/Edit Modal */}
       <FoodItemModal
